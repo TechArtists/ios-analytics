@@ -1,0 +1,656 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		406869D429086F2100E4E222 /* OverbaseAnalyticsDemoAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406869D329086F2100E4E222 /* OverbaseAnalyticsDemoAppApp.swift */; };
+		406869D829086F2300E4E222 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 406869D729086F2300E4E222 /* Assets.xcassets */; };
+		406869DB29086F2300E4E222 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 406869DA29086F2300E4E222 /* Preview Assets.xcassets */; };
+		406869E529086F2300E4E222 /* MyCallManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406869E429086F2300E4E222 /* MyCallManagerTests.swift */; };
+		406869EF29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406869EE29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.swift */; };
+		406869F129086F2300E4E222 /* OverbaseAnalyticsDemoAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406869F029086F2300E4E222 /* OverbaseAnalyticsDemoAppUITestsLaunchTests.swift */; };
+		40686A0C2908708400E4E222 /* OverbaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 40686A0B2908708400E4E222 /* OverbaseAnalytics */; };
+		40686A0E290870E300E4E222 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A0D290870E300E4E222 /* AppDelegate.swift */; };
+		40686A1029096A0400E4E222 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A0F29096A0300E4E222 /* Contacts.swift */; };
+		40686A152909725D00E4E222 /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A132909725D00E4E222 /* ContactDetailView.swift */; };
+		40686A162909725D00E4E222 /* ContactsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A142909725D00E4E222 /* ContactsListView.swift */; };
+		40686A182909794500E4E222 /* NavigationLinkWithTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A172909794500E4E222 /* NavigationLinkWithTap.swift */; };
+		40686A1A290979F700E4E222 /* MyCallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A19290979F700E4E222 /* MyCallManager.swift */; };
+		40686A1C2926629700E4E222 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A1B2926629700E4E222 /* CreateAccountView.swift */; };
+		40686A1E29267E3800E4E222 /* ContactImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A1D29267E3800E4E222 /* ContactImageView.swift */; };
+		40686A2129267E8300E4E222 /* ContactsListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40686A2029267E8300E4E222 /* ContactsListRowView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		406869E129086F2300E4E222 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 406869C829086F2100E4E222 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 406869CF29086F2100E4E222;
+			remoteInfo = OverbaseAnalyticsDemoApp;
+		};
+		406869EB29086F2300E4E222 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 406869C829086F2100E4E222 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 406869CF29086F2100E4E222;
+			remoteInfo = OverbaseAnalyticsDemoApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		406869D029086F2100E4E222 /* OverbaseAnalyticsDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OverbaseAnalyticsDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		406869D329086F2100E4E222 /* OverbaseAnalyticsDemoAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverbaseAnalyticsDemoAppApp.swift; sourceTree = "<group>"; };
+		406869D729086F2300E4E222 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		406869DA29086F2300E4E222 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		406869E029086F2300E4E222 /* OverbaseAnalyticsDemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OverbaseAnalyticsDemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		406869E429086F2300E4E222 /* MyCallManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCallManagerTests.swift; sourceTree = "<group>"; };
+		406869EA29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OverbaseAnalyticsDemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		406869EE29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverbaseAnalyticsDemoAppUITests.swift; sourceTree = "<group>"; };
+		406869F029086F2300E4E222 /* OverbaseAnalyticsDemoAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverbaseAnalyticsDemoAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		40686A092908707800E4E222 /* ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "ios-sdk"; path = ..; sourceTree = "<group>"; };
+		40686A0D290870E300E4E222 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		40686A0F29096A0300E4E222 /* Contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
+		40686A132909725D00E4E222 /* ContactDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
+		40686A142909725D00E4E222 /* ContactsListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsListView.swift; sourceTree = "<group>"; };
+		40686A172909794500E4E222 /* NavigationLinkWithTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLinkWithTap.swift; sourceTree = "<group>"; };
+		40686A19290979F700E4E222 /* MyCallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCallManager.swift; sourceTree = "<group>"; };
+		40686A1B2926629700E4E222 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		40686A1D29267E3800E4E222 /* ContactImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactImageView.swift; sourceTree = "<group>"; };
+		40686A2029267E8300E4E222 /* ContactsListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListRowView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		406869CD29086F2100E4E222 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40686A0C2908708400E4E222 /* OverbaseAnalytics in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869DD29086F2300E4E222 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869E729086F2300E4E222 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		406869C729086F2100E4E222 = {
+			isa = PBXGroup;
+			children = (
+				406869FD29086F4C00E4E222 /* Packages */,
+				406869D229086F2100E4E222 /* OverbaseAnalyticsDemoApp */,
+				406869E329086F2300E4E222 /* OverbaseAnalyticsDemoAppTests */,
+				406869ED29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests */,
+				406869D129086F2100E4E222 /* Products */,
+				40686A0A2908708400E4E222 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		406869D129086F2100E4E222 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				406869D029086F2100E4E222 /* OverbaseAnalyticsDemoApp.app */,
+				406869E029086F2300E4E222 /* OverbaseAnalyticsDemoAppTests.xctest */,
+				406869EA29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		406869D229086F2100E4E222 /* OverbaseAnalyticsDemoApp */ = {
+			isa = PBXGroup;
+			children = (
+				40686A0D290870E300E4E222 /* AppDelegate.swift */,
+				406869D329086F2100E4E222 /* OverbaseAnalyticsDemoAppApp.swift */,
+				40686A1F29267E5700E4E222 /* Views */,
+				40686A19290979F700E4E222 /* MyCallManager.swift */,
+				40686A0F29096A0300E4E222 /* Contacts.swift */,
+				406869D729086F2300E4E222 /* Assets.xcassets */,
+				406869D929086F2300E4E222 /* Preview Content */,
+			);
+			path = OverbaseAnalyticsDemoApp;
+			sourceTree = "<group>";
+		};
+		406869D929086F2300E4E222 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				406869DA29086F2300E4E222 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		406869E329086F2300E4E222 /* OverbaseAnalyticsDemoAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				406869E429086F2300E4E222 /* MyCallManagerTests.swift */,
+			);
+			path = OverbaseAnalyticsDemoAppTests;
+			sourceTree = "<group>";
+		};
+		406869ED29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				406869EE29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.swift */,
+				406869F029086F2300E4E222 /* OverbaseAnalyticsDemoAppUITestsLaunchTests.swift */,
+			);
+			path = OverbaseAnalyticsDemoAppUITests;
+			sourceTree = "<group>";
+		};
+		406869FD29086F4C00E4E222 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				40686A092908707800E4E222 /* ios-sdk */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		40686A0A2908708400E4E222 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		40686A1F29267E5700E4E222 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				40686A1B2926629700E4E222 /* CreateAccountView.swift */,
+				40686A142909725D00E4E222 /* ContactsListView.swift */,
+				40686A2029267E8300E4E222 /* ContactsListRowView.swift */,
+				40686A132909725D00E4E222 /* ContactDetailView.swift */,
+				40686A1D29267E3800E4E222 /* ContactImageView.swift */,
+				40686A172909794500E4E222 /* NavigationLinkWithTap.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		406869CF29086F2100E4E222 /* OverbaseAnalyticsDemoApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 406869F429086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoApp" */;
+			buildPhases = (
+				406869CC29086F2100E4E222 /* Sources */,
+				406869CD29086F2100E4E222 /* Frameworks */,
+				406869CE29086F2100E4E222 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OverbaseAnalyticsDemoApp;
+			packageProductDependencies = (
+				40686A0B2908708400E4E222 /* OverbaseAnalytics */,
+			);
+			productName = OverbaseAnalyticsDemoApp;
+			productReference = 406869D029086F2100E4E222 /* OverbaseAnalyticsDemoApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		406869DF29086F2300E4E222 /* OverbaseAnalyticsDemoAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 406869F729086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoAppTests" */;
+			buildPhases = (
+				406869DC29086F2300E4E222 /* Sources */,
+				406869DD29086F2300E4E222 /* Frameworks */,
+				406869DE29086F2300E4E222 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				406869E229086F2300E4E222 /* PBXTargetDependency */,
+			);
+			name = OverbaseAnalyticsDemoAppTests;
+			productName = OverbaseAnalyticsDemoAppTests;
+			productReference = 406869E029086F2300E4E222 /* OverbaseAnalyticsDemoAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		406869E929086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 406869FA29086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoAppUITests" */;
+			buildPhases = (
+				406869E629086F2300E4E222 /* Sources */,
+				406869E729086F2300E4E222 /* Frameworks */,
+				406869E829086F2300E4E222 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				406869EC29086F2300E4E222 /* PBXTargetDependency */,
+			);
+			name = OverbaseAnalyticsDemoAppUITests;
+			productName = OverbaseAnalyticsDemoAppUITests;
+			productReference = 406869EA29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		406869C829086F2100E4E222 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1400;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					406869CF29086F2100E4E222 = {
+						CreatedOnToolsVersion = 14.0;
+					};
+					406869DF29086F2300E4E222 = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 406869CF29086F2100E4E222;
+					};
+					406869E929086F2300E4E222 = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 406869CF29086F2100E4E222;
+					};
+				};
+			};
+			buildConfigurationList = 406869CB29086F2100E4E222 /* Build configuration list for PBXProject "OverbaseAnalyticsDemoApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 406869C729086F2100E4E222;
+			productRefGroup = 406869D129086F2100E4E222 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				406869CF29086F2100E4E222 /* OverbaseAnalyticsDemoApp */,
+				406869DF29086F2300E4E222 /* OverbaseAnalyticsDemoAppTests */,
+				406869E929086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		406869CE29086F2100E4E222 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				406869DB29086F2300E4E222 /* Preview Assets.xcassets in Resources */,
+				406869D829086F2300E4E222 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869DE29086F2300E4E222 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869E829086F2300E4E222 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		406869CC29086F2100E4E222 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40686A152909725D00E4E222 /* ContactDetailView.swift in Sources */,
+				40686A1E29267E3800E4E222 /* ContactImageView.swift in Sources */,
+				40686A182909794500E4E222 /* NavigationLinkWithTap.swift in Sources */,
+				40686A0E290870E300E4E222 /* AppDelegate.swift in Sources */,
+				40686A1A290979F700E4E222 /* MyCallManager.swift in Sources */,
+				40686A162909725D00E4E222 /* ContactsListView.swift in Sources */,
+				40686A2129267E8300E4E222 /* ContactsListRowView.swift in Sources */,
+				406869D429086F2100E4E222 /* OverbaseAnalyticsDemoAppApp.swift in Sources */,
+				40686A1C2926629700E4E222 /* CreateAccountView.swift in Sources */,
+				40686A1029096A0400E4E222 /* Contacts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869DC29086F2300E4E222 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				406869E529086F2300E4E222 /* MyCallManagerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		406869E629086F2300E4E222 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				406869EF29086F2300E4E222 /* OverbaseAnalyticsDemoAppUITests.swift in Sources */,
+				406869F129086F2300E4E222 /* OverbaseAnalyticsDemoAppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		406869E229086F2300E4E222 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 406869CF29086F2100E4E222 /* OverbaseAnalyticsDemoApp */;
+			targetProxy = 406869E129086F2300E4E222 /* PBXContainerItemProxy */;
+		};
+		406869EC29086F2300E4E222 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 406869CF29086F2100E4E222 /* OverbaseAnalyticsDemoApp */;
+			targetProxy = 406869EB29086F2300E4E222 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		406869F229086F2300E4E222 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		406869F329086F2300E4E222 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		406869F529086F2300E4E222 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OverbaseAnalyticsDemoApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Overbase Analytics Demo App";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Demo app using the contacts";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		406869F629086F2300E4E222 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OverbaseAnalyticsDemoApp/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Overbase Analytics Demo App";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Demo app using the contacts";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		406869F829086F2300E4E222 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OverbaseAnalyticsDemoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OverbaseAnalyticsDemoApp";
+			};
+			name = Debug;
+		};
+		406869F929086F2300E4E222 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OverbaseAnalyticsDemoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OverbaseAnalyticsDemoApp";
+			};
+			name = Release;
+		};
+		406869FB29086F2300E4E222 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OverbaseAnalyticsDemoApp;
+			};
+			name = Debug;
+		};
+		406869FC29086F2300E4E222 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overbase.OverbaseAnalyticsDemoAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OverbaseAnalyticsDemoApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		406869CB29086F2100E4E222 /* Build configuration list for PBXProject "OverbaseAnalyticsDemoApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406869F229086F2300E4E222 /* Debug */,
+				406869F329086F2300E4E222 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		406869F429086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406869F529086F2300E4E222 /* Debug */,
+				406869F629086F2300E4E222 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		406869F729086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406869F829086F2300E4E222 /* Debug */,
+				406869F929086F2300E4E222 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		406869FA29086F2300E4E222 /* Build configuration list for PBXNativeTarget "OverbaseAnalyticsDemoAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406869FB29086F2300E4E222 /* Debug */,
+				406869FC29086F2300E4E222 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		40686A0B2908708400E4E222 /* OverbaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OverbaseAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 406869C829086F2100E4E222 /* Project object */;
+}

@@ -1,0 +1,64 @@
+//  OverbaseAnalytics+Permissions.swift
+//  Created by Adi on 10/25/22
+//
+//  Copyright (c) 2022 Overbase SRL (http://overbase.com/)
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+
+import Foundation
+
+// MARK: -
+
+/// Protocol that uses `OverbaseAnalyticsUIProtocol` in order to log when a permission has been shown & its response
+public protocol OverbaseAnalyticsPermissionProtocol: OverbaseAnalyticsUIProtocol {
+    /// Logs a `ui_view_shown` event with `view_name="permission"` and `view_type=permissionType`
+    /// - Parameter permissionType: however you want to identify the permission (e.g. "notifications", "photos")
+    func logPermissionScreenShown(for permissionType: String)
+    
+    /// Logs a `ui_button_tapped` event with `name="allow"/"dont allow"`, `view_name="permission"`, `view_type=permissionType`
+    func logPermissionButtonTapped(allowed: Bool, permissionType: String)
+    
+    /// Logs a `ui_button_tapped` event with `name=status`, `view_name="permission"`, `view_type=permissionType`
+    func logPermissionButtonTapped(status: String, permissionType: String)
+}
+
+// MARK: - Default Implementations
+
+extension OverbaseAnalyticsPermissionProtocol {
+    
+    public func logPermissionScreenShown(for permissionType: String) {
+        let view = AnalyticsView(name: "permission", type: permissionType)
+        log(viewShown: view)
+    }
+
+    public func logPermissionButtonTapped(allowed: Bool, permissionType: String) {
+        let view = AnalyticsView(name: "permission", type: permissionType)
+        log(buttonTapped: allowed ? "allow" : "dont allow", onView: view)
+    }
+
+    public func logPermissionButtonTapped(status: String, permissionType: String) {
+        let view = AnalyticsView(name: "permission", type: permissionType)
+        log(buttonTapped: status, onView: view)
+    }
+
+}
+
+// MARK: - Empty Conformance
+
+extension OverbaseAnalyticsCompat : OverbaseAnalyticsPermissionProtocol {}
