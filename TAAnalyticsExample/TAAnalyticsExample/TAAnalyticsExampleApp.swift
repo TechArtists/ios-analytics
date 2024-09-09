@@ -1,5 +1,8 @@
-//  TAAnalytics+UserIDs.swift
-//  Created by Adi on 10/24/22
+//
+//  TAAnalyticsExampleApp.swift
+//  TAAnalyticsExample
+//
+//  Created by Adi on 10/26/22.
 //
 //  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
 //
@@ -20,33 +23,25 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
+//
 
-import Foundation
+import SwiftUI
 
-// MARK: -
+@main
+struct TAAnalyticsExampleApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
-public protocol TAAnalyticsUserIDsProtocol {
-    var userPseudoID: String? { get }
-    var userID: String? { get set}
-}
+    @State var needsToSignIn = true
 
-// MARK: -
-
-extension TAAnalytics: TAAnalyticsUserIDsProtocol {
-    
-    public var userPseudoID: String? {
-        return (self.startedPlatforms.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
-    }
-
-    public var userID: String? {
-        get {
-            return (self.startedPlatforms.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
-        }
-        set {
-            self.startedPlatforms
-                .compactMap { $0 as? AnalyticsConsumerWithWriteOnlyUserID }
-                .forEach { $0.set(usertID: newValue) }
+    var body: some Scene {
+        WindowGroup {
+            NavigationView {
+                if needsToSignIn {
+                    CreateAccountView(needsToSignIn: $needsToSignIn)
+                } else {
+                    ContactsListView()
+                }
+            }.environmentObject(appDelegate.analytics)
         }
     }
-    
 }

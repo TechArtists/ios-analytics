@@ -47,7 +47,7 @@ internal let LOGGER = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: 
 //}
 
 /// It's for backwards compatibility purposes, it does not implement the ObservableObject protocol
-public class TAAnalytics {
+public class TAAnalytics: ObservableObject {
     public static let userdefaultsKeyPrefix = "TAAnalytics"
     public static let logger = LOGGER
     

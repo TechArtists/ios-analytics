@@ -1,6 +1,6 @@
-//  TAAnalyticsDemoAppApp.swift
 //
-//  Created by Adi on 10/25/22.
+//  ContentView.swift
+//  TAAnalyticsExample
 //
 //  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
 //
@@ -22,23 +22,21 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
 import SwiftUI
 
-@main
-struct TAAnalyticsDemoAppApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    @State var needsToSignIn = true
-
-    var body: some Scene {
-        WindowGroup {
-            NavigationView {
-                if needsToSignIn {
-                    CreateAccountView(needsToSignIn: $needsToSignIn)
-                } else {
-                    ContactsListView()
-                }
-            }.environmentObject(appDelegate.analytics)
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, world!")
         }
+        .padding()
     }
+}
+
+#Preview {
+    ContentView()
 }

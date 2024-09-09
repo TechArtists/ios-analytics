@@ -1,13 +1,13 @@
 //
-//  TAAnalyticsDemoAppAppAnalyticsDemoAppUITestsLaunchTests.swift
-//  TAAnalyticsDemoAppAppAnalyticsDemoAppUITests
+//  TAAnalyticsExampleUITestsLaunchTests.swift
+//  TAAnalyticsExampleUITests
 //
-//  Created by Adi on 10/25/22.
+//  Created by Robert Tataru on 09.09.2024.
 //
 
 import XCTest
 
-final class TAAnalyticsDemoAppAppAnalyticsDemoAppUITestsLaunchTests: XCTestCase {
+final class TAAnalyticsExampleUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

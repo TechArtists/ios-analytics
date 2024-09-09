@@ -26,21 +26,16 @@
 import Foundation
 import OSLog
 
-extension AnalyticsConsumer {
-    /// Logs to OSLog. `OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")`
-    public static let osLog = OSLogAnalyticsConsumer()
-}
-
 /// Logs to OSLog. `OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")`
 public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     
     private let logger : OSLog
     
-    override init() {
+    init() {
         self.logger = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")
     }
     
-    public override func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool {
+    public func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool {
         return true
     }
     
@@ -48,7 +43,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return parameter
     }
     
-    public override func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
+    public func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
         os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, event.rawValue, String(describingOptional: paramsString))
     }
@@ -68,7 +63,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return "sendEvent: '\(event.rawValue)', params: [\(String(describingOptional: paramsString))]"
     }
 
-    public override func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func set(userProperty: AnalyticsUserProperty, to: String?) {
         os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, userProperty.rawValue, String(describingOptional: to))
     }
     

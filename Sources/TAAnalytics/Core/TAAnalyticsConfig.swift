@@ -44,7 +44,7 @@ public struct TAAnalyticsConfig {
     }
     
     let analyticsVersion: String
-    let platforms: [AnalyticsConsumer]
+    let platforms: [any AnalyticsConsumer]
     let currentProcessType: ProcessType
     let enabledProcessTypes: [ProcessType]
     let currentInstallType: InstallType
@@ -59,7 +59,7 @@ public struct TAAnalyticsConfig {
     ///   - enabledProcessTypes: what process types should have logging enabled. Defaults to `ProcessType.allCases`
     ///   - userDefaults: defaults to `UserDefaults.standard`
     public init(analyticsVersion: String,
-                platforms: [AnalyticsConsumer],
+                platforms: [any AnalyticsConsumer],
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,

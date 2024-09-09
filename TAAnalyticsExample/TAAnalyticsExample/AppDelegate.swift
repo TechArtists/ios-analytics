@@ -57,7 +57,7 @@ extension AnalyticsView {
         UITableView.appearance().backgroundColor = UIColor.clear
 
         let config = TAAnalyticsConfig(analyticsVersion: "1.0"
-                                             , platforms: [.osLog,
+                                             , platforms: [/* OSLogAnalyticsConsumer(),*/
 //                                                           .keemojiAPI
                                              ])
         analytics = TAAnalytics(config: config)
@@ -71,6 +71,4 @@ extension AnalyticsView {
         
         return true
     }
-    
-    
 }

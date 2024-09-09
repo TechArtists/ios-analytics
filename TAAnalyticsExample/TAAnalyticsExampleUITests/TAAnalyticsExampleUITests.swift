@@ -1,13 +1,13 @@
 //
-//  TAAnalyticsDemoAppUITests.swift
-//  TAAnalyticsDemoAppUITests
+//  TAAnalyticsExampleUITests.swift
+//  TAAnalyticsExampleUITests
 //
-//  Created by Adi on 10/25/22.
+//  Created by Robert Tataru on 09.09.2024.
 //
 
 import XCTest
 
-final class TAAnalyticsDemoAppAppAnalyticsDemoAppUITests: XCTestCase {
+final class TAAnalyticsExampleUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

@@ -25,51 +25,39 @@
 
 import Foundation
 
-// Firebase/ OSLog/ Crashlytics
-
-/// A concrete implementation of an Analytics Platform, that is able to log event & user properties
-/// For example, there is an implementation that sends events to Firebase, another one that sends events to OSLog
-///
-/// You can create your own that can send events to any 3rd party.
-open class AnalyticsConsumer {
-
-    public init() {}
-    
+/// `AnalyticsConsumer` is a protocol that defines methods for starting an analytics consumer, logging events, and setting user properties.
+/// Classes that conform to this protocol will handle these operations for different analytics platforms.
+public protocol AnalyticsConsumer {
     /// Starts the consumer if it can for the required
     /// - Parameters:
     ///   - installType: installType
     ///   - userDefaults: user defaults to use
     ///   - TAAnalytics: if you do keep a reference to it, keep it `weak` and use it **after** this function has been called (to ensure that it was properly initialized)
     /// - Returns: `true` if it has been started, `false` otherwise
-    open func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool {
-        fatalError("not implemented")
-    }
+    func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool
         
     
     /// Log the specific event
-    open func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?) {
-        fatalError("not implemented")
-    }
+    func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?)
      
     /// Set the user property
-    open func set(userProperty: AnalyticsUserProperty, to: String?) {
-        fatalError("not implemented")
-    }
+    func set(userProperty: AnalyticsUserProperty, to: String?)
 }
 
 
 /// If the consumer also support a user ID, though only setting it (e.g. Crashlytics)
 public protocol AnalyticsConsumerWithWriteOnlyUserID: AnyObject {
     /// Swift forces us to also define a getter, but it will never be called for this protocol
-    var userID: String? { get set }
+    func set(usertID: String?)
 }
 
 /// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
 public protocol AnalyticsConsumerWithReadWriteUserID: AnalyticsConsumerWithWriteOnlyUserID {
-    var userID: String? { get set }
+    func getUserID() -> String?
 }
 
 /// Some Analytics Consumers can also support a user pseudo ID (Firebase, mostly)
 public protocol AnalyticsConsumerWithReadOnlyUserPseudoID: AnyObject {
-    var userPseudoID: String { get }
+    func set(usertID: String?)
+    func getUserID() -> String?
 }

@@ -1,5 +1,6 @@
+//
 //  Contacts.swift
-//  Created by Adi on 10/26/22.
+//  TAAnalyticsExample
 //
 //  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
 //
@@ -21,12 +22,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
+import Foundation
 import Foundation
 import Combine
 import Contacts
 import TAAnalytics
 import SwiftUI
-
 
 class ContactsPermission: ObservableObject {
     let contactStore = CNContactStore()

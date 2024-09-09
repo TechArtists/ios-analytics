@@ -27,7 +27,6 @@ import TAAnalytics
 import Combine
 import Contacts
 
-
 struct ContactsListView: View {
 
     @EnvironmentObject var analytics: TAAnalytics

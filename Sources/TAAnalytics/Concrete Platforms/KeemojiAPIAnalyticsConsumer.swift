@@ -27,9 +27,9 @@ import OSLog
 
 // TODO: No !
 
-extension AnalyticsConsumer {
-    public static let keemojiAPI = KeemojiAPIAnalyticsConsumer()
-}
+//extension AnalyticsConsumer {
+//    public static let keemojiAPI = KeemojiAPIAnalyticsConsumer()
+//}
 
 public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnlyUserID {
     var debugServerGlobalCounter: Int = 0
@@ -58,7 +58,7 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         case setUserProperty = "setUserProperty"
     }
     
-    public override func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool {
+    public func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool {
         if installType != .AppStore {
             self.userDefaults = userDefaults
             self.TAAnalytics = TAAnalytics
@@ -67,7 +67,7 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         return false
     }
     
-    public override func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
+    public func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
         var jsonParams = [String: Any]()
         jsonParams["name"] = event.rawValue
         jsonParams["parameters"] = params
@@ -75,7 +75,7 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         sendToDebugServer(endpoint: .sendEvent, postData: jsonParams)
     }
     
-    public override func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func set(userProperty: AnalyticsUserProperty, to: String?) {
         var jsonParams = [String: Any]()
         jsonParams["name"] = userProperty.rawValue
         jsonParams["value"] = to
@@ -83,9 +83,8 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         sendToDebugServer(endpoint: .setUserProperty, postData: jsonParams)
     }
     
-    public var userID: String? {
-        get { fatalError("never gets here") }
-        set { sendUserIDToDebugServer(userID: newValue) }
+    public func set(usertID: String?) {
+        sendUserIDToDebugServer(userID: usertID)
     }
     
     // MARK: Server stuff
