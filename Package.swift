@@ -3,21 +3,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "OverbaseAnalytics",
+    name: "TAAnalytics",
     platforms: [ .iOS(.v11), .macOS(.v10_13)],
     products: [
         .library(
-            name: "OverbaseAnalytics",
-            targets: ["OverbaseAnalytics"]),
+            name: "TAAnalytics",
+            targets: ["TAAnalytics"]),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "OverbaseAnalytics",
+            name: "TAAnalytics",
             dependencies: []),
         .testTarget(
-            name: "OverbaseAnalyticsTests",
-            dependencies: ["OverbaseAnalytics"]),
+            name: "TAAnalyticsTests",
+            dependencies: ["TAAnalytics"]),
     ]
 )
