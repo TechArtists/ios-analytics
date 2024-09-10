@@ -43,9 +43,15 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return parameter
     }
     
-    public func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
+    public func log(trimmedEvent: TrimmedEvent, params: [String : AnalyticsBaseParameterValue]?) {
+        let event = trimmedEvent.event
+        
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
         os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, event.rawValue, String(describingOptional: paramsString))
+    }
+    
+    public func trim(event: AnalyticsEvent) -> AnalyticsEvent {
+        .init(event.rawValue.ob_trim(type: "event", toLength: 40))
     }
         
     /// Returns a debug string for a send(event:params:) function call. Note that all the information inside this debug string is not redacted for privacy,

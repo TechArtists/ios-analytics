@@ -99,7 +99,7 @@ class DefaultInstallUserPropertiesCalculator {
 
 
 @available(iOS 12.0, *)
-extension UIUserInterfaceStyle  : CustomDebugStringConvertible{
+extension UIUserInterfaceStyle  : @retroactive CustomDebugStringConvertible{
     public var debugDescription: String {
         switch self {
         case .unspecified: return "unspecified"
@@ -110,7 +110,7 @@ extension UIUserInterfaceStyle  : CustomDebugStringConvertible{
     }
 }
 
-extension UIContentSizeCategory: CustomDebugStringConvertible {
+extension UIContentSizeCategory: @retroactive CustomDebugStringConvertible {
     
     public var debugDescription: String {
         switch self {

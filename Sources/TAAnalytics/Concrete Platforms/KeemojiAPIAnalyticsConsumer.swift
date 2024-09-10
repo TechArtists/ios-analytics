@@ -67,12 +67,18 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         return false
     }
     
-    public func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?) {
+    public func log(trimmedEvent: TrimmedEvent, params: [String : any AnalyticsBaseParameterValue]?) {
+        let event = trimmedEvent.event
+        
         var jsonParams = [String: Any]()
         jsonParams["name"] = event.rawValue
         jsonParams["parameters"] = params
 
         sendToDebugServer(endpoint: .sendEvent, postData: jsonParams)
+    }
+    
+    public func trim(event: AnalyticsEvent) -> AnalyticsEvent {
+        event
     }
     
     public func set(userProperty: AnalyticsUserProperty, to: String?) {
@@ -96,8 +102,6 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         sendToDebugServer(endpoint: .setUserProperty, postData: jsonParams)
     }
 
-    
-    
     func sendToDebugServer(endpoint: DebugServerEndpoint, postData: [String:Any]){
         let osVersion = ProcessInfo().operatingSystemVersion
         let osVersionString = "\(osVersion.majorVersion).\(osVersion.minorVersion).\(osVersion.patchVersion)"

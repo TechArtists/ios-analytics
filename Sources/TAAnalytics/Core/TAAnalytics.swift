@@ -129,7 +129,6 @@ public class TAAnalytics: ObservableObject {
         return 0
     }
     
-    
     public func stringFromUserDefaults(forKey key: String) -> String? {
         return self.config.userDefaults.string(forKey: "\(Self.userdefaultsKeyPrefix)_\(key)")
     }

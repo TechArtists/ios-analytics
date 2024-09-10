@@ -35,7 +35,7 @@ public extension AnalyticsEvent {
 
 public extension AnalyticsUserProperty {
     static let ANALYTICS_VERSION = AnalyticsUserProperty("analytics_version")
-
+    
     /// The date of the install, in ISO 8601 format (YYYY-MM-DD)
     static let INSTALL_DATE    = AnalyticsUserProperty("install_date")
     /// The version of the app at install time

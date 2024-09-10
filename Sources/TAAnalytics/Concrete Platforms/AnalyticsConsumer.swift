@@ -36,12 +36,15 @@ public protocol AnalyticsConsumer {
     /// - Returns: `true` if it has been started, `false` otherwise
     func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool
         
-    
-    /// Log the specific event
-    func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?)
-     
-    /// Set the user property
-    func set(userProperty: AnalyticsUserProperty, to: String?)
+/// Log event, enforces trimming before calling the consumer-specific implementation.
+   func log(trimmedEvent: TrimmedEvent, params: [String: AnalyticsBaseParameterValue]?)
+
+   /// Set user property
+   func set(userProperty: AnalyticsUserProperty, to: String?)
+
+   /// Consumers should implement this to define how they trim the event.
+   func trim(event: AnalyticsEvent) -> AnalyticsEvent
+
 }
 
 

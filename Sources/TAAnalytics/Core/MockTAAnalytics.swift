@@ -86,7 +86,4 @@ public class MockTAAnalyticsPlatform : TAAnalyticsProtocol {
     public var userPseudoID: String? = UUID().uuidString
     
     public var userID: String? = nil
-    
-
-
 }

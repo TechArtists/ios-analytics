@@ -54,9 +54,13 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         return self.config.currentProcessType
     }
     
-    
     public func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]? = nil, logCondition: EventLogCondition = .logAlways) {
-        let logInPlaforms = { self.startedPlatforms.forEach { platform in platform.log(event: event, params: params) } }
+        let logInPlaforms = {
+            self.startedPlatforms.forEach { platform in
+                let trimmedEvent = TrimmedEvent(event, trimAction: platform.trim(event:))
+                platform.log(trimmedEvent: trimmedEvent, params: params)
+            }
+        }
 
         switch logCondition {
         case .logAlways:
@@ -85,4 +89,3 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     }
 
 }
-

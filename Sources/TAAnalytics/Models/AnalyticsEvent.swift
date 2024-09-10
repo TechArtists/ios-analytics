@@ -31,13 +31,20 @@ public final class AnalyticsEvent: Hashable, Equatable, RawRepresentable {
     /// "firebase_", "google_", and "ga_" prefixes are reserved
     /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
     public init(_ rawValue: String){
-        self.rawValue = rawValue.ob_trim(type: "event", toLength: 40)
+        self.rawValue = rawValue
     }
     /// At most 40 alphanumeric characters or underscores
     /// "firebase_", "google_", and "ga_" prefixes are reserved
     /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
     public init?(rawValue: String) {
-        self.rawValue = rawValue.ob_trim(type: "event", toLength: 40)
+        self.rawValue = rawValue
     }
+}
+
+public final class TrimmedEvent {
+    public let event: AnalyticsEvent
     
+    public init(_ event: AnalyticsEvent, trimAction: (AnalyticsEvent) -> AnalyticsEvent) {
+        self.event = trimAction(event)
+    }
 }
