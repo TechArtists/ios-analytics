@@ -1,7 +1,7 @@
 //  TAAnalyticsTests.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import XCTest
 @testable import TAAnalytics
 
 final class TAAnalyticsTests: XCTestCase {
-    let ob = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", platforms: []))
+    let ob = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: []))
         
     func testRelativeAgeForUnder24h() throws {
         let formatter = ISO8601DateFormatter()

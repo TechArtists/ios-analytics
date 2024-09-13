@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		78280D792C8F2F0E008888AD /* TAAnalyticsExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78280D782C8F2F0E008888AD /* TAAnalyticsExampleApp.swift */; };
-		78280D7B2C8F2F0E008888AD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78280D7A2C8F2F0E008888AD /* ContentView.swift */; };
 		78280D7D2C8F2F0F008888AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78280D7C2C8F2F0F008888AD /* Assets.xcassets */; };
 		78280D812C8F2F0F008888AD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78280D802C8F2F0F008888AD /* Preview Assets.xcassets */; };
 		78280D8B2C8F2F10008888AD /* TAAnalyticsExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78280D8A2C8F2F10008888AD /* TAAnalyticsExampleTests.swift */; };
@@ -49,7 +48,6 @@
 /* Begin PBXFileReference section */
 		78280D752C8F2F0E008888AD /* TAAnalyticsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TAAnalyticsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78280D782C8F2F0E008888AD /* TAAnalyticsExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAAnalyticsExampleApp.swift; sourceTree = "<group>"; };
-		78280D7A2C8F2F0E008888AD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		78280D7C2C8F2F0F008888AD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		78280D7E2C8F2F0F008888AD /* TAAnalyticsExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TAAnalyticsExample.entitlements; sourceTree = "<group>"; };
 		78280D802C8F2F0F008888AD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -126,11 +124,10 @@
 				78280DE72C8F32FA008888AD /* MyCallManager.swift */,
 				78280DDF2C8F32B2008888AD /* Views */,
 				78280D782C8F2F0E008888AD /* TAAnalyticsExampleApp.swift */,
-				78280D7A2C8F2F0E008888AD /* ContentView.swift */,
+				78280DD72C8F31CA008888AD /* Contacts.swift */,
 				78280D7C2C8F2F0F008888AD /* Assets.xcassets */,
 				78280D7E2C8F2F0F008888AD /* TAAnalyticsExample.entitlements */,
 				78280D7F2C8F2F0F008888AD /* Preview Content */,
-				78280DD72C8F31CA008888AD /* Contacts.swift */,
 			);
 			path = TAAnalyticsExample;
 			sourceTree = "<group>";
@@ -328,7 +325,6 @@
 				78280DE02C8F32B2008888AD /* ContactDetailView.swift in Sources */,
 				78280DE32C8F32B2008888AD /* ContactsListView.swift in Sources */,
 				78280DE22C8F32B2008888AD /* ContactsListRowView.swift in Sources */,
-				78280D7B2C8F2F0E008888AD /* ContentView.swift in Sources */,
 				78280DE52C8F32B2008888AD /* NavigationLinkWithTap.swift in Sources */,
 				78280D792C8F2F0E008888AD /* TAAnalyticsExampleApp.swift in Sources */,
 				78280DE42C8F32B2008888AD /* CreateAccountView.swift in Sources */,
@@ -498,6 +494,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "\"Allow contacts acces\"";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -536,6 +533,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSContactsUsageDescription = "\"Allow contacts acces\"";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

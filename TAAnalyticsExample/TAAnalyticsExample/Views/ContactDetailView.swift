@@ -1,7 +1,7 @@
 //  ContactDetailView.swift
 //  Created by Adi on 10/26/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +69,7 @@ struct ContactDetailView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
         }.onAppear() {
-            analytics.log(viewShown: analyticsView)
+            analytics.track(viewShown: analyticsView)
         }
     }
     
@@ -78,7 +78,7 @@ struct ContactDetailView: View {
             Text("\(label.capitalized):")
             Spacer()
             Button(phoneNumber) {
-                analytics.log(buttonTapped: "call", onView: analyticsView)
+                analytics.track(buttonTapped: "call", onView: analyticsView)
                 MyCallManager(analytics: analytics).callIfAtLeastFourDigits(phoneNumber: phoneNumber)
             }
         }

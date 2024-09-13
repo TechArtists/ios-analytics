@@ -1,7 +1,7 @@
 //  AnalyticsUserProperty.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,38 @@
 
 import Foundation
 
+public final class AnalyticsInstallUserProperty: Hashable, Equatable, RawRepresentable {
+   public let rawValue: String
+   
+   public init(_ rawValue: String){
+       self.rawValue = rawValue
+   }
+   
+   public init?(rawValue: String){
+       self.rawValue = rawValue
+   }
+}
 
 public final class AnalyticsUserProperty : Hashable, Equatable, RawRepresentable {
+   
     public let rawValue: String
     
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
     public init(_ rawValue: String){
-        self.rawValue = rawValue.ob_trim(type: "user property", toLength: 24)
+        self.rawValue = rawValue
     }
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
     public init?(rawValue: String){
-        self.rawValue = rawValue.ob_trim(type: "user property", toLength: 24)
+        self.rawValue = rawValue
     }
 }
 
-
+public final class TrimmedUserProperty {
+    public let userProperty: AnalyticsUserProperty
+    
+    public init(_ rawValue: String){
+        self.userProperty = AnalyticsUserProperty(rawValue)
+    }
+}

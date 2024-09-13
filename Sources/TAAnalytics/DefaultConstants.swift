@@ -1,7 +1,7 @@
 //  DefaultConstants.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,11 @@ public extension AnalyticsEvent {
 
 public extension AnalyticsUserProperty {
     static let ANALYTICS_VERSION = AnalyticsUserProperty("analytics_version")
+    
+    static let APP_VERSION = AnalyticsUserProperty("app_version")
+    static let DEVICE_LANGUAGE = AnalyticsUserProperty("device_language")
+    static let INSTALL_DEVICE_LANGUAGE = AnalyticsInstallUserProperty("device_language")
+    static let INSTALL_DEVICE_LANGUAGE2 = AnalyticsInstallUserProperty("install_device_language")
     
     /// The date of the install, in ISO 8601 format (YYYY-MM-DD)
     static let INSTALL_DATE    = AnalyticsUserProperty("install_date")

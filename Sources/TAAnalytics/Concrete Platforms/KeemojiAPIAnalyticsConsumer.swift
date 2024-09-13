@@ -1,7 +1,7 @@
 //  KeemojiAPIAnalyticsConsumer.swift
 //  Created by Adi on 11/9/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,17 @@ import Foundation
 import UIKit
 import OSLog
 
-// TODO: No !
-
-//extension AnalyticsConsumer {
-//    public static let keemojiAPI = KeemojiAPIAnalyticsConsumer()
-//}
-
 public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnlyUserID {
+    
+    public typealias T = KeemojiAPIAnalyticsConsumer
+
     var debugServerGlobalCounter: Int = 0
     var debugServerFailedURLRequests = [(URLRequest, String?)]()
 
     weak var userDefaults: UserDefaults? = nil
     weak var TAAnalytics: TAAnalytics? = nil
+    
+    public init() {}
     
     lazy var userIDForInstance: String = {
         if let userID = self.TAAnalytics?.userID {
@@ -77,11 +76,17 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         sendToDebugServer(endpoint: .sendEvent, postData: jsonParams)
     }
     
-    public func trim(event: AnalyticsEvent) -> AnalyticsEvent {
-        event
+    public func trim(event: AnalyticsEvent) -> TrimmedEvent {
+        TrimmedEvent(event.rawValue.ob_trim(type: "event", toLength: 40))
     }
     
-    public func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func trim(userProperty: AnalyticsUserProperty) -> TrimmedUserProperty {
+        TrimmedUserProperty(userProperty.rawValue.ob_trim(type: "user property", toLength: 24))
+    }
+    
+    public func set(trimmedUserProperty: TrimmedUserProperty, to: String?) {
+        let userProperty = trimmedUserProperty.userProperty
+        
         var jsonParams = [String: Any]()
         jsonParams["name"] = userProperty.rawValue
         jsonParams["value"] = to
@@ -89,8 +94,12 @@ public class KeemojiAPIAnalyticsConsumer: AnalyticsConsumer, AnalyticsConsumerWi
         sendToDebugServer(endpoint: .setUserProperty, postData: jsonParams)
     }
     
-    public func set(usertID: String?) {
-        sendUserIDToDebugServer(userID: usertID)
+    public func set(userID: String?) {
+        sendUserIDToDebugServer(userID: userID)
+    }
+    
+    public var wrappedValue: Self {
+        self
     }
     
     // MARK: Server stuff

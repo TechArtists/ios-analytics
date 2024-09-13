@@ -1,7 +1,7 @@
 //  MyCallManager.swift
 //  Created by Adi on 10/26/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ class MyCallManager {
     func callIfAtLeastFourDigits(phoneNumber: String) {
         if phoneNumber.count >= 4 {
             // send only the last 4 digits for analytics purposes while preserving PII
-            analytics.log(event: .CALL_PLACED, params: ["phone_number_suffix": String(phoneNumber.suffix(4))], logCondition: .logAlways)
+            analytics.track(event: .CALL_PLACED, params: ["phone_number_suffix": String(phoneNumber.suffix(4))], logCondition: .logAlways)
 
             // actually place the call somehow
             // Carrier.placeCall(phoneNumber)

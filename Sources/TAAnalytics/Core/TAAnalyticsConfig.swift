@@ -1,7 +1,7 @@
 //  TAAnalyticsConfig.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ public struct TAAnalyticsConfig {
     }
     
     let analyticsVersion: String
-    let platforms: [any AnalyticsConsumer]
+    public let consumers: [any AnalyticsConsumer]
     let currentProcessType: ProcessType
     let enabledProcessTypes: [ProcessType]
     let currentInstallType: InstallType
@@ -54,19 +54,19 @@ public struct TAAnalyticsConfig {
     ///
     /// - Parameters:
     ///   - analyticsVersion: Separate user property that tracks the version of the analytics events. Ideally, when you'd add/modify an event, this version would also be changed and communicated to the BI team, so that they know to only look for that specific event from analyticsVersion x.
-    ///   - platforms: analytics platforms to use
+    ///   - consumers: analytics consumers to use
     ///   - currentProcessType: defaults to `findProcessType()`
     ///   - enabledProcessTypes: what process types should have logging enabled. Defaults to `ProcessType.allCases`
     ///   - userDefaults: defaults to `UserDefaults.standard`
     public init(analyticsVersion: String,
-                platforms: [any AnalyticsConsumer],
+                consumers: [any AnalyticsConsumer],
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
                 instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE]
     ) {
         self.analyticsVersion = analyticsVersion
-        self.platforms = platforms
+        self.consumers = consumers
         self.currentProcessType = currentProcessType
         self.enabledProcessTypes = enabledProcessTypes
         self.userDefaults = userDefaults

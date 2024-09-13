@@ -1,7 +1,7 @@
 //  File.swift
 //  Created by Adi on 11/17/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,18 @@
 import Foundation
 import UIKit
 
-extension TAAnalytics {
+public protocol TAAnalyticsAppNotificationsProtocol {
+    /// Adds observers for app lifecycle events to log analytics and update user properties.
+    /// Call during app setup to track lifecycle transitions.
+    func addAppLifecycleObservers()
+}
+
+extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
-    func addAppLifecycleObservers() {
+    /// - Observers:
+    ///   - **Foreground**: Increments `FOREGROUND_ID` and logs `.APP_FOREGROUND` (skips increment on first event).
+    ///   - **Background**: Logs `.APP_BACKGROUND`.
+    public func addAppLifecycleObservers() {
         
         let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { notification in
 
@@ -39,16 +48,14 @@ extension TAAnalytics {
                          to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_ID))")
             }
             
-            self.log(event: .APP_FOREGROUND)
+            self.track(event: .APP_FOREGROUND)
         }
         let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { notification in
             
-            self.log(event: .APP_BACKGROUND)
+            self.track(event: .APP_BACKGROUND)
         }
         
         notificationCenterObservers.append(obsForeground)
         notificationCenterObservers.append(obsBackground)
     }
-    
-    
 }

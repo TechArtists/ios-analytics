@@ -2,7 +2,7 @@
 //
 //  Created by Adi on 10/24/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,11 @@ import OSLog
 /// Logs to OSLog. `OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")`
 public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     
+    public typealias T = OSLogAnalyticsConsumer
+    
     private let logger : OSLog
     
-    init() {
+    public init() {
         self.logger = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")
     }
     
@@ -50,8 +52,16 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, event.rawValue, String(describingOptional: paramsString))
     }
     
-    public func trim(event: AnalyticsEvent) -> AnalyticsEvent {
-        .init(event.rawValue.ob_trim(type: "event", toLength: 40))
+    public func trim(event: AnalyticsEvent) -> TrimmedEvent {
+        TrimmedEvent(event.rawValue.ob_trim(type: "event", toLength: 40))
+    }
+    
+    public func trim(userProperty: AnalyticsUserProperty) -> TrimmedUserProperty {
+        TrimmedUserProperty(userProperty.rawValue.ob_trim(type: "user property", toLength: 24))
+    }
+    
+    public var wrappedValue: Self {
+        self
     }
         
     /// Returns a debug string for a send(event:params:) function call. Note that all the information inside this debug string is not redacted for privacy,
@@ -69,7 +79,9 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return "sendEvent: '\(event.rawValue)', params: [\(String(describingOptional: paramsString))]"
     }
 
-    public func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func set(trimmedUserProperty: TrimmedUserProperty, to: String?) {
+        let userProperty = trimmedUserProperty.userProperty
+        
         os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, userProperty.rawValue, String(describingOptional: to))
     }
     
