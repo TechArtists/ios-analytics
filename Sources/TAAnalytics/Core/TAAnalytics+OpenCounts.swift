@@ -1,7 +1,7 @@
 //  TAAnalytics+OpenCounts.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -115,7 +115,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String: AnalyticsBaseParameterValue]?) -> Bool {
         if config.currentProcessType == .app && isFirstOpen {
             let params = paramsCallback()
-            log(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
+            track(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
             return true
         }
         return false

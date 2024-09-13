@@ -1,7 +1,7 @@
 //  TAAnalytics+UI.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///
     /// - Parameters:
     ///   - viewShown: the view that was just shown
-    func log(viewShown: AnalyticsView)
+    func track(viewShown: AnalyticsView)
     
     /// Sends an `ui_button_tapped` event.
     ///
@@ -58,14 +58,14 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///   - view: the view the button has been shown on
     ///   - extra: any extra information that should be attached (e.g. Maybe once users "Subscribe", you want to also know the subscription plan they are subscribing to. That plan id, can go into `extra`)
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
-    func log(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
+    func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
 }
 
 // MARK: - Default Implementations
 
 public extension TAAnalyticsUIProtocol{
     
-    func log(viewShown: AnalyticsView) {
+    func track(viewShown: AnalyticsView) {
         var params = [String: AnalyticsBaseParameterValue]()
         params["view_name"] = viewShown.name
         if let type = viewShown.type {
@@ -77,10 +77,10 @@ public extension TAAnalyticsUIProtocol{
                 params["parent_view_type"] = type
             }
         }
-        log(event: .UI_VIEW_SHOWN, params: params, logCondition: .logAlways)
+        track(event: .UI_VIEW_SHOWN, params: params, logCondition: .logAlways)
     }
     
-    func log(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
+    func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
         var params = [String: AnalyticsBaseParameterValue]()
         params["name"] = symbolicName
         params["view_name"] = view.name
@@ -99,7 +99,7 @@ public extension TAAnalyticsUIProtocol{
         if let extra = extra {
             params["extra"] = extra
         }
-        log(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
+        track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
     }
 }
 

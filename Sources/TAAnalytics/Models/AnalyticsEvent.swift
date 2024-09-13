@@ -1,7 +1,7 @@
 //  AnalyticsEvent.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 //  THE SOFTWARE.
 
 import Foundation
-
 
 public final class AnalyticsEvent: Hashable, Equatable, RawRepresentable {
     public let rawValue: String
@@ -46,5 +45,9 @@ public final class TrimmedEvent {
     
     public init(_ event: AnalyticsEvent, trimAction: (AnalyticsEvent) -> AnalyticsEvent) {
         self.event = trimAction(event)
+    }
+    
+    public init(_ rawValue: String) {
+        self.event = AnalyticsEvent(rawValue)
     }
 }

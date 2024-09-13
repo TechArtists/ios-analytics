@@ -1,7 +1,7 @@
 //  TAAnalytics+Base.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,16 +31,16 @@ public protocol TAAnalyticsBaseProtocol {
     
     var currentProcessType: TAAnalyticsConfig.ProcessType { get }
     
-    func start(beforeLoggingFirstOpenCompletion: (() -> ())?,
+    func start(customInstallUserPropertiesCompletion: (() -> ())?,
                       shouldLogFirstOpen: Bool,
-                      firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)?)
+                      firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)?) async
     
     ///
     /// - Parameters:
     ///   - event:
     ///   - params:
     ///   - logCondition: if the event should be logged for each ocurrence. Note that this only applies on a per `AnalyticsEvent` level, parameters are not included
-    func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?, logCondition: EventLogCondition)
+    func track(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?, logCondition: EventLogCondition)
     
     func set(userProperty: AnalyticsUserProperty, to: String?)
     
@@ -50,29 +50,35 @@ public protocol TAAnalyticsBaseProtocol {
 // MARK: -
 
 extension TAAnalytics: TAAnalyticsBaseProtocol {
+    
     public var currentProcessType: TAAnalyticsConfig.ProcessType {
         return self.config.currentProcessType
     }
     
-    public func log(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]? = nil, logCondition: EventLogCondition = .logAlways) {
-        let logInPlaforms = {
-            self.startedPlatforms.forEach { platform in
-                let trimmedEvent = TrimmedEvent(event, trimAction: platform.trim(event:))
-                platform.log(trimmedEvent: trimmedEvent, params: params)
+    //TODO: If the consumers are not started keep tracked events in a queue for when are ready
+    // In flush function add late arrived event as a parameter -> delta not specific time stamp
+    public func track(
+        event: AnalyticsEvent,
+        params: [String: AnalyticsBaseParameterValue]? = nil,
+        logCondition: EventLogCondition = .logAlways
+    ) {
+        let logInConsumers = {
+            self.startedConsumers.forEach { consumer in
+                consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
             }
         }
 
         switch logCondition {
         case .logAlways:
-            logInPlaforms()
+            logInConsumers()
         case .logOnlyOncePerLifetime:
             if self.boolFromUserDefaults(forKey: "onlyOnce_\(event.rawValue)") == false {
-                logInPlaforms()
+                logInConsumers()
                 self.setInUserDefaults(true, forKey: "onlyOnce_\(event.rawValue)")
             }
         case .logOnlyOncePerAppSession:
             if !self.appSessionEvents.contains(event) {
-                logInPlaforms()
+                logInConsumers()
                 appSessionEvents.insert(event)
             }
         }
@@ -81,7 +87,9 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     
     public func set(userProperty: AnalyticsUserProperty, to: String?) {
         self.setInUserDefaults(to, forKey: "userProperty_\(userProperty.rawValue)")
-        self.startedPlatforms.forEach { platform in platform.set(userProperty: userProperty, to: to) }
+        self.startedConsumers.forEach { consumer in
+            consumer.set(trimmedUserProperty: consumer.trim(userProperty: userProperty), to: to)
+        }
     }
 
     public func get(userProperty: AnalyticsUserProperty) -> String? {

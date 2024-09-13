@@ -1,7 +1,7 @@
 //  AppDelegate.swift
 //  Created by Adi on 10/25/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -56,15 +56,19 @@ extension AnalyticsView {
         
         UITableView.appearance().backgroundColor = UIColor.clear
 
-        let config = TAAnalyticsConfig(analyticsVersion: "1.0"
-                                             , platforms: [/* OSLogAnalyticsConsumer(),*/
-//                                                           .keemojiAPI
-                                             ])
+        let config = TAAnalyticsConfig(analyticsVersion: "1.0",
+                                       consumers: [
+                                                OSLogAnalyticsConsumer(),
+                                                EventEmitterConsumer()
+                                       ]
+                                    )
         analytics = TAAnalytics(config: config)
-        analytics.start(beforeLoggingFirstOpenCompletion: {
-            self.analytics.set(userProperty: .INSTALL_ORIENTATION, to: UIDevice.current.orientation.rawValue.description)
-        })
-                        
+        Task {
+            await analytics.start(customInstallUserPropertiesCompletion: {
+                self.analytics.set(userProperty: .INSTALL_ORIENTATION, to: UIDevice.current.orientation.rawValue.description)
+            })
+        }
+        
         // the `ob_first_open` event that will be sent will have the "install_orientation" user property already set, before being set
 
         // TODO: also send an event

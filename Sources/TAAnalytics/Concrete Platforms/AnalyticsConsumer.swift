@@ -1,7 +1,7 @@
 //  AnalyticsConsumer.swift
 //  Created by Adi on 10/24/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,32 +26,38 @@
 import Foundation
 
 /// `AnalyticsConsumer` is a protocol that defines methods for starting an analytics consumer, logging events, and setting user properties.
-/// Classes that conform to this protocol will handle these operations for different analytics platforms.
-public protocol AnalyticsConsumer {
+/// Classes that conform to this protocol will handle these operations for different analytics consumers.
+public protocol AnalyticsConsumer<T> where T: AnyObject {
+    
+    associatedtype T
+    
     /// Starts the consumer if it can for the required
     /// - Parameters:
     ///   - installType: installType
     ///   - userDefaults: user defaults to use
     ///   - TAAnalytics: if you do keep a reference to it, keep it `weak` and use it **after** this function has been called (to ensure that it was properly initialized)
     /// - Returns: `true` if it has been started, `false` otherwise
-    func maybeStartFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) -> Bool
+    func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws
         
-/// Log event, enforces trimming before calling the consumer-specific implementation.
-   func log(trimmedEvent: TrimmedEvent, params: [String: AnalyticsBaseParameterValue]?)
+    /// Log event, enforces trimming before calling the consumer-specific implementation.
+    func track(trimmedEvent: TrimmedEvent, params: [String: AnalyticsBaseParameterValue]?)
 
-   /// Set user property
-   func set(userProperty: AnalyticsUserProperty, to: String?)
+    /// Set user property
+    func set(trimmedUserProperty: TrimmedUserProperty, to: String?)
 
-   /// Consumers should implement this to define how they trim the event.
-   func trim(event: AnalyticsEvent) -> AnalyticsEvent
-
+    /// Consumers should implement this to define how they trim the event.
+    func trim(event: AnalyticsEvent) -> TrimmedEvent
+    
+    func trim(userProperty: AnalyticsUserProperty) -> TrimmedUserProperty
+    
+    var wrappedValue: T { get }
 }
 
 
 /// If the consumer also support a user ID, though only setting it (e.g. Crashlytics)
 public protocol AnalyticsConsumerWithWriteOnlyUserID: AnyObject {
     /// Swift forces us to also define a getter, but it will never be called for this protocol
-    func set(usertID: String?)
+    func set(userID: String?)
 }
 
 /// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
@@ -61,6 +67,6 @@ public protocol AnalyticsConsumerWithReadWriteUserID: AnalyticsConsumerWithWrite
 
 /// Some Analytics Consumers can also support a user pseudo ID (Firebase, mostly)
 public protocol AnalyticsConsumerWithReadOnlyUserPseudoID: AnyObject {
-    func set(usertID: String?)
+    func set(userID: String?)
     func getUserID() -> String?
 }

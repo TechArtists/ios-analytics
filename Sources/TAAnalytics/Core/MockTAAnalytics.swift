@@ -2,7 +2,7 @@
 //
 //  Created by Adi on 10/25/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,40 +24,40 @@
 //
 
 import Foundation
+import UIKit
 
 /// Very basic implementation of `OvebaseAnalyticsProtocol` that can be used in unit tests:
 ///
-///     let mockAnalytics = MockTAAnalyticsPlatform()
+///     let mockAnalytics = MockTAAnalytics()
 ///     let foo = Foo(analytics: mockAnalytics)
 ///     foo.doStuff()
 ///
 ///     XCTAssertEqual(foo.stuffItDid, 42)
 ///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, AnalyticsEvent.EVENT_I_EXPECTED)
-public class MockTAAnalyticsPlatform : TAAnalyticsProtocol {
+public class MockTAAnalytics : TAAnalyticsProtocol {
     
     public var eventsSent = [(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue])]()
     public var userPropertiesSet = [AnalyticsUserProperty: String]()
     
-    public init() {
-    }
+    public init() {}
     
     public var currentProcessType: TAAnalyticsConfig.ProcessType {
         return .app
     }
 
-    public func start(beforeLoggingFirstOpenCompletion: (() -> ())? = nil,
+    public func start(customInstallUserPropertiesCompletion: (() -> ())? = nil,
                       shouldLogFirstOpen: Bool = true,
                       firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)? = nil ) {
         Self.staticLoadCount += 1
         
-        beforeLoggingFirstOpenCompletion?()
+        customInstallUserPropertiesCompletion?()
         if shouldLogFirstOpen {
             let params = firstOpenParameterCallback?()
             self.maybeLogTAFirstOpen(paramsCallback: { return params })
         }
     }
 
-    public func log(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?, logCondition: EventLogCondition) {
+    public func track(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]? = nil, logCondition: EventLogCondition = .logAlways) {
         eventsSent.append((event, params ?? [:]))
     }
         
@@ -79,11 +79,15 @@ public class MockTAAnalyticsPlatform : TAAnalyticsProtocol {
     
     @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : AnalyticsBaseParameterValue]?) -> Bool {
         let params = paramsCallback()
-        log(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
+        track(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
         return true
     }
     
     public var userPseudoID: String? = UUID().uuidString
     
     public var userID: String? = nil
+    
+    public func addAppLifecycleObservers() {
+        
+    }
 }

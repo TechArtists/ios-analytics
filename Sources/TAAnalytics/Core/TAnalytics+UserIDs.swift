@@ -1,7 +1,7 @@
 //  TAAnalytics+UserIDs.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,17 +35,17 @@ public protocol TAAnalyticsUserIDsProtocol {
 extension TAAnalytics: TAAnalyticsUserIDsProtocol {
     
     public var userPseudoID: String? {
-        return (self.startedPlatforms.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
+        return (self.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
     }
 
     public var userID: String? {
         get {
-            return (self.startedPlatforms.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
+            return (self.startedConsumers.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
         }
         set {
-            self.startedPlatforms
+            self.startedConsumers
                 .compactMap { $0 as? AnalyticsConsumerWithWriteOnlyUserID }
-                .forEach { $0.set(usertID: newValue) }
+                .forEach { $0.set(userID: newValue) }
         }
     }
     

@@ -1,7 +1,7 @@
 //  TAAnalytics+Permissions.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -44,17 +44,17 @@ extension TAAnalyticsPermissionProtocol {
     
     public func logPermissionScreenShown(for permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        log(viewShown: view)
+        track(viewShown: view)
     }
 
     public func logPermissionButtonTapped(allowed: Bool, permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        log(buttonTapped: allowed ? "allow" : "dont allow", onView: view)
+        track(buttonTapped: allowed ? "allow" : "dont allow", onView: view)
     }
 
     public func logPermissionButtonTapped(status: String, permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        log(buttonTapped: status, onView: view)
+        track(buttonTapped: status, onView: view)
     }
 
 }

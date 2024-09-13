@@ -1,7 +1,7 @@
 //  TAAnalyticsTests.swift
 //  Created by Adi on 10/24/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import XCTest
 @testable import TAAnalytics
 
 final class TAAnalyticsTests: XCTestCase {
-    let ob = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", platforms: []))
+    let ob = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: []))
         
     func testRelativeAgeForUnder24h() throws {
         let formatter = ISO8601DateFormatter()
@@ -33,13 +33,12 @@ final class TAAnalyticsTests: XCTestCase {
         let endDate1  = formatter.date(from: "2022-01-01T21:59:59Z")!
         let endDate2  = formatter.date(from: "2022-01-02T00:01:59Z")!
         let endDate3  = formatter.date(from: "2022-01-02T20:59:58Z")!
-
         
         XCTAssertEqual(0,ob.relativeAgeBetween(startDate: startDate, endDate: endDate1))
         XCTAssertEqual(0,ob.relativeAgeBetween(startDate: startDate, endDate: endDate2))
         XCTAssertEqual(0,ob.relativeAgeBetween(startDate: startDate, endDate: endDate3))
     }
-    
+
     func testRelativeAgeForOver24h() throws {
         let formatter = ISO8601DateFormatter()
         

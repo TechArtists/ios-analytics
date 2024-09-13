@@ -1,7 +1,7 @@
 //  TAAnalytics+Error.swift
 //  Created by Adi on 10/25/22
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +69,7 @@ public extension TAAnalyticsErrorProtocol {
             params["description"] = nserror.localizedDescription
         }
         extraParams?.forEach({ key, value in params[key] = value })
-        log(event: AnalyticsEvent("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
+        track(event: AnalyticsEvent("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
     }
 }
 

@@ -2,7 +2,7 @@
 //
 //  Created by Adi on 10/25/22.
 //
-//  Copyright (c) 2022 Tecj Artists Agenyc SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -68,7 +68,7 @@ struct ContactsListView: View {
                     Text("Please allow contacts permission for the app to work 🙏.")
                         .multilineTextAlignment(.center)
                     Button("Request Contact Permission") {
-                        analytics.log(buttonTapped: "request contacts permission", onView: analyticsView)
+                        analytics.track(buttonTapped: "request contacts permission", onView: analyticsView)
                         contactsPermission.requestAccess(analytics: analytics)
                     }
                     Spacer()
@@ -78,7 +78,7 @@ struct ContactsListView: View {
                     noPermissionHeaderView
                     Text("Please allow contacts permission from the settings")
                     Button("Open Settings") {
-                        analytics.log(buttonTapped: "open settings", onView: analyticsView)
+                        analytics.track(buttonTapped: "open settings", onView: analyticsView)
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     }
                     Spacer()
@@ -90,7 +90,7 @@ struct ContactsListView: View {
                             contact in
                             NavigationLinkWithTap(
                                 tapHandler: {
-                                    analytics.log(buttonTapped: "contact", onView: analyticsView)
+                                    analytics.track(buttonTapped: "contact", onView: analyticsView)
                                 },
                                 destination: ContactDetailView(contact: contact))
                             {
@@ -106,16 +106,9 @@ struct ContactsListView: View {
         }
         .navigationTitle(Text("Contacts"))
         .onAppear() {
-            analytics.log(viewShown: analyticsView)
+            analytics.track(viewShown: analyticsView)
             contactsPermission.fetchContacts()
         }
 
-    }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContactsListView()
     }
 }
