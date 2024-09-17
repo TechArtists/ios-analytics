@@ -36,7 +36,7 @@ extension String {
         }
     }
     
-    func ob_trim(type: String, toLength length: Int) -> String {
+    public func ob_trim(type: String, toLength length: Int) -> String {
         if self.count > length {
             let trimmedString = String(self.prefix(length))
             os_log("Trimming %{public}@ to length %ld ('%{public}@' -> '%{public}@'",

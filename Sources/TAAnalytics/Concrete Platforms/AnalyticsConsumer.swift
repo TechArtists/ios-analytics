@@ -61,12 +61,12 @@ public protocol AnalyticsConsumerWithWriteOnlyUserID: AnyObject {
 }
 
 /// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
-public protocol AnalyticsConsumerWithReadWriteUserID: AnalyticsConsumerWithWriteOnlyUserID {
+public protocol AnalyticsConsumerWithReadOnlyUserPseudoID {
     func getUserID() -> String?
 }
 
 /// Some Analytics Consumers can also support a user pseudo ID (Firebase, mostly)
-public protocol AnalyticsConsumerWithReadOnlyUserPseudoID: AnyObject {
+public protocol AnalyticsConsumerWithReadWriteUserID: AnyObject {
     func set(userID: String?)
     func getUserID() -> String?
 }
