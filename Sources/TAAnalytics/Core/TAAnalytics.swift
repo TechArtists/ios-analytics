@@ -30,12 +30,6 @@ import OSLog
 
 internal let LOGGER = OSLog(subsystem: "TA", category: "TAAnalytics")
 
-class TAAnalyticsNotObservable {
-
-//    internal(set) public static var shared : AnalyticsProtocol!
-//    internal init(state: AnalyticsState, isApp: Bool, userDefaults: UserDefaults) {}
-}
-
 #else
 import UIKit
 import OSLog
@@ -51,7 +45,30 @@ public class TAAnalytics: ObservableObject {
     internal var notificationCenterObservers = [Any]()
     internal var isFirstForeground = true
     
-    internal var startedConsumers = [any AnalyticsConsumer]()
+    internal var startedConsumers = [any AnalyticsConsumer]() {
+        didSet {
+            guard let lastConsumer = startedConsumers.last else { return }
+
+            flushDeferedEventQueue()
+        }
+    }
+    
+    func flushDeferedEventQueue() {
+        startedConsumers.forEach { consumer in
+            differedEventQueue.remove(where: { differedEvent in
+                type(of: differedEvent.consumer) == type(of: consumer)
+            }) {[weak self] differedEvent in
+                var params = differedEvent.parameters ?? [:]
+                params["timeDelta"] = Date().timeIntervalSince(differedEvent.dateAdded)
+                self?.track(
+                    event: differedEvent.event,
+                    params: params
+                )
+            }
+        }
+    }
+    
+    internal var differedEventQueue = Queue<DifferedQueuedEvent>()
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<AnalyticsEvent>()
@@ -76,6 +93,8 @@ public class TAAnalytics: ObservableObject {
         configureUserProperties()
         
         incrementLoadCount()
+        
+        sendAppVersionEventUpdatedIfNeeded()
 
         if isFirstOpen {
             handleFirstOpen(
@@ -100,15 +119,22 @@ public class TAAnalytics: ObservableObject {
 
     //TODO: create a maximum timeout for consumers to start
     private func startConsumers() async {
-        let startedConsumers = await withTaskGroup(of: (any AnalyticsConsumer)?.self) { group in
+         let startedConsumers = await withTaskGroup(of: (any AnalyticsConsumer)?.self) { group in
             for consumer in config.consumers {
                 group.addTask {
                     do {
-                        try await consumer.startFor(
-                            installType: self.config.currentInstallType,
-                            userDefaults: self.config.userDefaults,
-                            TAAnalytics: self
-                        )
+                        try await withThrowingTimeout(seconds: 5) {
+                            if consumer is EventEmitterConsumer {
+                                try await Task.sleep(seconds: 10)
+                            }
+                            
+                            try await consumer.startFor(
+                                installType: self.config.currentInstallType,
+                                userDefaults: self.config.userDefaults,
+                                TAAnalytics: self
+                            )
+                        }
+                        
                         os_log("Consumer: '%{public}@' has been started", log: LOGGER, type: .info, String(describing: consumer))
                         return consumer
                     } catch {
@@ -124,15 +150,33 @@ public class TAAnalytics: ObservableObject {
                     }
                 }
             }
-            
-            return await group.reduce(into: [any AnalyticsConsumer]()) { partialResult, consumer in
-                if let consumer = consumer {
-                    partialResult.append(consumer)
-                }
-            }
+
+             return await group.compactMap{ $0 }.reduce(into: []) { $0.append($1) }
         }
         
         self.startedConsumers = startedConsumers
+    }
+    
+    //Build number de adaugat -> from build - to build
+    private func sendAppVersionEventUpdatedIfNeeded() {
+        guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return
+        }
+        
+        if let defaultsAppVersion = stringFromUserDefaults(forKey: "appVersion") {
+            if defaultsAppVersion != appVersion {
+                setInUserDefaults(appVersion, forKey: "appVersion")
+                track(
+                    event: .APP_UPDATE,
+                    params: [
+                        "from version": defaultsAppVersion,
+                        "to version": appVersion
+                    ]
+                )
+            }
+        } else {
+            setInUserDefaults(appVersion, forKey: "appVersion")
+        }
     }
 
     private func configureUserProperties() {

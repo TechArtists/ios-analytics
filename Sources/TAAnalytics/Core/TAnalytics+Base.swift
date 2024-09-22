@@ -62,9 +62,23 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         params: [String: AnalyticsBaseParameterValue]? = nil,
         logCondition: EventLogCondition = .logAlways
     ) {
-        let logInConsumers = {
-            self.startedConsumers.forEach { consumer in
-                consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
+        let logInConsumers = {[weak self] in
+            guard let self else { return }
+            
+            for consumer in self.startableConsumers {
+                if self.startedConsumers.contains(where: { type(of: $0) == type(of: consumer) }) {
+                    consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
+                    os_log("Consumer: '%{public}@' has has logged event: '%{public}@'", log: LOGGER, type: .info, String(describing: consumer), event.rawValue)
+                } else {
+                    self.differedEventQueue.enqueue(
+                        .init(
+                            event: event,
+                            dateAdded: Date(),
+                            consumer: consumer,
+                            parameters: params
+                        )
+                    )
+                }
             }
         }
 

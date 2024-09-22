@@ -68,6 +68,4 @@ public class AnalyticsView: Hashable, Equatable {
         hasher.combine(parentView)
     }
 
-    
-
 }

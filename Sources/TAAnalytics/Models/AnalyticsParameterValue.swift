@@ -22,7 +22,6 @@
 //  THE SOFTWARE.
 import Foundation
 
-// TODO: Move in Firebase so that anyone can write their own converter
 /// Firebase only accepts Strings & NSNumbers as parameter values
 public protocol AnalyticsPlatformParameterValue {}
 
@@ -40,5 +39,3 @@ extension Int: AnalyticsBaseParameterValue {}
 extension Double: AnalyticsBaseParameterValue {}
 extension Float: AnalyticsBaseParameterValue {}
 extension Bool: AnalyticsBaseParameterValue {}
-
-extension NSNumber: AnalyticsBaseParameterValue {}

@@ -27,7 +27,7 @@ import OSLog
 
 // TechArtists.Agency <- site
 
-enum InstallTypeError: Error {
+public enum InstallTypeError: Error {
     case invalidInstallType
 }
 

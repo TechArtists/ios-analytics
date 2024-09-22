@@ -31,6 +31,8 @@ public extension AnalyticsEvent {
     
     static let APP_FOREGROUND = AnalyticsEvent("app_foreground")
     static let APP_BACKGROUND = AnalyticsEvent("app_background")
+    
+    static let APP_UPDATE = AnalyticsEvent("app_update")
 }
 
 public extension AnalyticsUserProperty {
