@@ -7,10 +7,9 @@
 
 import Foundation
 
-public struct DifferedQueuedEvent {
+public struct DeferedQueuedEvent {
     let event: AnalyticsEvent
     let dateAdded: Date
-    let consumer: any AnalyticsConsumer
     let parameters: [String: AnalyticsBaseParameterValue]?
 }
 

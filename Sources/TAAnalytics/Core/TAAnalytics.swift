@@ -47,28 +47,26 @@ public class TAAnalytics: ObservableObject {
     
     internal var startedConsumers = [any AnalyticsConsumer]() {
         didSet {
-            guard let lastConsumer = startedConsumers.last else { return }
-
             flushDeferedEventQueue()
         }
     }
     
     func flushDeferedEventQueue() {
         startedConsumers.forEach { consumer in
-            differedEventQueue.remove(where: { differedEvent in
-                type(of: differedEvent.consumer) == type(of: consumer)
-            }) {[weak self] differedEvent in
-                var params = differedEvent.parameters ?? [:]
-                params["timeDelta"] = Date().timeIntervalSince(differedEvent.dateAdded)
+            deferedEventQueue.remove(where: { DeferedEvent in
+                true
+            }) {[weak self] DeferedEvent in
+                var params = DeferedEvent.parameters ?? [:]
+                params["timeDelta"] = Date().timeIntervalSince(DeferedEvent.dateAdded)
                 self?.track(
-                    event: differedEvent.event,
+                    event: DeferedEvent.event,
                     params: params
                 )
             }
         }
     }
     
-    internal var differedEventQueue = Queue<DifferedQueuedEvent>()
+    internal var deferedEventQueue = Queue<DeferedQueuedEvent>()
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<AnalyticsEvent>()
@@ -117,7 +115,6 @@ public class TAAnalytics: ObservableObject {
         )
     }
 
-    //TODO: create a maximum timeout for consumers to start
     private func startConsumers() async {
          let startedConsumers = await withTaskGroup(of: (any AnalyticsConsumer)?.self) { group in
             for consumer in config.consumers {
@@ -137,6 +134,15 @@ public class TAAnalytics: ObservableObject {
                         
                         os_log("Consumer: '%{public}@' has been started", log: LOGGER, type: .info, String(describing: consumer))
                         return consumer
+                    } catch is TimeoutError {
+                        os_log(
+                            "Consumer: '%{public}@' did NOT start because maximum start timeout of '%{public}@' seconds was reached",
+                            log: LOGGER,
+                            type: .info,
+                            String(describing: consumer),
+                            String(describing: self.config.maxTimeoutForConsumerStart)
+                        )
+                        return nil
                     } catch {
                         os_log(
                             "Consumer: '%{public}@' did NOT start for this install types: '%{public}@' and threw error: '%{public}@'",
@@ -159,23 +165,46 @@ public class TAAnalytics: ObservableObject {
     
     //Build number de adaugat -> from build - to build
     private func sendAppVersionEventUpdatedIfNeeded() {
-        guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+        guard
+            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+            let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        else {
             return
         }
-        
-        if let defaultsAppVersion = stringFromUserDefaults(forKey: "appVersion") {
-            if defaultsAppVersion != appVersion {
-                setInUserDefaults(appVersion, forKey: "appVersion")
+
+        let defaultsAppVersion = stringFromUserDefaults(forKey: "appVersion")
+        let defaultsBuild = stringFromUserDefaults(forKey: "build")
+
+        // Check and update app version
+        if defaultsAppVersion != appVersion {
+            setInUserDefaults(appVersion, forKey: "appVersion")
+            if let defaultsAppVersion = defaultsAppVersion {
                 track(
                     event: .APP_UPDATE,
                     params: [
                         "from version": defaultsAppVersion,
-                        "to version": appVersion
+                        "to version": appVersion,
+                        "from build": defaultsBuild ?? "",
+                        "to build": build
                     ]
                 )
             }
-        } else {
-            setInUserDefaults(appVersion, forKey: "appVersion")
+        }
+
+        // Check and update build version
+        if defaultsBuild != build {
+            setInUserDefaults(build, forKey: "build")
+            if let defaultsBuild = defaultsBuild {
+                track(
+                    event: .APP_UPDATE,
+                    params: [
+                        "from version": defaultsAppVersion ?? "",
+                        "to version": appVersion,
+                        "from build": defaultsBuild,
+                        "to build": build
+                    ]
+                )
+            }
         }
     }
 

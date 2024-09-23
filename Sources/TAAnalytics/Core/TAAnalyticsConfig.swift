@@ -50,6 +50,7 @@ public struct TAAnalyticsConfig {
     let currentInstallType: InstallType
     let userDefaults: UserDefaults
     let instalUserProperties: [AnalyticsUserProperty]
+    let maxTimeoutForConsumerStart: Int
     
     ///
     /// - Parameters:
@@ -63,7 +64,8 @@ public struct TAAnalyticsConfig {
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
-                instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE]
+                instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
+                maxTimeoutForConsumerStart: Int = 10
     ) {
         self.analyticsVersion = analyticsVersion
         self.consumers = consumers
@@ -72,6 +74,7 @@ public struct TAAnalyticsConfig {
         self.userDefaults = userDefaults
         self.currentInstallType = Self.findInstallType()
         self.instalUserProperties = instalUserProperties
+        self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
     }
     
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix
