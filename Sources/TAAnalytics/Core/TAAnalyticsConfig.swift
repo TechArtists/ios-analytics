@@ -43,14 +43,42 @@ public struct TAAnalyticsConfig {
         case TestFlight
     }
     
-    let analyticsVersion: String
+    public enum EventPrefixStrategy {
+        
+        case allEvents
+        
+        case internalOnly
+    }
+    
+    public struct PrefixConfig {
+        let eventPrefix: String
+        let propertyPrefix: String
+        let eventPrefixingStrategy: EventPrefixStrategy
+        let propertyPrefixingStrategy: EventPrefixStrategy
+        
+        public init(
+            eventPrefix: String = "ta",
+            propertyPrefix: String = "ta",
+            eventPrefixingStrategy: EventPrefixStrategy = .allEvents,
+            propertyPrefixingStrategy: EventPrefixStrategy = .allEvents
+        ) {
+            self.eventPrefix = eventPrefix
+            self.propertyPrefix = propertyPrefix
+            self.eventPrefixingStrategy = eventPrefixingStrategy
+            self.propertyPrefixingStrategy = propertyPrefixingStrategy
+        }
+    }
+    
     public let consumers: [any AnalyticsConsumer]
+    
+    let analyticsVersion: String
     let currentProcessType: ProcessType
     let enabledProcessTypes: [ProcessType]
     let currentInstallType: InstallType
     let userDefaults: UserDefaults
     let instalUserProperties: [AnalyticsUserProperty]
-    let maxTimeoutForConsumerStart: Int
+    let maxTimeoutForConsumerStart: Double
+    let prefixConfig: PrefixConfig
     
     ///
     /// - Parameters:
@@ -65,7 +93,9 @@ public struct TAAnalyticsConfig {
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
                 instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
-                maxTimeoutForConsumerStart: Int = 10
+                maxTimeoutForConsumerStart: Double = 10,
+                prefixConfig: PrefixConfig = .init()
+                
     ) {
         self.analyticsVersion = analyticsVersion
         self.consumers = consumers
@@ -75,6 +105,7 @@ public struct TAAnalyticsConfig {
         self.currentInstallType = Self.findInstallType()
         self.instalUserProperties = instalUserProperties
         self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
+        self.prefixConfig = prefixConfig
     }
     
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix

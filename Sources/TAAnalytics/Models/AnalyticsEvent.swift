@@ -25,18 +25,24 @@ import Foundation
 
 public final class AnalyticsEvent: Hashable, Equatable, RawRepresentable {
     public let rawValue: String
+    let isInternalEvent: Bool
     
-    /// At most 40 alphanumeric characters or underscores
     /// "firebase_", "google_", and "ga_" prefixes are reserved
     /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
     public init(_ rawValue: String){
         self.rawValue = rawValue
+        self.isInternalEvent = false
     }
-    /// At most 40 alphanumeric characters or underscores
     /// "firebase_", "google_", and "ga_" prefixes are reserved
     /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
     public init?(rawValue: String) {
         self.rawValue = rawValue
+        self.isInternalEvent = false
+    }
+    
+    internal init(_ rawValue: String, isInternalEvent: Bool) {
+        self.rawValue = rawValue
+        self.isInternalEvent = isInternalEvent
     }
 }
 

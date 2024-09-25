@@ -25,29 +25,45 @@ import Foundation
 
 public final class AnalyticsInstallUserProperty: Hashable, Equatable, RawRepresentable {
    public let rawValue: String
+    public let isInternalProperty: Bool
    
    public init(_ rawValue: String){
        self.rawValue = rawValue
+       self.isInternalProperty = false
    }
    
    public init?(rawValue: String){
        self.rawValue = rawValue
+       self.isInternalProperty = false
    }
+    
+    internal init(_ rawValue: String, isInternalProperty: Bool) {
+        self.rawValue = rawValue
+        self.isInternalProperty = isInternalProperty
+    }
 }
 
 public final class AnalyticsUserProperty : Hashable, Equatable, RawRepresentable {
    
     public let rawValue: String
+    public let isInternalProperty: Bool
     
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
-    public init(_ rawValue: String){
+    public init(_ rawValue: String) {
         self.rawValue = rawValue
+        self.isInternalProperty = false
     }
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
-    public init?(rawValue: String){
+    public init?(rawValue: String) {
         self.rawValue = rawValue
+        self.isInternalProperty = false
+    }
+    
+    internal init(_ rawValue: String, isInternalProperty: Bool) {
+        self.rawValue = rawValue
+        self.isInternalProperty = isInternalProperty
     }
 }
 

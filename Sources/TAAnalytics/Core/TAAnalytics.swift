@@ -45,28 +45,7 @@ public class TAAnalytics: ObservableObject {
     internal var notificationCenterObservers = [Any]()
     internal var isFirstForeground = true
     
-    internal var startedConsumers = [any AnalyticsConsumer]() {
-        didSet {
-            flushDeferedEventQueue()
-        }
-    }
-    
-    func flushDeferedEventQueue() {
-        startedConsumers.forEach { consumer in
-            deferedEventQueue.remove(where: { DeferedEvent in
-                true
-            }) {[weak self] DeferedEvent in
-                var params = DeferedEvent.parameters ?? [:]
-                params["timeDelta"] = Date().timeIntervalSince(DeferedEvent.dateAdded)
-                self?.track(
-                    event: DeferedEvent.event,
-                    params: params
-                )
-            }
-        }
-    }
-    
-    internal var deferedEventQueue = Queue<DeferedQueuedEvent>()
+    internal var eventQueueBuffer: EventBuffer = .init(allConsumers: [])
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<AnalyticsEvent>()
@@ -93,6 +72,8 @@ public class TAAnalytics: ObservableObject {
         incrementLoadCount()
         
         sendAppVersionEventUpdatedIfNeeded()
+        
+        sendOSUpdateEventIFNeeded()
 
         if isFirstOpen {
             handleFirstOpen(
@@ -114,15 +95,15 @@ public class TAAnalytics: ObservableObject {
                String(describing: config.enabledProcessTypes)
         )
     }
-
+    
     private func startConsumers() async {
          let startedConsumers = await withTaskGroup(of: (any AnalyticsConsumer)?.self) { group in
             for consumer in config.consumers {
                 group.addTask {
                     do {
-                        try await withThrowingTimeout(seconds: 5) {
+                        try await withThrowingTimeout(seconds: self.config.maxTimeoutForConsumerStart) {
                             if consumer is EventEmitterConsumer {
-                                try await Task.sleep(seconds: 10)
+                                try await Task.sleep(seconds: 4)
                             }
                             
                             try await consumer.startFor(
@@ -160,10 +141,9 @@ public class TAAnalytics: ObservableObject {
              return await group.compactMap{ $0 }.reduce(into: []) { $0.append($1) }
         }
         
-        self.startedConsumers = startedConsumers
+        await self.eventQueueBuffer.setupConsumers(with: startedConsumers)
     }
     
-    //Build number de adaugat -> from build - to build
     private func sendAppVersionEventUpdatedIfNeeded() {
         guard
             let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
@@ -191,7 +171,6 @@ public class TAAnalytics: ObservableObject {
             }
         }
 
-        // Check and update build version
         if defaultsBuild != build {
             setInUserDefaults(build, forKey: "build")
             if let defaultsBuild = defaultsBuild {
@@ -202,6 +181,26 @@ public class TAAnalytics: ObservableObject {
                         "to version": appVersion,
                         "from build": defaultsBuild,
                         "to build": build
+                    ]
+                )
+            }
+        }
+    }
+    
+    private func sendOSUpdateEventIFNeeded() {
+        let os = ProcessInfo.processInfo.operatingSystemVersion
+        let osString = "\(os.majorVersion).\(os.minorVersion).\(os.patchVersion)"
+        
+        let defaultsOSVersion = stringFromUserDefaults(forKey: "osVersion")
+        
+        if defaultsOSVersion != osString {
+            setInUserDefaults(osString, forKey: "osVersion")
+            if let defaultsOSVersion {
+                track(
+                    event: .OS_UPDATE,
+                    params: [
+                        "from OS version": defaultsOSVersion,
+                        "to OS version": osString,
                     ]
                 )
             }
@@ -263,46 +262,46 @@ public class TAAnalytics: ObservableObject {
     }
     
     // Helper function to fetch the stored dictionary
-       private func fetchStoredDictionary() -> [String: Any] {
-           if let storedDict = self.config.userDefaults.dictionary(forKey: Self.userdefaultsKeyPrefix) {
-               return storedDict
-           }
-           return [:]
-       }
-       
-       private func saveDictionaryToUserDefaults(_ dict: [String: Any]) {
-           self.config.userDefaults.set(dict, forKey: Self.userdefaultsKeyPrefix)
-       }
-       
-       public func stringFromUserDefaults(forKey key: String) -> String? {
-           let storedDict = fetchStoredDictionary()
-           return storedDict[key] as? String
-       }
-
-       public func boolFromUserDefaults(forKey key: String) -> Bool? {
-           let storedDict = fetchStoredDictionary()
-           return storedDict[key] as? Bool
-       }
-
-       public func integerFromUserDefaults(forKey key: String) -> Int? {
-           let storedDict = fetchStoredDictionary()
-           return storedDict[key] as? Int
-       }
+    private func fetchStoredDictionary() -> [String: Any] {
+        if let storedDict = self.config.userDefaults.dictionary(forKey: Self.userdefaultsKeyPrefix) {
+            return storedDict
+        }
+        return [:]
+    }
     
-       public func objectFromUserDefaults(forKey key: String) -> Any? {
-           let storedDict = fetchStoredDictionary()
-           return storedDict[key]
-       }
-
-       public func setInUserDefaults(_ value: Any?, forKey key: String) {
-           var storedDict = fetchStoredDictionary()
-           if let value = value {
-               storedDict[key] = value
-           } else {
-               storedDict.removeValue(forKey: key)
-           }
-           saveDictionaryToUserDefaults(storedDict)
-       }
+    private func saveDictionaryToUserDefaults(_ dict: [String: Any]) {
+        self.config.userDefaults.set(dict, forKey: Self.userdefaultsKeyPrefix)
+    }
+    
+    public func stringFromUserDefaults(forKey key: String) -> String? {
+        let storedDict = fetchStoredDictionary()
+        return storedDict[key] as? String
+    }
+    
+    public func boolFromUserDefaults(forKey key: String) -> Bool? {
+        let storedDict = fetchStoredDictionary()
+        return storedDict[key] as? Bool
+    }
+    
+    public func integerFromUserDefaults(forKey key: String) -> Int? {
+        let storedDict = fetchStoredDictionary()
+        return storedDict[key] as? Int
+    }
+    
+    public func objectFromUserDefaults(forKey key: String) -> Any? {
+        let storedDict = fetchStoredDictionary()
+        return storedDict[key]
+    }
+    
+    public func setInUserDefaults(_ value: Any?, forKey key: String) {
+        var storedDict = fetchStoredDictionary()
+        if let value = value {
+            storedDict[key] = value
+        } else {
+            storedDict.removeValue(forKey: key)
+        }
+        saveDictionaryToUserDefaults(storedDict)
+    }
 }
 
 #endif

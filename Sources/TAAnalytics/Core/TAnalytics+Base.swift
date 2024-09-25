@@ -60,48 +60,34 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         params: [String: AnalyticsBaseParameterValue]? = nil,
         logCondition: EventLogCondition = .logAlways
     ) {
-        let logInConsumers = {[weak self] in
-            guard let self else { return }
-            
-            for consumer in self.config.consumers {
-                if startedConsumers.isEmpty {
-                    self.deferedEventQueue.enqueue(
-                        .init(
-                            event: event,
-                            dateAdded: Date(),
-                            parameters: params
-                        )
-                    )
-                } else {
-                    if self.startedConsumers.contains(where: { type(of: $0) == type(of: consumer) }) {
-                            consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
-                            os_log("Consumer: '%{public}@' has has logged event: '%{public}@'", log: LOGGER, type: .info, String(describing: consumer), event.rawValue)
-                    }
-                }
+        func trackInConsumers() {
+            Task { [weak self] in
+                guard let self else { return }
+                let prefixedEvent = prefixEventIfNeeded(event)
+                await self.eventQueueBuffer.addEvent(prefixedEvent, params: params)
             }
         }
-
         switch logCondition {
         case .logAlways:
-            logInConsumers()
+            trackInConsumers()
         case .logOnlyOncePerLifetime:
             if self.boolFromUserDefaults(forKey: "onlyOnce_\(event.rawValue)") == false {
-                logInConsumers()
+                trackInConsumers()
                 self.setInUserDefaults(true, forKey: "onlyOnce_\(event.rawValue)")
             }
         case .logOnlyOncePerAppSession:
             if !self.appSessionEvents.contains(event) {
-                logInConsumers()
+                trackInConsumers()
                 appSessionEvents.insert(event)
             }
         }
     }
     
-    
     public func set(userProperty: AnalyticsUserProperty, to: String?) {
-        self.setInUserDefaults(to, forKey: "userProperty_\(userProperty.rawValue)")
-        self.startedConsumers.forEach { consumer in
-            consumer.set(trimmedUserProperty: consumer.trim(userProperty: userProperty), to: to)
+        let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
+        self.setInUserDefaults(to, forKey: "userProperty_\(prefixedUserProperty.rawValue)")
+        self.eventQueueBuffer.startedConsumers.forEach { consumer in
+            consumer.set(trimmedUserProperty: consumer.trim(userProperty: prefixedUserProperty), to: to)
         }
     }
 
@@ -109,4 +95,40 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         return self.stringFromUserDefaults(forKey: "userProperty_\(userProperty.rawValue)")
     }
 
+    private func prefixEventIfNeeded(_ event: AnalyticsEvent) -> AnalyticsEvent {
+        let shouldPrefix: Bool
+        let prefixConfig = config.prefixConfig
+        
+        switch prefixConfig.eventPrefixingStrategy {
+        case .allEvents:
+            shouldPrefix = true
+        case .internalOnly:
+            shouldPrefix = event.isInternalEvent
+        }
+        
+        let eventValue = shouldPrefix ?
+                        prefixConfig.eventPrefix + "_" + event.rawValue :
+                        event.rawValue
+        
+        return .init(eventValue)
+    }
+    
+    private func prefixUserPropertyIfNeeded(_ userProperty: AnalyticsUserProperty) -> AnalyticsUserProperty {
+        let shouldPrefix: Bool
+        let prefixConfig = config.prefixConfig
+        
+        switch prefixConfig.propertyPrefixingStrategy {
+        case .allEvents:
+            shouldPrefix = true
+        case .internalOnly:
+            shouldPrefix = userProperty.isInternalProperty
+        }
+        
+        let userPropertyValue = shouldPrefix ?
+                                prefixConfig.propertyPrefix + "_" + userProperty.rawValue :
+                                userProperty.rawValue
+        
+        return .init(userPropertyValue)
+        
+    }
 }

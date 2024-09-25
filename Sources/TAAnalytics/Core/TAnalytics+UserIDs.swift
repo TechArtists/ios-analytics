@@ -35,15 +35,15 @@ public protocol TAAnalyticsUserIDsProtocol {
 extension TAAnalytics: TAAnalyticsUserIDsProtocol {
     
     public var userPseudoID: String? {
-        return (self.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
+        return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
     }
 
     public var userID: String? {
         get {
-            return (self.startedConsumers.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
+            return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
         }
         set {
-            self.startedConsumers
+            self.eventQueueBuffer.startedConsumers
                 .compactMap { $0 as? AnalyticsConsumerWithWriteOnlyUserID }
                 .forEach { $0.set(userID: newValue) }
         }

@@ -24,42 +24,44 @@
 import Foundation
 
 public extension AnalyticsEvent {
-    static let FIRST_OPEN = AnalyticsEvent("first_open")
+    static let FIRST_OPEN = AnalyticsEvent("first_open", isInternalEvent: true)
     
     static let UI_VIEW_SHOWN = AnalyticsEvent("ui_view_shown")
     static let UI_BUTTON_TAPPED = AnalyticsEvent("ui_button_tapped")
     
-    static let APP_FOREGROUND = AnalyticsEvent("app_foreground")
-    static let APP_BACKGROUND = AnalyticsEvent("app_background")
+    static let APP_FOREGROUND = AnalyticsEvent("app_foreground", isInternalEvent: true)
+    static let APP_BACKGROUND = AnalyticsEvent("app_background", isInternalEvent: true)
     
-    static let APP_UPDATE = AnalyticsEvent("app_update")
+    static let APP_UPDATE = AnalyticsEvent("app_update", isInternalEvent: true)
+    
+    static let OS_UPDATE = AnalyticsEvent("os_update", isInternalEvent: true)
 }
 
 public extension AnalyticsUserProperty {
-    static let ANALYTICS_VERSION = AnalyticsUserProperty("analytics_version")
+    static let ANALYTICS_VERSION = AnalyticsUserProperty("analytics_version", isInternalProperty: true)
     
-    static let APP_VERSION = AnalyticsUserProperty("app_version")
-    static let DEVICE_LANGUAGE = AnalyticsUserProperty("device_language")
-    static let INSTALL_DEVICE_LANGUAGE = AnalyticsInstallUserProperty("device_language")
-    static let INSTALL_DEVICE_LANGUAGE2 = AnalyticsInstallUserProperty("install_device_language")
+    static let APP_VERSION = AnalyticsUserProperty("app_version", isInternalProperty: true)
+    static let DEVICE_LANGUAGE = AnalyticsUserProperty("device_language", isInternalProperty: true)
+    static let INSTALL_DEVICE_LANGUAGE = AnalyticsInstallUserProperty("device_language", isInternalProperty: true)
+    static let INSTALL_DEVICE_LANGUAGE2 = AnalyticsInstallUserProperty("install_device_language", isInternalProperty: true)
     
     /// The date of the install, in ISO 8601 format (YYYY-MM-DD)
-    static let INSTALL_DATE    = AnalyticsUserProperty("install_date")
+    static let INSTALL_DATE    = AnalyticsUserProperty("install_date", isInternalProperty: true)
     /// The version of the app at install time
-    static let INSTALL_VERSION = AnalyticsUserProperty("install_version")
+    static let INSTALL_VERSION = AnalyticsUserProperty("install_version", isInternalProperty: true)
     /// The version of the platform/operating system
-    static let INSTALL_PLATFORM_VERSION = AnalyticsUserProperty("install_platform_version")
+    static let INSTALL_PLATFORM_VERSION = AnalyticsUserProperty("install_platform_version", isInternalProperty: true)
     /// If this is jailbroken at install time
-    static let INSTALL_IS_JAILBROKEN = AnalyticsUserProperty("install_is_jailbroken")
+    static let INSTALL_IS_JAILBROKEN = AnalyticsUserProperty("install_is_jailbroken", isInternalProperty: true)
     /// The ui appearance at install time
-    static let INSTALL_UI_APPEARANCE = AnalyticsUserProperty("install_ui_appearance")
+    static let INSTALL_UI_APPEARANCE = AnalyticsUserProperty("install_ui_appearance", isInternalProperty: true)
     /// The dynamic type at install time
-    static let INSTALL_DYNAMIC_TYPE  = AnalyticsUserProperty("install_dynamic_type")
+    static let INSTALL_DYNAMIC_TYPE  = AnalyticsUserProperty("install_dynamic_type", isInternalProperty: true)
 
     /// Ever increasing counter on each cold app launch, starting from 0 at first open.
-    static let COLD_APP_LAUNCH_ID = AnalyticsUserProperty("cold_app_launch_id")
+    static let COLD_APP_LAUNCH_ID = AnalyticsUserProperty("cold_app_launch_id", isInternalProperty: true)
     /// Ever increasing counter on each app foreground, starting from 0 at each cold app launch
-    static let FOREGROUND_ID = AnalyticsUserProperty("foreground_id")
+    static let FOREGROUND_ID = AnalyticsUserProperty("foreground_id", isInternalProperty: true)
     
     
     /// If the variant is control/test.
