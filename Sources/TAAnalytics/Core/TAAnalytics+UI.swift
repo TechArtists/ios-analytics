@@ -59,47 +59,55 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///   - extra: any extra information that should be attached (e.g. Maybe once users "Subscribe", you want to also know the subscription plan they are subscribing to. That plan id, can go into `extra`)
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
     func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
+    
 }
 
 // MARK: - Default Implementations
 
 public extension TAAnalyticsUIProtocol{
-    
-    func track(viewShown: AnalyticsView) {
+
+    func track(viewShown view: AnalyticsView) {
         var params = [String: AnalyticsBaseParameterValue]()
-        params["view_name"] = viewShown.name
-        if let type = viewShown.type {
-            params["view_type"] = type
+        
+        addParametersFor(view: view, params: &params, prefix: "")
+        if let parentView = view.parentView {
+            addParametersFor(view: parentView, params: &params, prefix: "parent_view_")
+        } else {
+            set(userProperty: .LAST_PARENT_VIEW_SHOWN, to: "\(view.name);\(String(describingOptional:view.type));\(String(describingOptional:view.groupDetails?.name));\(String(describingOptional:view.groupDetails?.order));\(String(describingOptional:view.groupDetails?.stage))")
         }
-        if let parentView = viewShown.parentView {
-            params["parent_view_name"] = parentView.name
-            if let type = parentView.type {
-                params["parent_view_type"] = type
-            }
-        }
+        
         track(event: .UI_VIEW_SHOWN, params: params, logCondition: .logAlways)
     }
     
     func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
         var params = [String: AnalyticsBaseParameterValue]()
+        
         params["name"] = symbolicName
-        params["view_name"] = view.name
-        if let screenType = view.type {
-            params["view_type"] = screenType
-        }
-        if let parentView = view.parentView {
-            params["parent_view_name"] = parentView.name
-            if let type = parentView.type {
-                params["parent_view_type"] = type
-            }
-        }
         if let index = index {
             params["order"] = index + 1
         }
         if let extra = extra {
             params["extra"] = extra
         }
+        addParametersFor(view: view, params: &params, prefix: "view_")
+        if let parentView = view.parentView {
+            addParametersFor(view: parentView, params: &params, prefix: "parent_view_")
+        }
+
         track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
+    }
+    
+    // TODO: add unit test
+    private func addParametersFor(view: AnalyticsView, params: inout [String: AnalyticsBaseParameterValue], prefix: String) {
+        params["\(prefix)name"] = view.name
+        if let type = view.type {
+            params["\(prefix)type"] = type
+        }
+        if let groupDetails = view.groupDetails {
+            params["\(prefix)group_name"] = groupDetails.name
+            params["\(prefix)group_order"] = groupDetails.order
+            params["\(prefix)group_stage"] = groupDetails.stage.description
+        }
     }
 }
 

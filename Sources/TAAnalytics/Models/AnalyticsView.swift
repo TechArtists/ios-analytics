@@ -29,31 +29,44 @@ public class AnalyticsView: Hashable, Equatable {
     public let type: String?
     
     public let parentView: AnalyticsView?
-    
+
+    public let groupDetails: AnalyticsViewGroupDetails?
+
     public init(_ name: String){
         self.name = name
         self.type = nil
         self.parentView = nil
+        self.groupDetails = nil
     }
     
     public init(name: String){
         self.name = name
         self.type = nil
         self.parentView = nil
+        self.groupDetails = nil
     }
     
     public init(name: String, type: String?){
         self.name = name
         self.type = type
         self.parentView = nil
+        self.groupDetails = nil
     }
     
     public init(name: String, type: String?, parentView: AnalyticsView){
         self.name = name
         self.type = type
         self.parentView = parentView
+        self.groupDetails = nil
     }
     
+    public init(name: String, type: String?, groupDetails: AnalyticsViewGroupDetails?){
+        self.name = name
+        self.type = type
+        self.parentView = nil
+        self.groupDetails = groupDetails
+    }
+
     public func withType(type: String?) -> AnalyticsView {
         return AnalyticsView(name: name, type: type)
     }
@@ -67,5 +80,37 @@ public class AnalyticsView: Hashable, Equatable {
         hasher.combine(type)
         hasher.combine(parentView)
     }
-
 }
+
+public class AnalyticsViewGroupDetails {
+    public enum Stage: CustomStringConvertible {
+        case start
+        case middle
+        case end // useful on the data to just see a minimal start -> end funnel
+
+        public var description: String {
+            switch self {
+            case .start: return "start"
+            case .middle: return "middle"
+            case .end: return "end"
+            }
+        }
+    }
+    
+    public let name: String
+    public let order: Int
+    public let stage: Stage
+    
+    public init(name: String, order: Int, isFinalScreen: Bool) {
+        self.name = name
+        self.order = order
+        if order == 1 {
+            self.stage = .start
+        } else if isFinalScreen {
+            self.stage = .end
+        } else {
+            self.stage = .middle
+        }
+    }
+}
+
