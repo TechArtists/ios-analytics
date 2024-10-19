@@ -49,6 +49,6 @@ class TAAnalyticsNotificationsTests {
         
         // Assert: Verify that the foreground ID counter is incremented on the second foreground event
         
-        #expect(analytics.get(userProperty: .FOREGROUND_ID) != "0", "Foreground ID should be incremented after the second notification.")
+        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) != "0", "Foreground ID should be incremented after the second notification.")
     }
 }
