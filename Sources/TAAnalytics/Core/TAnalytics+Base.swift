@@ -96,39 +96,20 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     }
 
     private func prefixEventIfNeeded(_ event: AnalyticsEvent) -> AnalyticsEvent {
-        let shouldPrefix: Bool
-        let prefixConfig = config.prefixConfig
-        
-        switch prefixConfig.eventPrefixingStrategy {
-        case .allEvents:
-            shouldPrefix = true
-        case .internalOnly:
-            shouldPrefix = event.isInternalEvent
+        if event.isInternalEvent {
+            return event.eventBy(prefixing: config.automaticallyTrackedEventsPrefixConfig.eventPrefix)
         }
-        
-        let eventValue = shouldPrefix ?
-                        prefixConfig.eventPrefix + "_" + event.rawValue :
-                        event.rawValue
-        
-        return .init(eventValue)
+        else {
+            return event.eventBy(prefixing: config.manuallyTrackedEventsPrefixConfig.eventPrefix)
+        }
     }
     
     private func prefixUserPropertyIfNeeded(_ userProperty: AnalyticsUserProperty) -> AnalyticsUserProperty {
-        let shouldPrefix: Bool
-        let prefixConfig = config.prefixConfig
-        
-        switch prefixConfig.propertyPrefixingStrategy {
-        case .allEvents:
-            shouldPrefix = true
-        case .internalOnly:
-            shouldPrefix = userProperty.isInternalProperty
+        if userProperty.isInternalUserProperty {
+            return userProperty.userPropertyBy(prefixing: config.automaticallyTrackedEventsPrefixConfig.userPropertyPrefix)
         }
-        
-        let userPropertyValue = shouldPrefix ?
-                                prefixConfig.propertyPrefix + "_" + userProperty.rawValue :
-                                userProperty.rawValue
-        
-        return .init(userPropertyValue)
-        
+        else {
+            return userProperty.userPropertyBy(prefixing: config.manuallyTrackedEventsPrefixConfig.userPropertyPrefix)
+        }
     }
 }

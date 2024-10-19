@@ -40,9 +40,13 @@ public final class AnalyticsEvent: Hashable, Equatable, RawRepresentable {
         self.isInternalEvent = false
     }
     
-    internal init(_ rawValue: String, isInternalEvent: Bool) {
+    internal init(_ rawValue: String, isTAInternalEvent: Bool) {
         self.rawValue = rawValue
-        self.isInternalEvent = isInternalEvent
+        self.isInternalEvent = isTAInternalEvent
+    }
+    
+    public func eventBy(prefixing: String) -> AnalyticsEvent {
+        return .init(prefixing + rawValue, isTAInternalEvent: isInternalEvent)
     }
 }
 

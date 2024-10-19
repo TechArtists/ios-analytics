@@ -25,46 +25,51 @@ import Foundation
 
 public final class AnalyticsInstallUserProperty: Hashable, Equatable, RawRepresentable {
    public let rawValue: String
-    public let isInternalProperty: Bool
+    public let isInternalUserProperty: Bool
    
    public init(_ rawValue: String){
        self.rawValue = rawValue
-       self.isInternalProperty = false
+       self.isInternalUserProperty = false
    }
    
    public init?(rawValue: String){
        self.rawValue = rawValue
-       self.isInternalProperty = false
+       self.isInternalUserProperty = false
    }
     
-    internal init(_ rawValue: String, isInternalProperty: Bool) {
+    internal init(_ rawValue: String, isTAInternalUserProperty: Bool) {
         self.rawValue = rawValue
-        self.isInternalProperty = isInternalProperty
+        self.isInternalUserProperty = isTAInternalUserProperty
     }
 }
 
 public final class AnalyticsUserProperty : Hashable, Equatable, RawRepresentable {
    
     public let rawValue: String
-    public let isInternalProperty: Bool
+    public let isInternalUserProperty: Bool
     
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
     public init(_ rawValue: String) {
         self.rawValue = rawValue
-        self.isInternalProperty = false
+        self.isInternalUserProperty = false
     }
     /// At most 24 alphanumeric characters or underscores
     /// Usually in snake_case, but it would be best to consult the BI for their preference.
     public init?(rawValue: String) {
         self.rawValue = rawValue
-        self.isInternalProperty = false
+        self.isInternalUserProperty = false
     }
     
-    internal init(_ rawValue: String, isInternalProperty: Bool) {
+    internal init(_ rawValue: String, isInternalUserProperty: Bool) {
         self.rawValue = rawValue
-        self.isInternalProperty = isInternalProperty
+        self.isInternalUserProperty = isInternalUserProperty
     }
+    
+    public func userPropertyBy(prefixing: String) -> AnalyticsUserProperty {
+        return .init(prefixing + rawValue, isInternalUserProperty: self.isInternalUserProperty)
+    }
+
 }
 
 public final class TrimmedUserProperty {

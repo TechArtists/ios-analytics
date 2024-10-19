@@ -191,8 +191,7 @@ public class TAAnalytics: ObservableObject {
 
     private func configureUserProperties() {
         set(userProperty: .ANALYTICS_VERSION, to: self.config.analyticsVersion)
-        set(userProperty: .COLD_APP_LAUNCH_ID, to: "\(self.getNextCounterValueFrom(userProperty: .COLD_APP_LAUNCH_ID))")
-        set(userProperty: .FOREGROUND_ID, to: "0")
+        set(userProperty: .COLD_APP_LAUNCH_COUNT, to: "\(self.getNextCounterValueFrom(userProperty: .COLD_APP_LAUNCH_COUNT))")
     }
 
     private func handleFirstOpen(

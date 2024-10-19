@@ -33,7 +33,7 @@ public protocol TAAnalyticsAppNotificationsProtocol {
 extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
     /// - Observers:
-    ///   - **Foreground**: Increments `FOREGROUND_ID` and logs `.APP_FOREGROUND` (skips increment on first event).
+    ///   - **Foreground**: Increments `FOREGROUND_COUNT` and logs `.APP_FOREGROUND` (skips increment on first event).
     ///   - **Background**: Logs `.APP_BACKGROUND`.
     public func addAppLifecycleObservers() {
         
@@ -44,8 +44,9 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
                 // because the foreground id has already been set to 0 as TAAnalytics was starting up
                 self.isFirstForeground = false
             } else {
-                self.set(userProperty: .FOREGROUND_ID,
-                         to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_ID))")
+                // TODO: adi user defaults guard for is ready?
+                self.set(userProperty: .FOREGROUND_COUNT,
+                         to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_COUNT))")
             }
             
             self.track(event: .APP_FOREGROUND)

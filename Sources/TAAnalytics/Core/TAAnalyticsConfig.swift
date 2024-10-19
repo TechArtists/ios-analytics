@@ -37,35 +37,25 @@ public struct TAAnalyticsConfig {
         /// installed from Xcode
         case Xcode
         /// installed from Xcode with Debugger Attached
-        /// TODO: asdf
         case XcodeAndDebuggerAttached
         /// installed from TestFlight
         case TestFlight
     }
     
-    public enum EventPrefixStrategy {
-        
-        case allEvents
-        
-        case internalOnly
+    public enum PrefixStrategy {
+        /// Prefix all events/userProperties sent via this library
+        case all
+        /// Prefix only events/userProperties sent by this internal library automatically. Those sent by the app via `track..` will not be prefixed
+        case automaticallyCollectedOnly
     }
     
     public struct PrefixConfig {
         let eventPrefix: String
-        let propertyPrefix: String
-        let eventPrefixingStrategy: EventPrefixStrategy
-        let propertyPrefixingStrategy: EventPrefixStrategy
+        let userPropertyPrefix: String
         
-        public init(
-            eventPrefix: String = "ta",
-            propertyPrefix: String = "ta",
-            eventPrefixingStrategy: EventPrefixStrategy = .allEvents,
-            propertyPrefixingStrategy: EventPrefixStrategy = .allEvents
-        ) {
+        public init(eventPrefix: String,userPropertyPrefix: String) {
             self.eventPrefix = eventPrefix
-            self.propertyPrefix = propertyPrefix
-            self.eventPrefixingStrategy = eventPrefixingStrategy
-            self.propertyPrefixingStrategy = propertyPrefixingStrategy
+            self.userPropertyPrefix = userPropertyPrefix
         }
     }
     
@@ -78,7 +68,13 @@ public struct TAAnalyticsConfig {
     let userDefaults: UserDefaults
     let instalUserProperties: [AnalyticsUserProperty]
     let maxTimeoutForConsumerStart: Double
-    let prefixConfig: PrefixConfig
+
+    /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
+    let automaticallyTrackedEventsPrefixConfig: PrefixConfig
+    /// Prefix for events/userProperties sent manually by you via `track..`/`set(userProperty..`
+    let manuallyTrackedEventsPrefixConfig: PrefixConfig
+    
+    // TODO: adi install user properties and dynamic what
     
     ///
     /// - Parameters:
@@ -87,6 +83,10 @@ public struct TAAnalyticsConfig {
     ///   - currentProcessType: defaults to `findProcessType()`
     ///   - enabledProcessTypes: what process types should have logging enabled. Defaults to `ProcessType.allCases`
     ///   - userDefaults: defaults to `UserDefaults.standard`
+    ///   - instalUserProperties:
+    ///   - maxTimeoutForConsumerStart:
+    ///   - automaticallyTrackedEventsPrefixConfig: Prefix for events/userProperties automatically tracked by this internal library. Those manually sent by the app via `track..`/`set(userProperty..` will not be prefixed
+    ///   - manuallyTrackedEventsPrefixConfig: Prefix for events/userProperties sent manually by you via `track..`/`set(userProperty..`
     public init(analyticsVersion: String,
                 consumers: [any AnalyticsConsumer],
                 currentProcessType: ProcessType = findProcessType(),
@@ -94,8 +94,8 @@ public struct TAAnalyticsConfig {
                 userDefaults: UserDefaults = UserDefaults.standard,
                 instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
                 maxTimeoutForConsumerStart: Double = 10,
-                prefixConfig: PrefixConfig = .init()
-                
+                automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "ta_", userPropertyPrefix: "ta_"),
+                manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: "")
     ) {
         self.analyticsVersion = analyticsVersion
         self.consumers = consumers
@@ -105,7 +105,8 @@ public struct TAAnalyticsConfig {
         self.currentInstallType = Self.findInstallType()
         self.instalUserProperties = instalUserProperties
         self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
-        self.prefixConfig = prefixConfig
+        self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
+        self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig
     }
     
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix
