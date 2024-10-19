@@ -50,6 +50,8 @@ public class TAAnalytics: ObservableObject {
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<AnalyticsEvent>()
     
+    public var lastParentViewShown: AnalyticsView?
+    
     public init(config: TAAnalyticsConfig) {
         self.config = config
     }

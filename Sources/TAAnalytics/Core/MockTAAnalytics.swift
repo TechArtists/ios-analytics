@@ -39,6 +39,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     public var eventsSent = [(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue])]()
     public var userPropertiesSet = [AnalyticsUserProperty: String]()
     
+    public var lastParentViewShown: AnalyticsView?
     public init() {}
     
     public var currentProcessType: TAAnalyticsConfig.ProcessType {

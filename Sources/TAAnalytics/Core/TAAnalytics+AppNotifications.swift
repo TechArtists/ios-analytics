@@ -52,7 +52,16 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
         }
         let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { notification in
             
-            self.track(event: .APP_BACKGROUND)
+            // add user property for last view types shown
+            var params = [String: AnalyticsBaseParameterValue]()
+
+            params["last_parent_view_name"] = self.lastParentViewShown?.name
+            params["last_parent_view_type"] = self.lastParentViewShown?.type
+            params["last_parent_view_group_name"] = self.lastParentViewShown?.groupDetails?.name
+            params["last_parent_view_group_order"] = self.lastParentViewShown?.groupDetails?.order
+            params["last_parent_view_group_stage"] = self.lastParentViewShown?.groupDetails?.stage.description
+
+            self.track(event: .APP_BACKGROUND, params: params)
         }
         
         notificationCenterObservers.append(obsForeground)

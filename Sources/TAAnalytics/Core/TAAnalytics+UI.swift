@@ -60,6 +60,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
     func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
     
+    var lastParentViewShown: AnalyticsView? { get set}
 }
 
 // MARK: - Default Implementations
@@ -73,6 +74,7 @@ public extension TAAnalyticsUIProtocol{
         if let parentView = view.parentView {
             addParametersFor(view: parentView, params: &params, prefix: "parent_view_")
         } else {
+            lastParentViewShown = view
             set(userProperty: .LAST_PARENT_VIEW_SHOWN, to: "\(view.name);\(String(describingOptional:view.type));\(String(describingOptional:view.groupDetails?.name));\(String(describingOptional:view.groupDetails?.order));\(String(describingOptional:view.groupDetails?.stage))")
         }
         
