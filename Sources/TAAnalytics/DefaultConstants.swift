@@ -32,9 +32,10 @@ public extension AnalyticsEvent {
     static let APP_FOREGROUND = AnalyticsEvent("app_foreground", isInternalEvent: true)
     static let APP_BACKGROUND = AnalyticsEvent("app_background", isInternalEvent: true)
     
-    static let APP_UPDATE = AnalyticsEvent("app_update", isInternalEvent: true)
-    
-    static let OS_UPDATE = AnalyticsEvent("os_update", isInternalEvent: true)
+    /// Parameters `from_version`, `to_version` (retrieved via `CFBundleShortVersionString` & `from_build`, `to_build` (retrieved via `CFBundleVersion`)
+    static let APP_VERSION_UPDATE = AnalyticsEvent("app_version_update", isInternalEvent: true)
+    /// Parameters `from_version`, `to_version` (retrieved via `ProcessInfo.processInfo.operatingSystemVersion`)
+    static let OS_VERSION_UPDATE = AnalyticsEvent("os_versin_update", isInternalEvent: true)
 }
 
 public extension AnalyticsUserProperty {

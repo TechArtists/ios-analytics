@@ -156,34 +156,17 @@ public class TAAnalytics: ObservableObject {
         let defaultsBuild = stringFromUserDefaults(forKey: "build")
 
         // Check and update app version
-        if defaultsAppVersion != appVersion {
-            setInUserDefaults(appVersion, forKey: "appVersion")
-            if let defaultsAppVersion = defaultsAppVersion {
-                track(
-                    event: .APP_UPDATE,
-                    params: [
-                        "from version": defaultsAppVersion,
-                        "to version": appVersion,
-                        "from build": defaultsBuild ?? "",
-                        "to build": build
-                    ]
-                )
-            }
-        }
+        if defaultsAppVersion != appVersion || defaultsBuild != build {
 
-        if defaultsBuild != build {
+            setInUserDefaults(appVersion, forKey: "appVersion")
             setInUserDefaults(build, forKey: "build")
-            if let defaultsBuild = defaultsBuild {
-                track(
-                    event: .APP_UPDATE,
-                    params: [
-                        "from version": defaultsAppVersion ?? "",
-                        "to version": appVersion,
-                        "from build": defaultsBuild,
-                        "to build": build
-                    ]
-                )
-            }
+
+            track(event: .APP_VERSION_UPDATE,
+                  params: [ "from_version": defaultsAppVersion,
+                            "to_version": appVersion,
+                            "from_build": defaultsBuild,
+                            "to_build": build
+            ])
         }
     }
     
