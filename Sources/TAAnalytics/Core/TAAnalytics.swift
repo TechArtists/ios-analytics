@@ -179,13 +179,10 @@ public class TAAnalytics: ObservableObject {
         if defaultsOSVersion != osString {
             setInUserDefaults(osString, forKey: "osVersion")
             if let defaultsOSVersion {
-                track(
-                    event: .OS_UPDATE,
-                    params: [
-                        "from OS version": defaultsOSVersion,
-                        "to OS version": osString,
-                    ]
-                )
+                track(event: .OS_VERSION_UPDATE,
+                      params: ["from_version": defaultsOSVersion,
+                               "to_version": osString,
+                ])
             }
         }
     }
