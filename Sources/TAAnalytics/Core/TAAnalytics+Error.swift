@@ -33,15 +33,15 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
     ///
     /// The AnalyticsEvent is sent alongside these parameters if an `error` parameter is present:
     ///
-    ///      domain: String?
-    ///      code: Int?
-    ///      description: String?
+    ///      error_domain: String?
+    ///      error_code: Int?
+    ///      error_description: String?
     ///
     /// - Parameters:
     ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error_foo`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func logErrorEvent(eventSuffix: String, error: Error?, extraParams: [String: AnalyticsBaseParameterValue]?)
+    func trackErrorEvent(eventSuffix: String, error: Error?, extraParams: [String: AnalyticsBaseParameterValue]?)
 }
 
 // MARK: - Default Implementations
@@ -60,13 +60,13 @@ public extension TAAnalyticsErrorProtocol {
     ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error foo`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func logErrorEvent(eventSuffix: String, error: Error? = nil, extraParams: [String: AnalyticsBaseParameterValue]? = nil) {
+    func trackErrorEvent(eventSuffix: String, error: Error? = nil, extraParams: [String: AnalyticsBaseParameterValue]? = nil) {
         var params = [String: AnalyticsBaseParameterValue]()
         if let error = error {
             let nserror = error as NSError
-            params["domain"] = nserror.domain
-            params["code"] = nserror.code
-            params["description"] = nserror.localizedDescription
+            params["error_domain"] = nserror.domain
+            params["error_code"] = nserror.code
+            params["error_description"] = nserror.localizedDescription
         }
         extraParams?.forEach({ key, value in params[key] = value })
         track(event: AnalyticsEvent("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
