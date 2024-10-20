@@ -61,9 +61,9 @@ public extension AnalyticsUserProperty {
     /// The dynamic type at install time
     static let INSTALL_DYNAMIC_TYPE  = AnalyticsUserProperty("install_dynamic_type", isInternalUserProperty: true)
 
-    /// Ever increasing counter on each cold app launch, starting from 0 at first open.
+    /// Ever increasing counter on each cold app launch, starting from 1 at first open.
     static let COLD_APP_LAUNCH_COUNT = AnalyticsUserProperty("cold_app_launch_count", isInternalUserProperty: true)
-    /// Ever increasing counter on each app foreground, starting from 0 at first open
+    /// Ever increasing counter on each app foreground, starting from 1 at first open
     static let FOREGROUND_COUNT = AnalyticsUserProperty("foreground_count", isInternalUserProperty: true)
     
     /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;group_name;group_order;group_stage`

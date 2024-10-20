@@ -1,6 +1,5 @@
-//
-//  TAAnalyticsNotificationsTests.swift
-//  TAAnalytics
+//  TAAnalyticsTests.swift
+//  Created by Adi on 10/24/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
@@ -21,31 +20,39 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-
 import Testing
 import Foundation
 import TAAnalytics
-import UIKit
 
-class TAAnalyticsNotificationsTests {
-
-    var analytics: TAAnalytics
-    var notificationCenter = NotificationCenter.default
+class TAAnalyticsBase {
+    let analytics: TAAnalytics
+    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    let notificationCenter = NotificationCenter.default
     
     init() {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
-        let defaults = UserDefaults(suiteName: "TATests")!
-        analytics =  TAAnalytics(config: .init(analyticsVersion: "0", consumers: [], userDefaults: defaults))
+        let mockUserDefaults = UserDefaults(suiteName: "TATests")!
+        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        analytics =  TAAnalytics(config: .init(analyticsVersion: "0", consumers: [], userDefaults: mockUserDefaults))
     }
-    
+
     @Test
-    func testAddAppLifecycleObservers_ForegroundNotification() {
-        analytics.addAppLifecycleObservers()
+    func testThatNilsAreNotSentToConsumers() {
+
+        var params = [String: AnalyticsBaseParameterValue?]()
+        params["key1"] = "value1"
+        params["key2"] = nil
+        params["key3"] = "value3"
         
-        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "1")
         
-        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "2")
+        analytics.track(event: .FIRST_OPEN, params: params, logCondition: .logAlways)
+        
+        // TODO: confirm that the only parameters sent are key1 & key3
+        #expect(unitTestConsumer.eventsSent[0].params.count == 2)
+        #expect((unitTestConsumer.eventsSent[0].params["key1"] as! String) == "value1")
+        #expect(unitTestConsumer.eventsSent[0].params["key2"] == nil)
+        #expect((unitTestConsumer.eventsSent[0].params["key3"] as! String) == "value3")
     }
+
+    
 }

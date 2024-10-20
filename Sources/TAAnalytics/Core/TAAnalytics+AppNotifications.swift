@@ -39,20 +39,15 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
         
         let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { notification in
 
-            if self.isFirstForeground {
-                // ignore increasing the counter for the first one,
-                // because the foreground id has already been set to 0 as TAAnalytics was starting up
-                self.isFirstForeground = false
-            } else {
-                // TODO: adi user defaults guard for is ready?
-                self.set(userProperty: .FOREGROUND_COUNT,
-                         to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_COUNT))")
-            }
+            // TODO: adi user defaults guard for is ready?
+            self.set(userProperty: .FOREGROUND_COUNT,
+                     to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_COUNT))")
             
             self.track(event: .APP_FOREGROUND)
         }
         let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { notification in
             
+            // TODO: add unit test for last view shown
             // add user property for last view types shown
             var params = [String: AnalyticsBaseParameterValue]()
 

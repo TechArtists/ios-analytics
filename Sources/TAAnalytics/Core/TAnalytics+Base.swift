@@ -27,7 +27,7 @@ import OSLog
 // MARK: -
 
 /// Base protocol for logging events & setting user properties
-public protocol TAAnalyticsBaseProtocol {
+public protocol TAAnalyticsBaseProtocol: AnyObject {
     
     var currentProcessType: TAAnalyticsConfig.ProcessType { get }
     
@@ -38,9 +38,9 @@ public protocol TAAnalyticsBaseProtocol {
     ///
     /// - Parameters:
     ///   - event:
-    ///   - params:
+    ///   - params: Note that if the parameter value is `nil`, the parameter will not be removed before sending
     ///   - logCondition: if the event should be logged for each ocurrence. Note that this only applies on a per `AnalyticsEvent` level, parameters are not included
-    func track(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue]?, logCondition: EventLogCondition)
+    func track(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue?]?, logCondition: EventLogCondition)
     
     func set(userProperty: AnalyticsUserProperty, to: String?)
     
@@ -57,23 +57,25 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     
     public func track(
         event: AnalyticsEvent,
-        params: [String: AnalyticsBaseParameterValue]? = nil,
+        params: [String: AnalyticsBaseParameterValue?]? = nil,
         logCondition: EventLogCondition = .logAlways
     ) {
+        let paramsWithoutNils = params?.compactMapValues { $0 }
+        let prefixedEvent = prefixEventIfNeeded(event)
+
         func trackInConsumers() {
             Task { [weak self] in
                 guard let self else { return }
-                let prefixedEvent = prefixEventIfNeeded(event)
-                await self.eventQueueBuffer.addEvent(prefixedEvent, params: params)
+                await self.eventQueueBuffer.addEvent(prefixedEvent, params: paramsWithoutNils)
             }
         }
         switch logCondition {
         case .logAlways:
             trackInConsumers()
         case .logOnlyOncePerLifetime:
-            if self.boolFromUserDefaults(forKey: "onlyOnce_\(event.rawValue)") == false {
+            if self.boolFromUserDefaults(forKey: "onlyOnce_\(prefixedEvent.rawValue)") == false {
                 trackInConsumers()
-                self.setInUserDefaults(true, forKey: "onlyOnce_\(event.rawValue)")
+                self.setInUserDefaults(true, forKey: "onlyOnce_\(prefixedEvent.rawValue)")
             }
         case .logOnlyOncePerAppSession:
             if !self.appSessionEvents.contains(event) {
@@ -92,7 +94,8 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     }
 
     public func get(userProperty: AnalyticsUserProperty) -> String? {
-        return self.stringFromUserDefaults(forKey: "userProperty_\(userProperty.rawValue)")
+        let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
+        return self.stringFromUserDefaults(forKey: "userProperty_\(prefixedUserProperty.rawValue)")
     }
 
     private func prefixEventIfNeeded(_ event: AnalyticsEvent) -> AnalyticsEvent {

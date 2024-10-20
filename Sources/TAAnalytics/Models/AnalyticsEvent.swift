@@ -50,14 +50,13 @@ public final class AnalyticsEvent: Hashable, Equatable, RawRepresentable {
     }
 }
 
-public final class TrimmedEvent {
-    public let event: AnalyticsEvent
+public final class AnalyticsEventTrimmed: Hashable, Equatable, RawRepresentable {
+    public let rawValue: String
     
-    public init(_ event: AnalyticsEvent, trimAction: (AnalyticsEvent) -> AnalyticsEvent) {
-        self.event = trimAction(event)
+    public init(_ rawValue: String){
+        self.rawValue = rawValue
     }
-    
-    public init(_ rawValue: String) {
-        self.event = AnalyticsEvent(rawValue)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
 }

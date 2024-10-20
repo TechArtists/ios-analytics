@@ -72,10 +72,13 @@ public final class AnalyticsUserProperty : Hashable, Equatable, RawRepresentable
 
 }
 
-public final class TrimmedUserProperty {
-    public let userProperty: AnalyticsUserProperty
+public final class AnalyticsUserPropertyTrimmed: Hashable, Equatable, RawRepresentable {
+    public let rawValue: String
     
     public init(_ rawValue: String){
-        self.userProperty = AnalyticsUserProperty(rawValue)
+        self.rawValue = rawValue
+    }
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
 }

@@ -36,13 +36,16 @@ extension String {
         }
     }
     
-    public func ob_trim(type: String, toLength length: Int) -> String {
+    /// - Parameters:
+    ///   - length: the length it needs to be trimmed to
+    ///   - debugType: what to write in the error log if it's being trimmed
+    internal func ta_trim(toLength length: Int, debugType: String) -> String {
         if self.count > length {
             let trimmedString = String(self.prefix(length))
             os_log("Trimming %{public}@ to length %ld ('%{public}@' -> '%{public}@'",
                    log: LOGGER,
                    type: .error,
-                   type, length, self, trimmedString)
+                   debugType, length, self, trimmedString)
             return trimmedString
         }
         return self

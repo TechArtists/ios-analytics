@@ -43,7 +43,6 @@ public class TAAnalytics: ObservableObject {
     public private(set) var config: TAAnalyticsConfig
     
     internal var notificationCenterObservers = [Any]()
-    internal var isFirstForeground = true
     
     internal var eventQueueBuffer: EventBuffer = .init(allConsumers: [])
     
@@ -234,12 +233,17 @@ public class TAAnalytics: ObservableObject {
         self.userID = existingUserIDFromUserDefaults
     }
     
-    internal func getNextCounterValueFrom(userProperty: AnalyticsUserProperty) -> Int{
+    
+    /// It reads the value of the user property from UserDefaults, expecting it to be an int
+    /// - Parameters:
+    ///   - defaultIfNotExists: defaults to 1 and is returned if there is no valid int saved in UserDefaults
+    /// - Returns: the existing value from UserDefaults incremented by 1. Note that this will not save the new value in UserDefaults.
+    internal func getNextCounterValueFrom(userProperty: AnalyticsUserProperty, defaultIfNotExists: Int = 1) -> Int{
         if let existingLaunchID = self.get(userProperty: userProperty),
            let previousLaunchID = Int(existingLaunchID){
             return previousLaunchID + 1
         }
-        return 0
+        return defaultIfNotExists
     }
     
     // Helper function to fetch the stored dictionary

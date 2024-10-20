@@ -45,19 +45,17 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return parameter
     }
     
-    public func track(trimmedEvent: TrimmedEvent, params: [String : AnalyticsBaseParameterValue]?) {
-        let event = trimmedEvent.event
-        
+    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : AnalyticsBaseParameterValue]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-        os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, event.rawValue, String(describingOptional: paramsString))
+        os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, trimmedEvent.rawValue, String(describingOptional: paramsString))
     }
     
-    public func trim(event: AnalyticsEvent) -> TrimmedEvent {
-        TrimmedEvent(event.rawValue.ob_trim(type: "event", toLength: 40))
+    public func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
+        AnalyticsEventTrimmed(event.rawValue.ta_trim(toLength: 40, debugType: "event"))
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> TrimmedUserProperty {
-        TrimmedUserProperty(userProperty.rawValue.ob_trim(type: "user property", toLength: 24))
+    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
+        AnalyticsUserPropertyTrimmed(userProperty.rawValue.ta_trim(toLength: 24, debugType: "user property"))
     }
     
     public var wrappedValue: Self {
@@ -79,10 +77,8 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return "sendEvent: '\(event.rawValue)', params: [\(String(describingOptional: paramsString))]"
     }
 
-    public func set(trimmedUserProperty: TrimmedUserProperty, to: String?) {
-        let userProperty = trimmedUserProperty.userProperty
-        
-        os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, userProperty.rawValue, String(describingOptional: to))
+    public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {        
+        os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, trimmedUserProperty.rawValue, String(describingOptional: to))
     }
     
     /// Returns a debug string for a set(userProperty:to:) function call.

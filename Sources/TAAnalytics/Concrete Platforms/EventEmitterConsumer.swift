@@ -11,13 +11,13 @@ public class EventEmitterConsumer: AnalyticsConsumer {
 
     public typealias T = EventEmitterConsumer
     
-    public var eventStream: AsyncStream<TrimmedEvent>?
+    public var eventStream: AsyncStream<AnalyticsEventTrimmed>?
     
-    private var continuationEvent: AsyncStream<TrimmedEvent>.Continuation?
+    private var continuationEvent: AsyncStream<AnalyticsEventTrimmed>.Continuation?
     
-    public var propertyStream: AsyncStream<TrimmedUserProperty>?
+    public var propertyStream: AsyncStream<AnalyticsUserPropertyTrimmed>?
     
-    private var continuationProperty: AsyncStream<TrimmedUserProperty>.Continuation?
+    private var continuationProperty: AsyncStream<AnalyticsUserPropertyTrimmed>.Continuation?
     
     public init() {}
     
@@ -26,21 +26,21 @@ public class EventEmitterConsumer: AnalyticsConsumer {
         (propertyStream, continuationProperty) = AsyncStream.makeStream()
     }
     
-    public func track(trimmedEvent: TrimmedEvent, params: [String : any AnalyticsBaseParameterValue]?) {
+    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
         
         continuationEvent?.yield(trimmedEvent)
     }
     
-    public func set(trimmedUserProperty: TrimmedUserProperty, to: String?) {
+    public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {
         continuationProperty?.yield(trimmedUserProperty)
     }
     
-    public func trim(event: AnalyticsEvent) -> TrimmedEvent {
-        TrimmedEvent(event.rawValue)
+    public func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
+        AnalyticsEventTrimmed(event.rawValue)
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> TrimmedUserProperty {
-        TrimmedUserProperty(userProperty.rawValue)
+    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
+        AnalyticsUserPropertyTrimmed(userProperty.rawValue)
     }
     
     public var wrappedValue: Self {

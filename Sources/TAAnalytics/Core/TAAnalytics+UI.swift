@@ -32,10 +32,12 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///
     /// The AnalyticsEvent has the following parameters:
     ///
-    ///      view_name: String
-    ///      view_type: String?
-    ///      parent_view_name: String?
-    ///      parent_view_type: String?
+    ///      name: String
+    ///      type: String?
+    ///      group_name: String?
+    ///      group_order: String?
+    ///      group_stage: String?
+    ///      parent_view_{name, type, group_name, group_order, group_stage}: String?
     ///
     /// - Parameters:
     ///   - viewShown: the view that was just shown
@@ -46,12 +48,11 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     /// The AnalyticsEvent has the following parameters:
     ///
     ///      name: String
-    ///      view_name: String
-    ///      view_type: String?
-    ///      parent_view_name: String?
-    ///      parent_view_type: String?
     ///      extra: String?
     ///      order: Int?, that is 1-based. It is equal to `index + 1`
+    ///      view_{name, type, group_name, group_order, group_stage}: String?
+    ///      parent_view_{name, type, group_name, group_order, group_stage}: String?
+    ///      where view_name is Mandatory
     ///
     /// - Parameters:
     ///   - symbolicName: usually use the symbolic name of the button, not the actual localized name (e.g. "Subscribe", event though the button might be called "Try Free Before Subscribing"
@@ -99,7 +100,6 @@ public extension TAAnalyticsUIProtocol{
         track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
     }
     
-    // TODO: add unit test
     private func addParametersFor(view: AnalyticsView, params: inout [String: AnalyticsBaseParameterValue], prefix: String) {
         params["\(prefix)name"] = view.name
         if let type = view.type {

@@ -23,9 +23,9 @@
 import XCTest
 @testable import TAAnalytics
 
-final class TAAnalyticsTests: XCTestCase {
+final class TAAnalyticsDateTests: XCTestCase {
     let ob = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: []))
-        
+    
     func testRelativeAgeForUnder24h() throws {
         let formatter = ISO8601DateFormatter()
         

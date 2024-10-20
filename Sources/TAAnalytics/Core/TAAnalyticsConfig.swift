@@ -42,13 +42,6 @@ public struct TAAnalyticsConfig {
         case TestFlight
     }
     
-    public enum PrefixStrategy {
-        /// Prefix all events/userProperties sent via this library
-        case all
-        /// Prefix only events/userProperties sent by this internal library automatically. Those sent by the app via `track..` will not be prefixed
-        case automaticallyCollectedOnly
-    }
-    
     public struct PrefixConfig {
         let eventPrefix: String
         let userPropertyPrefix: String

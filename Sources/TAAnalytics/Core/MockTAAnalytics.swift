@@ -36,10 +36,10 @@ import UIKit
 ///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, AnalyticsEvent.EVENT_I_EXPECTED)
 public class MockTAAnalytics : TAAnalyticsProtocol {
     
-    public var eventsSent = [(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue])]()
+    public var eventsSent = [(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue?])]()
     public var userPropertiesSet = [AnalyticsUserProperty: String]()
-    
     public var lastParentViewShown: AnalyticsView?
+
     public init() {}
     
     public var currentProcessType: TAAnalyticsConfig.ProcessType {
@@ -58,7 +58,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
         }
     }
 
-    public func track(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]? = nil, logCondition: EventLogCondition = .logAlways) {
+    public func track(event: AnalyticsEvent, params: [String : (any AnalyticsBaseParameterValue)?]? = nil, logCondition: EventLogCondition = .logAlways) {
         eventsSent.append((event, params ?? [:]))
     }
         

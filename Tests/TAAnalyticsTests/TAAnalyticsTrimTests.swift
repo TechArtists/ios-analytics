@@ -1,6 +1,5 @@
-//
-//  Test.swift
-//  TAAnalytics
+//  TAAnalyticsTests.swift
+//  Created by Adi on 10/24/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
 //
@@ -21,27 +20,24 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-
 import Testing
-import TAAnalytics
 import Foundation
+import TAAnalytics
 
-struct TAAnalyticsTestsMain {
-    let ob = TAAnalytics(
-        config: TAAnalyticsConfig(
-            analyticsVersion: "0",
-            consumers: [],
-            userDefaults: UserDefaults(suiteName: "testSuite") ?? .standard
-        )
-    )
+class TAAnalyticsTrimTests {
     
-    init() {
-        ob.start()
-    }
-    
-    @Test func test_getNextCounterValueFrom_initiallyReturns0() async throws {
-        let analyticsUserProperty = AnalyticsUserProperty("ui_screen_shown")
+    @Test
+    func testTrimmingEvents() {
+        let mockUserDefaults = UserDefaults(suiteName: "TATests")!
+        let unitTestConsumer = TAAnalyticsUnitTestConsumer(eventTrimLength: 10, userPropertyTrimLength: 10)
+        let ta = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: [unitTestConsumer],userDefaults: mockUserDefaults))
         
+        // TODO: to implement once we figure out the async buffer
     }
 
+    @Test
+    func testTrimmingUserProperties() {
+        // TODO: to implement once we figure out the async buffer
+    }
+    
 }
