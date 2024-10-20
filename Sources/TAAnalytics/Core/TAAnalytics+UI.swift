@@ -100,7 +100,7 @@ public extension TAAnalyticsUIProtocol{
         track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
     }
     
-    private func addParametersFor(view: AnalyticsView, params: inout [String: AnalyticsBaseParameterValue], prefix: String) {
+    internal func addParametersFor(view: AnalyticsView, params: inout [String: AnalyticsBaseParameterValue], prefix: String) {
         params["\(prefix)name"] = view.name
         if let type = view.type {
             params["\(prefix)type"] = type

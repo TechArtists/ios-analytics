@@ -52,6 +52,19 @@ public extension AnalyticsEvent {
     static let ACCOUNT_SIGNUP_START = AnalyticsEvent("account_signup_start", isTAInternalEvent: true)
     //// Sent when the account signup ends
     static let ACCOUNT_SIGNUP_END = AnalyticsEvent("account_signup_end", isTAInternalEvent: true)
+    
+    /// Parameters `placement`, `id` (optional)
+    /// This also sends the `ui_view_shown` event in the background with `name="paywall"` and `type=<placement>`
+    static let PAYWALL_SHOWN = AnalyticsEvent("paywall_shown", isTAInternalEvent: true)
+    /// Parameters `placement`, `id` (optional)
+    static let PAYWALL_CLOSED = AnalyticsEvent("paywall_closed", isTAInternalEvent: true)
+    /// Parameters `button_name`, `product_identifier`, `paywall_placement`, `paywall_id` (optional),
+    /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
+    static let PAYWALL_PURCHASE_TAPPED = AnalyticsEvent("paywall_purchase_tapped", isTAInternalEvent: true)
+    /// Purchase that happened once the user tried to purchase. TODO:// add those SKError events? 
+    static let ERROR_PAYWALL_PURCHASE = AnalyticsEvent("error_paywall_purchase", isTAInternalEvent: true)
+    /// The paywall couldn't be shown
+    static let ERROR_PAYWALL_SHOWN = AnalyticsEvent("error_paywall_shown", isTAInternalEvent: true)
 }
 
 public extension AnalyticsUserProperty {
