@@ -61,10 +61,34 @@ public extension AnalyticsEvent {
     /// Parameters `button_name`, `product_identifier`, `paywall_placement`, `paywall_id` (optional),
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
     static let PAYWALL_PURCHASE_TAPPED = AnalyticsEvent("paywall_purchase_tapped", isTAInternalEvent: true)
-    /// Purchase that happened once the user tried to purchase. TODO:// add those SKError events? 
+    /// Purchase that happened once the user tried to purchase. TODO:// add those SKError events?
     static let ERROR_PAYWALL_PURCHASE = AnalyticsEvent("error_paywall_purchase", isTAInternalEvent: true)
     /// The paywall couldn't be shown
     static let ERROR_PAYWALL_SHOWN = AnalyticsEvent("error_paywall_shown", isTAInternalEvent: true)
+    
+    
+    static let SUBSCRIPTION_START_PAID_PAY_AS_YOU_GO = AnalyticsEvent("subscripton_start_paid_pay_as_you_go", isTAInternalEvent: true)
+    static let SUBSCRIPTION_START_PAID_PAY_UP_FRONT = AnalyticsEvent("subscripton_start_paid_pay_up_front", isTAInternalEvent: true)
+    static let SUBSCRIPTION_START_TRIAL = AnalyticsEvent("subscripton_star_trial", isTAInternalEvent: true)
+
+    static let SUBSCRIPTION_START_PAID_REGULAR = AnalyticsEvent("subscripton_start_paid_regular", isTAInternalEvent: true)
+
+    static let SUBSCRIPTION_START = AnalyticsEvent("subscripton_start", isTAInternalEvent: true)
+
+    static let SUBSCRIPTION_RENEWAL = AnalyticsEvent("subscripton_renewal", isTAInternalEvent: true)
+    static let SUBSCRIPTION_TRIAL_CONVERTED_TO_PAID = AnalyticsEvent("subscripton_trial_converted_to_paid", isTAInternalEvent: true)
+}
+
+public extension AnalyticsUserProperty {
+    /// The introductory offer from the current active subscription. If the introductory offer has passed, this will become nil.
+    /// Possible values: "trial" or "pay as you go" or "pay up front"
+    static let SUBSCRIPTION_INTRO_OFFER = AnalyticsUserProperty("subscription_intro_offer", isInternalUserProperty: true)
+
+    /// The product identifier of the currently active subscription
+    static let SUBSCRIPTION = AnalyticsUserProperty("subscription", isInternalUserProperty: true)
+    /// The product identifier of the currently active subscription that is separate from the main subscription.
+    /// Use this when there are multiple subscription active at the same time
+    static let SUBSCRIPTION2 = AnalyticsUserProperty("subscription2", isInternalUserProperty: true)
 }
 
 public extension AnalyticsUserProperty {
