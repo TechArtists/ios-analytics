@@ -37,7 +37,7 @@ public extension AnalyticsEvent {
     /// Parameters `from_version`, `to_version` (retrieved via `CFBundleShortVersionString` & `from_build`, `to_build` (retrieved via `CFBundleVersion`)
     static let APP_VERSION_UPDATE = AnalyticsEvent("app_version_update", isTAInternalEvent: true)
     /// Parameters `from_version`, `to_version` (retrieved via `ProcessInfo.processInfo.operatingSystemVersion`)
-    static let OS_VERSION_UPDATE = AnalyticsEvent("os_versin_update", isTAInternalEvent: true)
+    static let OS_VERSION_UPDATE = AnalyticsEvent("os_version_update", isTAInternalEvent: true)
 }
 
 public extension AnalyticsUserProperty {
