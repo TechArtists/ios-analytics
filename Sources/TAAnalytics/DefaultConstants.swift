@@ -38,6 +38,20 @@ public extension AnalyticsEvent {
     static let APP_VERSION_UPDATE = AnalyticsEvent("app_version_update", isTAInternalEvent: true)
     /// Parameters `from_version`, `to_version` (retrieved via `ProcessInfo.processInfo.operatingSystemVersion`)
     static let OS_VERSION_UPDATE = AnalyticsEvent("os_version_update", isTAInternalEvent: true)
+    
+    /// Parameters `name`, the name of the engagement and all the last parent view shown is automatically added as parameters with `view_%`
+    static let ENGAGEMENT = AnalyticsEvent("engagement", isTAInternalEvent: true)
+    /// Send this when you consider something the primary engagement of the app. This is sent alongside the usual `ENGAGEMENT` event with the same parameters
+    static let ENGAGEMENT_PRIMARY = AnalyticsEvent("engagement_primary", isTAInternalEvent: true)
+    
+    /// Sent when the onboarding starts and the very first screen is shown
+    static let ONBOARDING_START = AnalyticsEvent("onboarding_start", isTAInternalEvent: true)
+    /// Sent when the onboarding is finished
+    static let ONBOARDING_END = AnalyticsEvent("onboarding_end", isTAInternalEvent: true)
+    //// Sent when the account signup starts
+    static let ACCOUNT_SIGNUP_START = AnalyticsEvent("account_signup_start", isTAInternalEvent: true)
+    //// Sent when the account signup ends
+    static let ACCOUNT_SIGNUP_END = AnalyticsEvent("account_signup_end", isTAInternalEvent: true)
 }
 
 public extension AnalyticsUserProperty {
