@@ -120,7 +120,8 @@ public extension AnalyticsUserProperty {
     /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;group_name;group_order;group_stage`
     static let LAST_PARENT_VIEW_SHOWN = AnalyticsUserProperty("last_parent_view_shown", isInternalUserProperty: true)
     
-    // TODO: adi add Experiments
+    // TODO: adi add Experiments or ABTesting mechanism that's dependent on feature flags
+    // prefix all curent running experiments with `ab_%`
     
     /// If the variant is control/test.
     // TODO: move this out
