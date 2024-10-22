@@ -52,10 +52,10 @@ class TAAnalyticsPrefixTests {
 
     @Test
     func testInternalUserPropertiesArePrefixedCorrectly() {
-        ta.set(userProperty: .FOREGROUND_COUNT, to: "123")
-        #expect(ta.get(userProperty: .FOREGROUND_COUNT) == "123")
+        ta.set(userProperty: .APP_OPEN_COUNT, to: "123")
+        #expect(ta.get(userProperty: .APP_OPEN_COUNT) == "123")
         
-        #expect(ta.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.FOREGROUND_COUNT.rawValue)") == "123")
+        #expect(ta.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.APP_OPEN_COUNT.rawValue)") == "123")
     }
 
     @Test
@@ -70,10 +70,10 @@ class TAAnalyticsPrefixTests {
 
     @Test
     func testInternalEventsArePrefixedCorrectly() {
-        ta.track(event: .APP_FOREGROUND)
+        ta.track(event: .APP_OPEN)
 
         // TODO: fix this, because the events are now sent async via the buffer
-        #expect(unitTestConsumer.eventsSent[0].0.rawValue == "manual_test_ev_\(AnalyticsEvent.APP_FOREGROUND.rawValue)")
+        #expect(unitTestConsumer.eventsSent[0].0.rawValue == "manual_test_ev_\(AnalyticsEvent.APP_OPEN.rawValue)")
     }
 
     

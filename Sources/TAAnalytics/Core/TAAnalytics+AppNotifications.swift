@@ -30,6 +30,9 @@ public protocol TAAnalyticsAppNotificationsProtocol {
     func addAppLifecycleObservers()
 }
 
+// TODO: move it into TAAnlytics
+var isFirstAppOpenThisProcess = false
+
 extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
     /// - Observers:
@@ -40,10 +43,15 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
         let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { notification in
 
             // TODO: adi user defaults guard for is ready?
-            self.set(userProperty: .FOREGROUND_COUNT,
-                     to:"\(self.getNextCounterValueFrom(userProperty: .FOREGROUND_COUNT))")
+            self.set(userProperty: .APP_OPEN_COUNT,
+                     to:"\(self.getNextCounterValueFrom(userProperty: .APP_OPEN_COUNT))")
             
-            self.track(event: .APP_FOREGROUND)
+            if isFirstAppOpenThisProcess {
+                self.track(event: .APP_OPEN, params: ["is_cold_launch": true])
+                isFirstAppOpenThisProcess = true
+            } else {
+                self.track(event: .APP_OPEN, params: ["is_cold_launch": false])
+            }
         }
         let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { notification in
             
@@ -57,7 +65,7 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
             params["last_parent_view_group_order"] = self.lastParentViewShown?.groupDetails?.order
             params["last_parent_view_group_stage"] = self.lastParentViewShown?.groupDetails?.stage.description
 
-            self.track(event: .APP_BACKGROUND, params: params)
+            self.track(event: .APP_CLOSE, params: params)
         }
         
         notificationCenterObservers.append(obsForeground)

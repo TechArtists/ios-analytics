@@ -29,10 +29,10 @@ public extension AnalyticsEvent {
     static let UI_VIEW_SHOWN = AnalyticsEvent("ui_view_shown")
     static let UI_BUTTON_TAPPED = AnalyticsEvent("ui_button_tapped")
     
-    /// Sent when the app goes to the foreground as detected by `UIApplication.willEnterForegroundNotification`
-    static let APP_FOREGROUND = AnalyticsEvent("app_foreground", isTAInternalEvent: true)
+    /// Sent when the app goes to the foreground as detected by `UIApplication.willEnterForegroundNotification`. It has an `is_cold_launch` boolean parameter
+    static let APP_OPEN = AnalyticsEvent("app_open", isTAInternalEvent: true)
     /// Sent when the app goes to the background as detected by `UIApplication.didEnterBackgroundNotification`. It also has parameters for the `last_parent_view` that was shown (aka no subviews).
-    static let APP_BACKGROUND = AnalyticsEvent("app_background", isTAInternalEvent: true)
+    static let APP_CLOSE = AnalyticsEvent("app_close", isTAInternalEvent: true)
     
     /// Parameters `from_version`, `to_version` (retrieved via `CFBundleShortVersionString` & `from_build`, `to_build` (retrieved via `CFBundleVersion`)
     static let APP_VERSION_UPDATE = AnalyticsEvent("app_version_update", isTAInternalEvent: true)
@@ -114,8 +114,8 @@ public extension AnalyticsUserProperty {
 
     /// Ever increasing counter on each cold app launch, starting from 1 at first open.
     static let COLD_APP_LAUNCH_COUNT = AnalyticsUserProperty("cold_app_launch_count", isInternalUserProperty: true)
-    /// Ever increasing counter on each app foreground, starting from 1 at first open
-    static let FOREGROUND_COUNT = AnalyticsUserProperty("foreground_count", isInternalUserProperty: true)
+    /// Ever increasing counter on each app open, starting from 1 at first open
+    static let APP_OPEN_COUNT = AnalyticsUserProperty("app_open_count", isInternalUserProperty: true)
     
     /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;group_name;group_order;group_stage`
     static let LAST_PARENT_VIEW_SHOWN = AnalyticsUserProperty("last_parent_view_shown", isInternalUserProperty: true)

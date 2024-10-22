@@ -43,9 +43,9 @@ class TAAnalyticsNotificationsTests {
         analytics.addAppLifecycleObservers()
         
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "1")
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "1")
         
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "2")
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "2")
     }
 }
