@@ -101,7 +101,7 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
 extension TAAnalytics: TAAnalyticsPaywallsProtocol {
 
     public func trackPaywallShown(placement: String, id: String?) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["placement"] = placement
         if let id = id {
@@ -113,7 +113,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
     }
     
     public func trackPaywallClosed(placement: String, id: String?) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["placement"] = placement
         if let id = id {
@@ -124,7 +124,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
     }
 
     public func trackPaywallPurchaseTapped(buttonName: String, productIdentifier: String, paywallPlacement: String, paywallID: String?) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["button_name"] = buttonName
         params["product_identifier"] = productIdentifier
@@ -138,7 +138,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
     }
 
     public func trackErrorPaywallPurchase(error: Error?, productIdentifier: String, paywallPlacement: String, paywallID: String?) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
 
         if let error = error {
             let nserror = error as NSError
@@ -158,7 +158,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
     }
 
     public func trackErrorPaywallShown(error: Error?, paywallPlacement: String, paywallID: String?) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
 
         if let error = error {
             let nserror = error as NSError

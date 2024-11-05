@@ -52,7 +52,7 @@ public protocol TAAnalyticsEngagementProtocol: TAAnalyticsBaseProtocol {
 extension TAAnalytics: TAAnalyticsEngagementProtocol {
 
     public func track(engagement: String){
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
         params["name"] = engagement
 
         if let view = self.lastParentViewShown {
@@ -62,7 +62,7 @@ extension TAAnalytics: TAAnalyticsEngagementProtocol {
     }
     
     public func track(engagementPrimary: String){
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
         params["name"] = engagementPrimary
 
         if let view = self.lastParentViewShown {

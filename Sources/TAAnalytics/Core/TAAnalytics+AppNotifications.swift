@@ -57,7 +57,7 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
             
             // TODO: add unit test for last view shown
             // add user property for last view types shown
-            var params = [String: AnalyticsBaseParameterValue]()
+            var params = [String: (any AnalyticsBaseParameterValue)]()
 
             params["last_parent_view_name"] = self.lastParentViewShown?.name
             params["last_parent_view_type"] = self.lastParentViewShown?.type

@@ -36,7 +36,7 @@ import UIKit
 ///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, AnalyticsEvent.EVENT_I_EXPECTED)
 public class MockTAAnalytics : TAAnalyticsProtocol {
     
-    public var eventsSent = [(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue?])]()
+    public var eventsSent = [(event: AnalyticsEvent, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [AnalyticsUserProperty: String]()
     public var lastParentViewShown: AnalyticsView?
 
@@ -48,7 +48,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
 
     public func start(customInstallUserPropertiesCompletion: (() -> ())? = nil,
                       shouldLogFirstOpen: Bool = true,
-                      firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)? = nil ) {
+                      firstOpenParameterCallback: (() -> [String: (any AnalyticsBaseParameterValue)]?)? = nil ) {
         Self.staticLoadCount += 1
         
         customInstallUserPropertiesCompletion?()
@@ -78,7 +78,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     
     public var installAgeLocalizedCalendar: Int? = nil
     
-    @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : AnalyticsBaseParameterValue]?) -> Bool {
+    @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : (any AnalyticsBaseParameterValue)]?) -> Bool {
         let params = paramsCallback()
         track(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
         return true

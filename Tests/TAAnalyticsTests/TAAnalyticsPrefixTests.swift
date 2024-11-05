@@ -22,59 +22,89 @@
 //  THE SOFTWARE.
 import Testing
 import Foundation
-import TAAnalytics
+@testable import TAAnalytics
 
 class TAAnalyticsPrefixTests {
 
-    let ta: TAAnalytics
+    let analytics: TAAnalytics
     let unitTestConsumer: TAAnalyticsUnitTestConsumer
     
-    init() {
-        let mockUserDefaults = UserDefaults(suiteName: "TATests")!
+    init() async {
+        UserDefaults.standard.removePersistentDomain(forName: "TATestsPrefix")
+        let mockUserDefaults = UserDefaults(suiteName: "TATestsPrefix")!
         unitTestConsumer = TAAnalyticsUnitTestConsumer()
-        ta = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: [unitTestConsumer],
-                                                   userDefaults: mockUserDefaults,
-                                           automaticallyTrackedEventsPrefixConfig: TAAnalyticsConfig.PrefixConfig(eventPrefix: "test_ev_", userPropertyPrefix: "test_up_"),
-                                           manuallyTrackedEventsPrefixConfig: TAAnalyticsConfig.PrefixConfig(eventPrefix: "manual_test_ev_", userPropertyPrefix: "manual_test_up_")))
+        analytics = TAAnalytics(
+            config: TAAnalyticsConfig(
+                analyticsVersion: "1",
+                consumers: [unitTestConsumer],
+                userDefaults: mockUserDefaults,
+                automaticallyTrackedEventsPrefixConfig: TAAnalyticsConfig.PrefixConfig(
+                    eventPrefix: "test_ev_",
+                    userPropertyPrefix: "test_up_"
+                ),
+                manuallyTrackedEventsPrefixConfig: TAAnalyticsConfig.PrefixConfig(
+                    eventPrefix: "manual_test_ev_",
+                    userPropertyPrefix: "manual_test_up_"
+                )
+            )
+        )
+        await analytics.start()
     }
     
     @Test
     func testManualUserPropertiesArePrefixedCorrectly() {
         let up = AnalyticsUserProperty("ta_test")
         
-        ta.set(userProperty: up, to: "123")
+        analytics.set(userProperty: up, to: "123")
         
         // below can fail if setting & getting aren't both prefixed
-        #expect(ta.get(userProperty: up) == "123")
+        #expect(analytics.get(userProperty: up) == "123")
         
-        #expect(ta.stringFromUserDefaults(forKey: "userProperty_manual_test_up_ta_test") == "123")
+        #expect(analytics.stringFromUserDefaults(forKey: "userProperty_manual_test_up_ta_test") == "123")
     }
 
     @Test
     func testInternalUserPropertiesArePrefixedCorrectly() {
-        ta.set(userProperty: .APP_OPEN_COUNT, to: "123")
-        #expect(ta.get(userProperty: .APP_OPEN_COUNT) == "123")
+        analytics.set(userProperty: .FOREGROUND_COUNT, to: "123")
+        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "123")
         
-        #expect(ta.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.APP_OPEN_COUNT.rawValue)") == "123")
+        #expect(analytics.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.FOREGROUND_COUNT.rawValue)") == "123")
     }
 
     @Test
-    func testManualEventsArePrefixedCorrectly() {
+    func testManualEventsArePrefixedCorrectly() async throws {
         let ev = AnalyticsEvent("ta_test")
         
-        ta.track(event: ev)
+        analytics.track(event: ev)
 
         // TODO: fix this, because the events are now sent async via the buffer
-        #expect(unitTestConsumer.eventsSent[0].0.rawValue == "manual_test_ev_ta_test")
+        let _ = try await requireEvent(named: "manual_test_ev_ta_test")
     }
 
     @Test
-    func testInternalEventsArePrefixedCorrectly() {
-        ta.track(event: .APP_OPEN)
+    func testInternalEventsArePrefixedCorrectly() async throws {
+        analytics.track(event: .APP_FOREGROUND)
 
         // TODO: fix this, because the events are now sent async via the buffer
-        #expect(unitTestConsumer.eventsSent[0].0.rawValue == "manual_test_ev_\(AnalyticsEvent.APP_OPEN.rawValue)")
+        let _ = try await requireEvent(named: "test_ev_\(AnalyticsEvent.APP_FOREGROUND.rawValue)")
     }
-
     
+    func requireEvent(
+        named eventName: String,
+        matching predicate: @escaping (DeferredQueuedEvent) -> Bool = { _ in true },
+        timeout: TimeInterval = 3
+    ) async throws -> DeferredQueuedEvent {
+        try await withThrowingTimeout(seconds: timeout) {
+            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+                guard deferredEvent.event.rawValue == eventName else { continue }
+
+                if predicate(deferredEvent) {
+                    return deferredEvent
+                }
+            }
+
+            Issue.record("No event found for \(eventName)")
+            throw EventStreamError.eventNotFound
+        }
+    }
 }

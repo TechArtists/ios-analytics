@@ -20,39 +20,68 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
+
 import Testing
 import Foundation
-import TAAnalytics
+@testable import TAAnalytics
+
+enum EventStreamError: Error {
+    case eventNotFound
+}
 
 class TAAnalyticsBase {
     let analytics: TAAnalytics
     let unitTestConsumer : TAAnalyticsUnitTestConsumer
     let notificationCenter = NotificationCenter.default
     
-    init() {
+    init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
         let mockUserDefaults = UserDefaults(suiteName: "TATests")!
         unitTestConsumer = TAAnalyticsUnitTestConsumer()
-        analytics =  TAAnalytics(config: .init(analyticsVersion: "0", consumers: [], userDefaults: mockUserDefaults))
+        analytics =  TAAnalytics(
+            config: .init(
+                analyticsVersion: "0",
+                consumers: [unitTestConsumer],
+                userDefaults: mockUserDefaults
+            )
+        )
+        await analytics.start()
     }
 
     @Test
-    func testThatNilsAreNotSentToConsumers() {
+    func testThatNilsAreNotSentToConsumers() async throws {
 
-        var params = [String: AnalyticsBaseParameterValue?]()
+        var params = [String: (any AnalyticsBaseParameterValue)?]()
         params["key1"] = "value1"
         params["key2"] = nil
         params["key3"] = "value3"
         
-        
         analytics.track(event: .FIRST_OPEN, params: params, logCondition: .logAlways)
         
-        // TODO: confirm that the only parameters sent are key1 & key3
-        #expect(unitTestConsumer.eventsSent[0].params.count == 2)
-        #expect((unitTestConsumer.eventsSent[0].params["key1"] as! String) == "value1")
-        #expect(unitTestConsumer.eventsSent[0].params["key2"] == nil)
-        #expect((unitTestConsumer.eventsSent[0].params["key3"] as! String) == "value3")
+         //TODO: confirm that the only parameters sent are key1 & key3
+        let deferredEvent = try await requireEvent(named: "ta_first_open")
+        #expect(deferredEvent.parameters?.count == 2)
+        #expect((deferredEvent.parameters?["key1"] as! String) == "value1")
+        #expect(deferredEvent.parameters?["key2"] == nil)
+        #expect((deferredEvent.parameters?["key3"] as! String) == "value3")
     }
-
     
+    func requireEvent(
+        named eventName: String,
+        matching predicate: @escaping (DeferredQueuedEvent) -> Bool = { _ in true },
+        timeout: TimeInterval = 3
+    ) async throws -> DeferredQueuedEvent {
+        try await withThrowingTimeout(seconds: timeout) {
+            for await eventSpecific in analytics.eventQueueBuffer.passthroughStream.stream {
+                guard eventSpecific.event.rawValue == eventName else { continue }
+
+                if predicate(eventSpecific) {
+                    return eventSpecific
+                }
+            }
+
+            Issue.record("No event found for \(eventName)")
+            throw EventStreamError.eventNotFound
+        }
+    }
 }

@@ -33,14 +33,14 @@ public protocol TAAnalyticsBaseProtocol: AnyObject {
     
     func start(customInstallUserPropertiesCompletion: (() -> ())?,
                       shouldLogFirstOpen: Bool,
-                      firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)?) async
+                      firstOpenParameterCallback: (() -> [String: (any AnalyticsBaseParameterValue)]?)?) async
     
     ///
     /// - Parameters:
     ///   - event:
     ///   - params: Note that if the parameter value is `nil`, the parameter will not be removed before sending
     ///   - logCondition: if the event should be logged for each ocurrence. Note that this only applies on a per `AnalyticsEvent` level, parameters are not included
-    func track(event: AnalyticsEvent, params: [String: AnalyticsBaseParameterValue?]?, logCondition: EventLogCondition)
+    func track(event: AnalyticsEvent, params: [String: (any AnalyticsBaseParameterValue)?]?, logCondition: EventLogCondition)
     
     func set(userProperty: AnalyticsUserProperty, to: String?)
     
@@ -57,7 +57,7 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     
     public func track(
         event: AnalyticsEvent,
-        params: [String: AnalyticsBaseParameterValue?]? = nil,
+        params: [String: (any AnalyticsBaseParameterValue)?]? = nil,
         logCondition: EventLogCondition = .logAlways
     ) {
         let paramsWithoutNils = params?.compactMapValues { $0 }

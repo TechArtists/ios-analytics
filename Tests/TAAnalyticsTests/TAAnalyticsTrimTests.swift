@@ -22,22 +22,58 @@
 //  THE SOFTWARE.
 import Testing
 import Foundation
-import TAAnalytics
+@testable import TAAnalytics
 
 class TAAnalyticsTrimTests {
+    let analytics: TAAnalytics
+    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    
+    init() async {
+        UserDefaults.standard.removePersistentDomain(forName: "TATests")
+        let mockUserDefaults = UserDefaults(suiteName: "TATests")!
+        unitTestConsumer = TAAnalyticsUnitTestConsumer(eventTrimLength: 7, userPropertyTrimLength: 7)
+        analytics =  TAAnalytics(
+            config: .init(
+                analyticsVersion: "0",
+                consumers: [unitTestConsumer],
+                userDefaults: mockUserDefaults
+            )
+        )
+        await analytics.start()
+    }
     
     @Test
-    func testTrimmingEvents() {
-        let mockUserDefaults = UserDefaults(suiteName: "TATests")!
-        let unitTestConsumer = TAAnalyticsUnitTestConsumer(eventTrimLength: 10, userPropertyTrimLength: 10)
-        let ta = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1", consumers: [unitTestConsumer],userDefaults: mockUserDefaults))
+    func testTrimmingEvents() async throws {
+        let trimmedEvent = unitTestConsumer.trim(event: .init("ta_test_test_test"))
+        unitTestConsumer.track(trimmedEvent: trimmedEvent, params: nil)
         
-        // TODO: to implement once we figure out the async buffer
+        #expect(unitTestConsumer.eventsSent.contains(where: { $0.event.rawValue == "ta_test" }))
     }
 
     @Test
     func testTrimmingUserProperties() {
-        // TODO: to implement once we figure out the async buffer
+        let trimmedUserProperty = unitTestConsumer.trim(userProperty: AnalyticsUserProperty("ta_test_test_test"))
+        unitTestConsumer.set(trimmedUserProperty: trimmedUserProperty, to: "")
+        
+        #expect(unitTestConsumer.userPropertiesSet.contains(where: { $0.key.rawValue == "ta_test" }))
     }
     
+    func requireEvent(
+        named eventName: String,
+        matching predicate: @escaping (DeferredQueuedEvent) -> Bool = { _ in true },
+        timeout: TimeInterval = 3
+    ) async throws -> DeferredQueuedEvent {
+        try await withThrowingTimeout(seconds: timeout) {
+            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+                guard deferredEvent.event.rawValue == eventName else { continue }
+
+                if predicate(deferredEvent) {
+                    return deferredEvent
+                }
+            }
+
+            Issue.record("No event found for \(eventName)")
+            throw EventStreamError.eventNotFound
+        }
+    }
 }

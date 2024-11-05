@@ -10,7 +10,7 @@ import TAAnalytics
 
 class TAAnalyticsUnitTestConsumer: AnalyticsConsumer {
     
-    public var eventsSent = [(event: AnalyticsEventTrimmed, params: [String: AnalyticsBaseParameterValue?])]()
+    public var eventsSent = [(event: AnalyticsEventTrimmed, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [AnalyticsUserPropertyTrimmed: String]()
     
     public typealias T = TAAnalyticsUnitTestConsumer
@@ -18,7 +18,6 @@ class TAAnalyticsUnitTestConsumer: AnalyticsConsumer {
         self
     }
 
-    
     private let eventTrimLength: Int
     private let userPropertyTrimLength: Int
      

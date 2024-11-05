@@ -81,15 +81,18 @@ class DefaultInstallUserPropertiesCalculator {
         let isJailbroken = UIApplication.shared.canOpenURL(URL(string: "cydia://package/com.an.example.package")!) ? "true" : "false"
         analytics.set(userProperty: .INSTALL_IS_JAILBROKEN, to: isJailbroken)
     }
+    
     private func setInstallUIAppearance() {
-        let vc = UIViewController()
-        let uiAppearance: String
-        if #available(iOS 12.0, *) {
-            uiAppearance = vc.traitCollection.userInterfaceStyle.debugDescription
-        } else {
-            uiAppearance = "light/dark mode not available"
+        DispatchQueue.main.async {
+            let vc = UIViewController()
+            let uiAppearance: String
+            if #available(iOS 12.0, *) {
+                uiAppearance = vc.traitCollection.userInterfaceStyle.debugDescription
+            } else {
+                uiAppearance = "light/dark mode not available"
+            }
+            self.analytics.set(userProperty: .INSTALL_UI_APPEARANCE, to: uiAppearance)
         }
-        analytics.set(userProperty: .INSTALL_UI_APPEARANCE, to: uiAppearance)
     }
     private func setInstallDynamicType() {
         let dynamicType = UIApplication.shared.preferredContentSizeCategory.debugDescription

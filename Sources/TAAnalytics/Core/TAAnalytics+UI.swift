@@ -69,7 +69,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
 public extension TAAnalyticsUIProtocol{
 
     func track(viewShown view: AnalyticsView) {
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
         
         addParametersFor(view: view, params: &params, prefix: "")
         if let parentView = view.parentView {
@@ -83,7 +83,7 @@ public extension TAAnalyticsUIProtocol{
     }
     
     func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
-        var params = [String: AnalyticsBaseParameterValue]()
+        var params = [String: (any AnalyticsBaseParameterValue)]()
         
         params["name"] = symbolicName
         if let index = index {
@@ -100,7 +100,7 @@ public extension TAAnalyticsUIProtocol{
         track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
     }
     
-    internal func addParametersFor(view: AnalyticsView, params: inout [String: AnalyticsBaseParameterValue], prefix: String) {
+    internal func addParametersFor(view: AnalyticsView, params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
         params["\(prefix)name"] = view.name
         if let type = view.type {
             params["\(prefix)type"] = type

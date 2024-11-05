@@ -24,28 +24,58 @@
 
 import Testing
 import Foundation
-import TAAnalytics
+@testable import TAAnalytics
 import UIKit
 
 class TAAnalyticsNotificationsTests {
 
     var analytics: TAAnalytics
+    let unitTestConsumer : TAAnalyticsUnitTestConsumer
     var notificationCenter = NotificationCenter.default
     
-    init() {
-        UserDefaults.standard.removePersistentDomain(forName: "TATests")
-        let defaults = UserDefaults(suiteName: "TATests")!
-        analytics =  TAAnalytics(config: .init(analyticsVersion: "0", consumers: [], userDefaults: defaults))
+    init() async {
+        UserDefaults.standard.removePersistentDomain(forName: "TATestsNotifcations")
+        let defaults = UserDefaults(suiteName: "TATestsNotifcations")!
+        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        analytics =  TAAnalytics(
+            config: .init(analyticsVersion: "0", consumers: [unitTestConsumer], userDefaults: defaults)
+        )
+        await analytics.start()
     }
     
     @Test
-    func testAddAppLifecycleObservers_ForegroundNotification() {
-        analytics.addAppLifecycleObservers()
+    func testAddAppLifecycleObservers_ForegroundNotification() async throws {
+        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+        let _ = try await requireEvent(named: "ta_app_foreground")
+        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "1")
         
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "1")
-        
-        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "2")
+        let _ = try await requireEvent(named: "ta_app_foreground")
+        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "2")
+    }
+    
+    @Test
+    func testAddAppLifecycleObservers_BackgroundNotification() async throws {
+        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+        let _ = try await requireEvent(named: "ta_app_background")
+    }
+    
+    func requireEvent(
+        named eventName: String,
+        matching predicate: @escaping (DeferredQueuedEvent) -> Bool = { _ in true },
+        timeout: TimeInterval = 3
+    ) async throws -> DeferredQueuedEvent {
+        try await withThrowingTimeout(seconds: timeout) {
+            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+                guard deferredEvent.event.rawValue == eventName else { continue }
+
+                if predicate(deferredEvent) {
+                    return deferredEvent
+                }
+            }
+
+            Issue.record("No event found for \(eventName)")
+            throw EventStreamError.eventNotFound
+        }
     }
 }

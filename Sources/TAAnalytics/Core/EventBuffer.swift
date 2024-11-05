@@ -8,10 +8,10 @@
 import Foundation
 import OSLog
 
-public struct DeferedQueuedEvent {
+public struct DeferredQueuedEvent {
     let event: AnalyticsEvent
     let dateAdded: Date
-    let parameters: [String: AnalyticsBaseParameterValue]?
+    let parameters: [String: (any AnalyticsBaseParameterValue)]?
 }
 
 struct Queue<T> {
@@ -55,9 +55,13 @@ struct Queue<T> {
 }
 
 actor EventBuffer {
-    private var eventQueue: Queue<DeferedQueuedEvent> = .init()
+    private var eventQueue: Queue<DeferredQueuedEvent> = .init()
+    
     nonisolated(unsafe) private(set) var startedConsumers: [any AnalyticsConsumer] = []
+    
     public let allConsumers: [any AnalyticsConsumer]
+    
+    nonisolated(unsafe) internal let passthroughStream = PassthroughAsyncStream<DeferredQueuedEvent>()
     
     init(allConsumers: [any AnalyticsConsumer]) {
         self.allConsumers = allConsumers
@@ -65,7 +69,7 @@ actor EventBuffer {
     
     func addEvent(
         _ event: AnalyticsEvent,
-        params: [String: AnalyticsBaseParameterValue]? = nil
+        params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
         if startedConsumers.isEmpty {
             eventQueue.enqueue(.init(event: event, dateAdded: Date(), parameters: params))
@@ -81,7 +85,7 @@ actor EventBuffer {
     
     private func trackEventInStartedConsumers(
         _ event: AnalyticsEvent,
-        params: [String: AnalyticsBaseParameterValue]? = nil
+        params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
         for consumer in startedConsumers {
             consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
@@ -90,9 +94,10 @@ actor EventBuffer {
                 log: LOGGER,
                 type: .info,
                 String(describing: consumer),
-                event.rawValue
+                consumer.trim(event: event).rawValue
             )
         }
+        passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
     
     private func flushDeferredEventQueue() {

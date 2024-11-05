@@ -41,7 +41,7 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
     ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error_foo`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func trackErrorEvent(eventSuffix: String, error: Error?, extraParams: [String: AnalyticsBaseParameterValue]?)
+    func trackErrorEvent(eventSuffix: String, error: Error?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 }
 
 // MARK: - Default Implementations
@@ -60,8 +60,8 @@ public extension TAAnalyticsErrorProtocol {
     ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error foo`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func trackErrorEvent(eventSuffix: String, error: Error? = nil, extraParams: [String: AnalyticsBaseParameterValue]? = nil) {
-        var params = [String: AnalyticsBaseParameterValue]()
+    func trackErrorEvent(eventSuffix: String, error: Error? = nil, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
+        var params = [String: (any AnalyticsBaseParameterValue)]()
         if let error = error {
             let nserror = error as NSError
             params["error_domain"] = nserror.domain

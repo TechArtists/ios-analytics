@@ -41,11 +41,11 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         
     }
     
-    public func convert(parameter: AnalyticsBaseParameterValue) -> AnalyticsBaseParameterValue {
+    public func convert(parameter: (any AnalyticsBaseParameterValue)) -> (any AnalyticsBaseParameterValue) {
         return parameter
     }
     
-    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : AnalyticsBaseParameterValue]?) {
+    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : (any AnalyticsBaseParameterValue)]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
         os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, trimmedEvent.rawValue, String(describingOptional: paramsString))
     }
@@ -67,7 +67,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     ///
     /// - Parameters:
     ///   - privacyRedacted: if the parameter values should be redacted or not. If they contain PIIA, they should be redacted
-    public func debugStringForLog(event: AnalyticsEvent, params: [String : AnalyticsBaseParameterValue]?, privacyRedacted: Bool) -> String {
+    public func debugStringForLog(event: AnalyticsEvent, params: [String : (any AnalyticsBaseParameterValue)]?, privacyRedacted: Bool) -> String {
         let paramsString : String?
         if privacyRedacted {
             paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):<private>" }).joined(separator: ", ")

@@ -62,7 +62,7 @@ public class TAAnalytics: ObservableObject {
     public func start(
         customInstallUserPropertiesCompletion: (() -> ())? = nil,
         shouldLogFirstOpen: Bool = true,
-        firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)? = nil
+        firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) async {
         logStartupDetails()
         
@@ -196,7 +196,7 @@ public class TAAnalytics: ObservableObject {
     private func handleFirstOpen(
         customInstallUserPropertiesCompletion: (() -> ())? = nil,
         shouldLogFirstOpen: Bool = true,
-        firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)? = nil
+        firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) {
         os_log("Is first open", log: LOGGER, type: .info)
         
@@ -219,7 +219,7 @@ public class TAAnalytics: ObservableObject {
         calculator.calculateUserPropertiesAndSetThem()
     }
 
-    private func logFirstOpen(firstOpenParameterCallback: (() -> [String: AnalyticsBaseParameterValue]?)?) {
+    private func logFirstOpen(firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)?) {
         let firstOpenParams = firstOpenParameterCallback?()
         maybeLogTAFirstOpen { return firstOpenParams }
     }

@@ -28,7 +28,7 @@ public protocol AnalyticsPlatformParameterValue {}
 
 /// AnalyticsBase accepts any String/Int/Double/Float/Boolean
 /// that it then convert to String/NSNumber so that Firebase can digest it
-public protocol AnalyticsBaseParameterValue: CustomStringConvertible {
+public protocol AnalyticsBaseParameterValue: CustomStringConvertible, Equatable {
 }
 
 // When adding any new conformances, make sure to update all existing AnalyticsPlatform#convert methods

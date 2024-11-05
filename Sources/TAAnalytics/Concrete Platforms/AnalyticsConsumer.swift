@@ -40,7 +40,7 @@ public protocol AnalyticsConsumer<T> where T: AnyObject {
     func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws
         
     /// Log event, enforces trimming before calling the consumer-specific implementation.
-    func track(trimmedEvent: AnalyticsEventTrimmed, params: [String: AnalyticsBaseParameterValue]?)
+    func track(trimmedEvent: AnalyticsEventTrimmed, params: [String: any AnalyticsBaseParameterValue]?)
 
     /// Set user property
     func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?)
