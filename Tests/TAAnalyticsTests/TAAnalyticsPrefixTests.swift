@@ -65,10 +65,10 @@ class TAAnalyticsPrefixTests {
 
     @Test
     func testInternalUserPropertiesArePrefixedCorrectly() {
-        analytics.set(userProperty: .FOREGROUND_COUNT, to: "123")
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "123")
+        analytics.set(userProperty: .APP_OPEN_COUNT, to: "123")
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "123")
         
-        #expect(analytics.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.FOREGROUND_COUNT.rawValue)") == "123")
+        #expect(analytics.stringFromUserDefaults(forKey: "userProperty_test_up_\(AnalyticsUserProperty.APP_OPEN_COUNT.rawValue)") == "123")
     }
 
     @Test
@@ -83,10 +83,10 @@ class TAAnalyticsPrefixTests {
 
     @Test
     func testInternalEventsArePrefixedCorrectly() async throws {
-        analytics.track(event: .APP_FOREGROUND)
+        analytics.track(event: .APP_OPEN)
 
         // TODO: fix this, because the events are now sent async via the buffer
-        let _ = try await requireEvent(named: "test_ev_\(AnalyticsEvent.APP_FOREGROUND.rawValue)")
+        let _ = try await requireEvent(named: "test_ev_\(AnalyticsEvent.APP_OPEN.rawValue)")
     }
     
     func requireEvent(

@@ -36,7 +36,7 @@ var isFirstAppOpenThisProcess = false
 extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
     /// - Observers:
-    ///   - **Foreground**: Increments `FOREGROUND_COUNT` and logs `.APP_FOREGROUND` (skips increment on first event).
+    ///   - **Foreground**: Increments `APP_OPEN_COUNT` and logs `.APP_OPEN` (skips increment on first event).
     ///   - **Background**: Logs `.APP_BACKGROUND`.
     public func addAppLifecycleObservers() {
         

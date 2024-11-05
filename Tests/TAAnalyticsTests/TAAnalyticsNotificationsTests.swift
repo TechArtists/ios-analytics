@@ -46,12 +46,12 @@ class TAAnalyticsNotificationsTests {
     @Test
     func testAddAppLifecycleObservers_ForegroundNotification() async throws {
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        let _ = try await requireEvent(named: "ta_app_foreground")
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "1")
+        let _ = try await requireEvent(named: "ta_APP_OPEN")
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "1")
         
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
-        let _ = try await requireEvent(named: "ta_app_foreground")
-        #expect(analytics.get(userProperty: .FOREGROUND_COUNT) == "2")
+        let _ = try await requireEvent(named: "ta_APP_OPEN")
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "2")
     }
     
     @Test
