@@ -95,8 +95,12 @@ class DefaultInstallUserPropertiesCalculator {
         }
     }
     private func setInstallDynamicType() {
-        let dynamicType = UIApplication.shared.preferredContentSizeCategory.debugDescription
-        analytics.set(userProperty: .INSTALL_DYNAMIC_TYPE, to: dynamicType)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            
+            let dynamicType = UIApplication.shared.preferredContentSizeCategory.debugDescription
+            self.analytics.set(userProperty: .INSTALL_DYNAMIC_TYPE, to: dynamicType)
+        }
     }
 }
 

@@ -24,7 +24,7 @@
 import Foundation
 
 ///   - parentView: the parent view of this view. If you're showing a full screen view controller, then this should be nil. If you want to track when a specific error message label has been shown, then in that case the `parentView` should be the filled.
-public class AnalyticsView: Hashable, Equatable {
+public class AnalyticsView: ObservableObject, Hashable, Equatable {
     public let name: String
     public let type: String?
     

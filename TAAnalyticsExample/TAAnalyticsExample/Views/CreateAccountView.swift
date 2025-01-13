@@ -112,10 +112,9 @@ struct CreateAccountView: View {
                 .eventStream else { return }
             
             for await trimmedEvent in eventStream {
-                print(trimmedEvent.event.rawValue)
+                print(trimmedEvent.rawValue)
             }
         }
-        
     }
     
 }

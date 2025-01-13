@@ -44,7 +44,7 @@ class MyCallManager {
             // actually place the call somehow
             // Carrier.placeCall(phoneNumber)
         } else {
-            analytics.logErrorEvent(eventSuffix: "call_not_placed", extraParams: ["reason": "not enough digits", "digits": phoneNumber.count])
+            analytics.trackErrorEvent(eventSuffix: "call_not_placed", extraParams: ["reason": "not enough digits", "digits": phoneNumber.count])
         }
     }
     
