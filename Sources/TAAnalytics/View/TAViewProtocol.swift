@@ -12,13 +12,15 @@ public protocol TABaseView: View {
     
     @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
     
-    let analyticsView: AnalyticsView { get }
+    var analyticsView: AnalyticsView { get }
     
-    let taAnalytics: TAAnalytics { get }
+    var taAnalytics: TAAnalytics { get }
 }
 
 public extension TABaseView {
-    @ViewBuilder var body: some View {
+    @ViewBuilder
+    @MainActor
+    var body: some View {
         viewBody
             .onFirstAppear {
                 taAnalytics.track(viewShown: analyticsView)

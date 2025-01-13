@@ -5,6 +5,7 @@
 //  Created by Robert Tataru on 13.01.2025.
 //
 
+import SwiftUI
 
 public struct OnFirstAppearModifier: ViewModifier {
 
