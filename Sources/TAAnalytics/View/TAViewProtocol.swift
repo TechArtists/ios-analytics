@@ -25,5 +25,6 @@ public extension TABaseView {
             .onFirstAppear {
                 taAnalytics.track(viewShown: analyticsView)
             }
+            .environmentObject(analyticsView)
     }
 }
