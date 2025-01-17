@@ -47,19 +47,19 @@ class TAAnalyticsUIEventsTests {
     }
         
     @Test
-    func testLastViewShownOnlyRemembersParentViews() async throws {
+    func testLastViewShowOnlyRemembersParentViews() async throws {
 
         let step1 = AnalyticsView(name: "step 1", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 1, isFinalScreen: false))
         let step1Subview = AnalyticsView(name: "incorrect email label", type: "foo", parentView: step1)
         let step2 = AnalyticsView(name: "step 2", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 2, isFinalScreen: false))
         let step3 = AnalyticsView(name: "step 3", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 3, isFinalScreen: true))
 
-        analytics.track(viewShown: step1)
-        analytics.track(viewShown: step1Subview)
+        analytics.track(viewShow: step1)
+        analytics.track(viewShow: step1Subview)
         // TODO: test that sending the step1 subview does not have any "group_" parameters on it
         // (impossible due to the separate the swift initializers, but we should test it in case someone refactors the initializers in the future)
         // . Only the "parent_view" parameters populated
-        let deferredEvent = try await requireEvent(named: "ui_view_shown", matching: {
+        let deferredEvent = try await requireEvent(named: "ui_view_show", matching: {
             if let eventName = $0.parameters?["name"],
                let stringEventName = eventName as? String {
                 return stringEventName == "incorrect email label"
@@ -89,11 +89,11 @@ class TAAnalyticsUIEventsTests {
             #expect((params?["last_parent_view_group_stage"] as! String) == lastParentViewShown.groupDetails?.stage.description)
         }
         
-        analytics.track(viewShown: step2)
+        analytics.track(viewShow: step2)
         #expect(analytics.lastParentViewShown == step2)
         #expect(analytics.get(userProperty: .LAST_PARENT_VIEW_SHOWN) == "step 2;nil;onboarding;2;middle")
 
-        analytics.track(viewShown: step3)
+        analytics.track(viewShow: step3)
         #expect(analytics.lastParentViewShown == step3)
         #expect(analytics.get(userProperty: .LAST_PARENT_VIEW_SHOWN) == "step 3;nil;onboarding;3;end")
     }

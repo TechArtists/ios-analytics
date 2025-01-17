@@ -11,7 +11,7 @@ It serves a couple of important points:
 
 # Standard Event Structure
 
-- `ui_view_shown` with `name`, `type`, `group_name`, `group_order`, `group_stage` & `parent_view_{all the before}`
+- `ui_view_show` with `name`, `type`, `group_name`, `group_order`, `group_stage` & `parent_view_{all the before}`
 - `ui_button_tapped` with `name`, `extra`, `order` & the above view parameters prefixed as `view_%`
 - `error_`
 - `permission_`

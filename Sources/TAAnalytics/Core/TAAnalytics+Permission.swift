@@ -27,34 +27,34 @@ import Foundation
 
 /// Protocol that uses `TAAnalyticsUIProtocol` in order to log when a permission has been shown & its response
 public protocol TAAnalyticsPermissionProtocol: TAAnalyticsUIProtocol {
-    /// Logs a `ui_view_shown` event with `view_name="permission"` and `view_type=permissionType`
+    /// Logs a `ui_view_show` event with `view_name="permission"` and `view_type=permissionType`
     /// - Parameter permissionType: however you want to identify the permission (e.g. "notifications", "photos")
-    func logPermissionScreenShown(for permissionType: String)
+    func logPermissionScreenShow(for permissionType: String)
     
-    /// Logs a `ui_button_tapped` event with `name="allow"/"dont allow"`, `view_name="permission"`, `view_type=permissionType`
-    func logPermissionButtonTapped(allowed: Bool, permissionType: String)
+    /// Logs a `ui_button_tap` event with `name="allow"/"dont allow"`, `view_name="permission"`, `view_type=permissionType`
+    func logPermissionButtonTap(allowed: Bool, permissionType: String)
     
-    /// Logs a `ui_button_tapped` event with `name=status`, `view_name="permission"`, `view_type=permissionType`
-    func logPermissionButtonTapped(status: String, permissionType: String)
+    /// Logs a `ui_button_tap` event with `name=status`, `view_name="permission"`, `view_type=permissionType`
+    func logPermissionButtonTap(status: String, permissionType: String)
 }
 
 // MARK: - Default Implementations
 
 extension TAAnalyticsPermissionProtocol {
     
-    public func logPermissionScreenShown(for permissionType: String) {
+    public func logPermissionScreenShow(for permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        track(viewShown: view)
+        track(viewShow: view)
     }
 
-    public func logPermissionButtonTapped(allowed: Bool, permissionType: String) {
+    public func logPermissionButtonTap(allowed: Bool, permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        track(buttonTapped: allowed ? "allow" : "dont allow", onView: view)
+        track(buttonTap: allowed ? "allow" : "dont allow", onView: view)
     }
 
-    public func logPermissionButtonTapped(status: String, permissionType: String) {
+    public func logPermissionButtonTap(status: String, permissionType: String) {
         let view = AnalyticsView(name: "permission", type: permissionType)
-        track(buttonTapped: status, onView: view)
+        track(buttonTap: status, onView: view)
     }
 
 }

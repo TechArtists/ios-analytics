@@ -26,6 +26,7 @@
 		78280DF12C8F35D0008888AD /* TAAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 78280DF02C8F35D0008888AD /* TAAnalytics */; };
 		78280DF32C8F35D5008888AD /* TAAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 78280DF22C8F35D5008888AD /* TAAnalytics */; };
 		78280DF52C8F3659008888AD /* MyCallManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78280DF42C8F3659008888AD /* MyCallManagerTests.swift */; };
+		78F653B62D3928C600F7B0A9 /* TAAnalyticsFirebaseConsumer in Frameworks */ = {isa = PBXBuildFile; productRef = 78F653B52D3928C600F7B0A9 /* TAAnalyticsFirebaseConsumer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78280DEF2C8F35CA008888AD /* TAAnalytics in Frameworks */,
+				78F653B62D3928C600F7B0A9 /* TAAnalyticsFirebaseConsumer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +198,7 @@
 			name = TAAnalyticsExample;
 			packageProductDependencies = (
 				78280DEE2C8F35CA008888AD /* TAAnalytics */,
+				78F653B52D3928C600F7B0A9 /* TAAnalyticsFirebaseConsumer */,
 			);
 			productName = TAAnalyticsExample;
 			productReference = 78280D752C8F2F0E008888AD /* TAAnalyticsExample.app */;
@@ -277,6 +280,7 @@
 			mainGroup = 78280D6C2C8F2F0E008888AD;
 			packageReferences = (
 				78280DEC2C8F35C1008888AD /* XCLocalSwiftPackageReference "../" */,
+				78F653B42D3928C600F7B0A9 /* XCLocalSwiftPackageReference "../../TAAnalyticsFirebaseConsumer" */,
 			);
 			productRefGroup = 78280D762C8F2F0E008888AD /* Products */;
 			projectDirPath = "";
@@ -695,6 +699,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../;
 		};
+		78F653B42D3928C600F7B0A9 /* XCLocalSwiftPackageReference "../../TAAnalyticsFirebaseConsumer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../TAAnalyticsFirebaseConsumer;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -712,6 +720,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 78280DEC2C8F35C1008888AD /* XCLocalSwiftPackageReference "../" */;
 			productName = TAAnalytics;
+		};
+		78F653B52D3928C600F7B0A9 /* TAAnalyticsFirebaseConsumer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TAAnalyticsFirebaseConsumer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

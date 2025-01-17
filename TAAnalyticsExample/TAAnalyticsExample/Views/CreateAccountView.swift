@@ -62,7 +62,7 @@ struct CreateAccountView: View {
                         } else {
                             showInvalidUsername = false
                         }
-                        analytics.track(event: .UI_BUTTON_TAPPED)
+                        analytics.track(event: .UI_BUTTON_TAP)
                     }
                 
                 if showInvalidUsername {
@@ -115,6 +115,7 @@ struct CreateAccountView: View {
                 print(trimmedEvent.rawValue)
             }
         }
+        
     }
     
 }

@@ -23,6 +23,7 @@
 import Foundation
 import UIKit
 import CoreTelephony
+import TAAnalyticsFirebaseConsumer
 
 import TAAnalytics
 
@@ -59,7 +60,8 @@ extension AnalyticsView {
         let config = TAAnalyticsConfig(analyticsVersion: "1.0",
                                        consumers: [
                                                 OSLogAnalyticsConsumer(),
-                                                EventEmitterConsumer()
+                                                EventEmitterConsumer(),
+                                                FirebaseAnalyticsConsumer()
                                        ]
                                     )
         analytics = TAAnalytics(config: config)

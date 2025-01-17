@@ -26,8 +26,12 @@ import Foundation
 public extension AnalyticsEvent {
     static let FIRST_OPEN = AnalyticsEvent("first_open", isTAInternalEvent: true)
     
-    static let UI_VIEW_SHOWN = AnalyticsEvent("ui_view_shown")
-    static let UI_BUTTON_TAPPED = AnalyticsEvent("ui_button_tapped")
+    
+    static let ui_view_show = AnalyticsEvent("ui_view_show")
+    static let UI_BUTTON_TAP = AnalyticsEvent("ui_button_tap")
+    
+    static let error_stuck_on_ui_view_show = AnalyticsEvent("error_stuck_on_ui_view_show")
+    static let corrected_error_stuck_on_ui_view_show = AnalyticsEvent("corrected_error_stuck_on_ui_view_show")
     
     /// Sent when the app goes to the foreground as detected by `UIApplication.willEnterForegroundNotification`. It has an `is_cold_launch` boolean parameter
     static let APP_OPEN = AnalyticsEvent("app_open", isTAInternalEvent: true)
@@ -54,17 +58,17 @@ public extension AnalyticsEvent {
     static let ACCOUNT_SIGNUP_END = AnalyticsEvent("account_signup_end", isTAInternalEvent: true)
     
     /// Parameters `placement`, `id` (optional)
-    /// This also sends the `ui_view_shown` event in the background with `name="paywall"` and `type=<placement>`
-    static let PAYWALL_SHOWN = AnalyticsEvent("paywall_shown", isTAInternalEvent: true)
+    /// This also sends the `ui_view_show` event in the background with `name="paywall"` and `type=<placement>`
+    static let PAYWALL_SHOW = AnalyticsEvent("paywall_show", isTAInternalEvent: true)
     /// Parameters `placement`, `id` (optional)
-    static let PAYWALL_CLOSED = AnalyticsEvent("paywall_closed", isTAInternalEvent: true)
+    static let PAYWALL_CLOSE = AnalyticsEvent("paywall_close", isTAInternalEvent: true)
     /// Parameters `button_name`, `product_identifier`, `paywall_placement`, `paywall_id` (optional),
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
-    static let PAYWALL_PURCHASE_TAPPED = AnalyticsEvent("paywall_purchase_tapped", isTAInternalEvent: true)
+    static let PAYWALL_PURCHASE_TAP = AnalyticsEvent("paywall_purchase_tap", isTAInternalEvent: true)
     /// Purchase that happened once the user tried to purchase. TODO:// add those SKError events?
     static let ERROR_PAYWALL_PURCHASE = AnalyticsEvent("error_paywall_purchase", isTAInternalEvent: true)
     /// The paywall couldn't be shown
-    static let ERROR_PAYWALL_SHOWN = AnalyticsEvent("error_paywall_shown", isTAInternalEvent: true)
+    static let ERROR_PAYWALL_SHOW = AnalyticsEvent("error_paywall_show", isTAInternalEvent: true)
     
     
     static let SUBSCRIPTION_START_PAID_PAY_AS_YOU_GO = AnalyticsEvent("subscripton_start_paid_pay_as_you_go", isTAInternalEvent: true)

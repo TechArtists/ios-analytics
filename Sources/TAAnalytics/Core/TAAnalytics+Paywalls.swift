@@ -28,19 +28,19 @@ import Foundation
 /// Defines specific events for showing views & tapping buttons
 public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     
-    /// Sends an `paywall_shown` event with these parameters:
+    /// Sends an `paywall_show` event with these parameters:
     ///
     ///      placement: String
     ///      id: String?
     ///
-    /// It also sends a `ui_view_shown` event with `name="paywall"` and `type=<placement>`
+    /// It also sends a `ui_view_show` event with `name="paywall"` and `type=<placement>`
     ///
     /// - Parameters:
     ///   - placement: the placement that triggered the paywall
     ///   - id: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackPaywallShown(placement: String, id: String?)
+    func trackPaywallShow(placement: String, id: String?)
 
-    /// Sends an `paywall_closed` event with these parameters:
+    /// Sends an `paywall_close` event with these parameters:
     ///
     ///      placement: String
     ///      id: String?
@@ -48,22 +48,22 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     /// - Parameters:
     ///   - placement: the placement that triggered the paywall
     ///   - id: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackPaywallClosed(placement: String, id: String?)
+    func trackPaywallClose(placement: String, id: String?)
     
-    /// Sends an `paywall_purchase_tapped` event with these parameters:
+    /// Sends an `paywall_purchase_tap` event with these parameters:
     ///
     ///      button_name: String
     ///      paywall_placement: String
     ///      paywall_id: String?
     ///      product_identifier: String
     ///
-    /// It also sends a `ui_button_tapped` event with `name="purchase`, `extra=<buttonName>`, `view_name="paywall"`, `view_type=<placement>`
+    /// It also sends a `ui_button_tap` event with `name="purchase`, `extra=<buttonName>`, `view_name="paywall"`, `view_type=<placement>`
     /// - Parameters:
     ///   - buttonName: the name of the button that was pressed. Usualy, dont' send the localized value, but send the English variant (e.g. "Try free before subscribing" vs "Subscribe Now")
     ///   - productIdentifier: the product identifier of the in app purchase/subscription users are trying to purchase
     ///   - paywallPlacement: the placement that triggered the paywall
     ///   - paywallID: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackPaywallPurchaseTapped(buttonName: String, productIdentifier: String, paywallPlacement: String, paywallID: String?)
+    func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, paywallPlacement: String, paywallID: String?)
 
     /// Sends an `error_paywall_purchase` event when the purchase couldn't be completed because of an error with these parameters:
     ///
@@ -81,7 +81,7 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     ///   - paywallID: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
     func trackErrorPaywallPurchase(error: Error?, productIdentifier: String, paywallPlacement: String, paywallID: String?)
 
-    /// Sends an `error_paywall_shown` event when the paywall couldn't be shown with these parameters:
+    /// Sends an `error_paywall_show` event when the paywall couldn't be shown with these parameters:
     ///
     ///      error_domain: String?
     ///      error_code: String?
@@ -93,14 +93,14 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     ///   - error: the error with more details about why the paywall couldn't be shown
     ///   - paywallPlacement: the placement that triggered the paywall
     ///   - paywallID: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackErrorPaywallShown(error: Error?, paywallPlacement: String, paywallID: String?)
+    func trackErrorPaywallShow(error: Error?, paywallPlacement: String, paywallID: String?)
 }
 
 // MARK: - Default Implementations
 
 extension TAAnalytics: TAAnalyticsPaywallsProtocol {
 
-    public func trackPaywallShown(placement: String, id: String?) {
+    public func trackPaywallShow(placement: String, id: String?) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["placement"] = placement
@@ -108,11 +108,11 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
             params["id"] = id
         }
 
-        track(event: .PAYWALL_SHOWN, params: params, logCondition: .logAlways)
-        track(viewShown: AnalyticsView(name: "paywall", type: placement))
+        track(event: .PAYWALL_SHOW, params: params, logCondition: .logAlways)
+        track(viewShow: AnalyticsView(name: "paywall", type: placement))
     }
     
-    public func trackPaywallClosed(placement: String, id: String?) {
+    public func trackPaywallClose(placement: String, id: String?) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["placement"] = placement
@@ -120,10 +120,10 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
             params["id"] = id
         }
 
-        track(event: .PAYWALL_CLOSED, params: params, logCondition: .logAlways)
+        track(event: .PAYWALL_CLOSE, params: params, logCondition: .logAlways)
     }
 
-    public func trackPaywallPurchaseTapped(buttonName: String, productIdentifier: String, paywallPlacement: String, paywallID: String?) {
+    public func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, paywallPlacement: String, paywallID: String?) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["button_name"] = buttonName
@@ -133,8 +133,8 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
             params["paywall_id"] = id
         }
 
-        track(event: .PAYWALL_PURCHASE_TAPPED, params: params, logCondition: .logAlways)
-        track(buttonTapped: "purchase", onView: AnalyticsView(name: "paywall", type: paywallPlacement), extra: buttonName, index: nil)
+        track(event: .PAYWALL_PURCHASE_TAP, params: params, logCondition: .logAlways)
+        track(buttonTap: "purchase", onView: AnalyticsView(name: "paywall", type: paywallPlacement), extra: buttonName, index: nil)
     }
 
     public func trackErrorPaywallPurchase(error: Error?, productIdentifier: String, paywallPlacement: String, paywallID: String?) {
@@ -157,7 +157,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         trackErrorEvent(eventSuffix: "paywall_purchase", error: error, extraParams: params)
     }
 
-    public func trackErrorPaywallShown(error: Error?, paywallPlacement: String, paywallID: String?) {
+    public func trackErrorPaywallShow(error: Error?, paywallPlacement: String, paywallID: String?) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         if let error = error {

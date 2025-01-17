@@ -56,7 +56,7 @@ extension TAAnalytics: TAAnalyticsEngagementProtocol {
         params["name"] = engagement
 
         if let view = self.lastParentViewShown {
-            addParametersFor(view: view, params: &params, prefix: "view_")
+            addParameters(for: view, to: &params, prefix: "view_")
         }
         track(event: .ENGAGEMENT, params: params, logCondition: .logAlways)
     }
@@ -66,7 +66,7 @@ extension TAAnalytics: TAAnalyticsEngagementProtocol {
         params["name"] = engagementPrimary
 
         if let view = self.lastParentViewShown {
-            addParametersFor(view: view, params: &params, prefix: "view_")
+            addParameters(for: view, to: &params, prefix: "view_")
         }
         track(event: .ENGAGEMENT, params: params, logCondition: .logAlways)
         track(event: .ENGAGEMENT_PRIMARY, params: params, logCondition: .logAlways)

@@ -64,6 +64,8 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         let prefixedEvent = prefixEventIfNeeded(event)
 
         func trackInConsumers() {
+            guard config.trackEventFilter(event, params) else { return }
+            
             Task { [weak self] in
                 guard let self else { return }
                 await self.eventQueueBuffer.addEvent(prefixedEvent, params: paramsWithoutNils)

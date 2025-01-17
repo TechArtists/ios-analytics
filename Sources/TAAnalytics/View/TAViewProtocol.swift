@@ -23,7 +23,7 @@ public extension TABaseView {
     var body: some View {
         viewBody
             .onFirstAppear {
-                taAnalytics.track(viewShown: analyticsView)
+                taAnalytics.track(viewShow: analyticsView)
             }
             .environmentObject(analyticsView)
     }

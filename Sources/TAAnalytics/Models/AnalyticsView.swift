@@ -29,9 +29,9 @@ public class AnalyticsView: ObservableObject, Hashable, Equatable {
     public let type: String?
     
     public let parentView: AnalyticsView?
-
+    
     public let groupDetails: AnalyticsViewGroupDetails?
-
+    
     public init(_ name: String){
         self.name = name
         self.type = nil
@@ -58,6 +58,13 @@ public class AnalyticsView: ObservableObject, Hashable, Equatable {
         self.type = type
         self.parentView = parentView
         self.groupDetails = nil
+    }
+    
+    public init(name: String, type: String?, parentView: AnalyticsView, groupDetails: AnalyticsViewGroupDetails?) {
+        self.name = name
+        self.type = type
+        self.parentView = parentView
+        self.groupDetails = groupDetails
     }
     
     public init(name: String, type: String?, groupDetails: AnalyticsViewGroupDetails?){

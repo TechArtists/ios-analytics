@@ -67,14 +67,14 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     ///
     /// - Parameters:
     ///   - privacyRedacted: if the parameter values should be redacted or not. If they contain PIIA, they should be redacted
-    public func debugStringForLog(event: AnalyticsEvent, params: [String : (any AnalyticsBaseParameterValue)]?, privacyRedacted: Bool) -> String {
+    public func debugStringForLog(eventRawValue: String, params: [String : (any AnalyticsBaseParameterValue)]?, privacyRedacted: Bool) -> String {
         let paramsString : String?
         if privacyRedacted {
             paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):<private>" }).joined(separator: ", ")
         } else {
             paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
         }
-        return "sendEvent: '\(event.rawValue)', params: [\(String(describingOptional: paramsString))]"
+        return "sendEvent: '\(eventRawValue)', params: [\(String(describingOptional: paramsString))]"
     }
 
     public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {        
@@ -85,11 +85,11 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     /// Note that all the information inside this debug string is not redacted for privacy, unlike the original implementation of ConsoleAnalyticsPlatform#set(userProperty:to:))
     /// - Parameters:
     ///   - privacyRedacted: if the parameter values should be redacted or not. If they contain PIIA, they should be redacted
-    public func debugStringForSet(userProperty: AnalyticsUserProperty, to: String?, privacyRedacted: Bool) -> String {
+    public func debugStringForSet(userPropertyRawValue: String, to: String?, privacyRedacted: Bool) -> String {
         if privacyRedacted {
-            return "setUserProperty: '\(userProperty.rawValue)', value: <private>"
+            return "setUserProperty: '\(userPropertyRawValue)', value: <private>"
         } else {
-            return "setUserProperty: '\(userProperty.rawValue)', value: '\(String(describingOptional:to))'"
+            return "setUserProperty: '\(userPropertyRawValue)', value: '\(String(describingOptional:to))'"
         }
     }
 

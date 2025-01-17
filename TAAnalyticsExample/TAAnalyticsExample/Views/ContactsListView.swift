@@ -30,6 +30,7 @@ import Contacts
 struct ContactsListView: View {
 
     @EnvironmentObject var analytics: TAAnalytics
+    
     var analyticsView: AnalyticsView {
         switch contactsPermission.authorizationStatus {
             case .notDetermined: return .CONTACTS_PERMISSION_NOT_DETERMINED
@@ -68,7 +69,7 @@ struct ContactsListView: View {
                     Text("Please allow contacts permission for the app to work 🙏.")
                         .multilineTextAlignment(.center)
                     Button("Request Contact Permission") {
-                        analytics.track(buttonTapped: "request contacts permission", onView: analyticsView)
+                        analytics.track(buttonTap: "request contacts permission", onView: analyticsView)
                         contactsPermission.requestAccess(analytics: analytics)
                     }
                     Spacer()
@@ -78,7 +79,7 @@ struct ContactsListView: View {
                     noPermissionHeaderView
                     Text("Please allow contacts permission from the settings")
                     Button("Open Settings") {
-                        analytics.track(buttonTapped: "open settings", onView: analyticsView)
+                        analytics.track(buttonTap: "open settings", onView: analyticsView)
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     }
                     Spacer()
@@ -90,7 +91,7 @@ struct ContactsListView: View {
                             contact in
                             NavigationLinkWithTap(
                                 tapHandler: {
-                                    analytics.track(buttonTapped: "contact", onView: analyticsView)
+                                    analytics.track(buttonTap: "contact", onView: analyticsView)
                                 },
                                 destination: ContactDetailView(contact: contact))
                             {
@@ -106,9 +107,12 @@ struct ContactsListView: View {
         }
         .navigationTitle(Text("Contacts"))
         .onAppear() {
-            analytics.track(viewShown: analyticsView)
+            analytics.track(viewShow: analyticsView)
             contactsPermission.fetchContacts()
+            
+            analytics.config.consumers.forEach { consumer in
+                print(type(of: consumer))
+            }
         }
-
     }
 }

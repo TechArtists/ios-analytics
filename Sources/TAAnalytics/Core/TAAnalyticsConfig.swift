@@ -61,6 +61,7 @@ public struct TAAnalyticsConfig {
     let userDefaults: UserDefaults
     let instalUserProperties: [AnalyticsUserProperty]
     let maxTimeoutForConsumerStart: Double
+    let trackEventFilter: (( _ event: AnalyticsEvent, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
 
     /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
     let automaticallyTrackedEventsPrefixConfig: PrefixConfig
@@ -88,7 +89,8 @@ public struct TAAnalyticsConfig {
                 instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
                 maxTimeoutForConsumerStart: Double = 10,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "ta_", userPropertyPrefix: "ta_"),
-                manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: "")
+                manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
+                trackEventFilter: @escaping (( _ event: AnalyticsEvent, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
     ) {
         self.analyticsVersion = analyticsVersion
         self.consumers = consumers
@@ -100,6 +102,7 @@ public struct TAAnalyticsConfig {
         self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
         self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
         self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig
+        self.trackEventFilter = trackEventFilter
     }
     
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix

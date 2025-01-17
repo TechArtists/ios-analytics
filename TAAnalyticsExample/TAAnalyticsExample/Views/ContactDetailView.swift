@@ -69,7 +69,7 @@ struct ContactDetailView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
         }.onAppear() {
-            analytics.track(viewShown: analyticsView)
+            analytics.track(viewShow: analyticsView)
         }
     }
     
@@ -78,7 +78,7 @@ struct ContactDetailView: View {
             Text("\(label.capitalized):")
             Spacer()
             Button(phoneNumber) {
-                analytics.track(buttonTapped: "call", onView: analyticsView)
+                analytics.track(buttonTap: "call", onView: analyticsView)
                 MyCallManager(analytics: analytics).callIfAtLeastFourDigits(phoneNumber: phoneNumber)
             }
         }

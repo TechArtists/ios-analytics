@@ -26,9 +26,8 @@ import Foundation
 // MARK: -
 
 /// Defines specific events for showing views & tapping buttons
-public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
-    
-    /// Sends an `ui_view_shown` event.
+public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuckUIProtocol {
+    /// Sends an `ui_view_show` event  and sets up a timer to detect if the user is stuck on the view.
     ///
     /// The AnalyticsEvent has the following parameters:
     ///
@@ -40,10 +39,11 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///      parent_view_{name, type, group_name, group_order, group_stage}: String?
     ///
     /// - Parameters:
-    ///   - viewShown: the view that was just shown
-    func track(viewShown: AnalyticsView)
+    ///   - viewShow: the view that was just shown
+    ///  - stuckTimer: The duration in seconds after which an `error_stuck_on_ui_view_show` event is triggered if the user remains on the view.
+    func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval?)
     
-    /// Sends an `ui_button_tapped` event.
+    /// Sends an `ui_button_tap` event.
     ///
     /// The AnalyticsEvent has the following parameters:
     ///
@@ -59,30 +59,38 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol {
     ///   - view: the view the button has been shown on
     ///   - extra: any extra information that should be attached (e.g. Maybe once users "Subscribe", you want to also know the subscription plan they are subscribing to. That plan id, can go into `extra`)
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
-    func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
+    func track(buttonTap symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
     
     var lastParentViewShown: AnalyticsView? { get set}
 }
 
 // MARK: - Default Implementations
 
-public extension TAAnalyticsUIProtocol{
+public extension TAAnalyticsUIProtocol {
 
-    func track(viewShown view: AnalyticsView) {
-        var params = [String: (any AnalyticsBaseParameterValue)]()
-        
-        addParametersFor(view: view, params: &params, prefix: "")
-        if let parentView = view.parentView {
-            addParametersFor(view: parentView, params: &params, prefix: "parent_view_")
-        } else {
-            lastParentViewShown = view
-            set(userProperty: .LAST_PARENT_VIEW_SHOWN, to: "\(view.name);\(String(describingOptional:view.type));\(String(describingOptional:view.groupDetails?.name));\(String(describingOptional:view.groupDetails?.order));\(String(describingOptional:view.groupDetails?.stage))")
+    func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval? = nil) {
+        cancelStuckTimer()
+        trackCorrectedStuckEventIfNeeded(viewName: view.name)
+
+        var params = buildParameters(for: view)
+
+        if let stuckTimer {
+            UserDefaults.standard.set(params, forKey: stuckViewParamsKey)
+
+            if view.parentView == nil {
+                scheduleStuckTimer(delay: stuckTimer, viewName: view.name)
+            }
         }
-        
-        track(event: .UI_VIEW_SHOWN, params: params, logCondition: .logAlways)
+
+        if view.parentView == nil {
+            lastParentViewShown = view
+            set(userProperty: .LAST_PARENT_VIEW_SHOWN, to: formatLastParentView(view))
+        }
+
+        track(event: .ui_view_show, params: params, logCondition: .logAlways)
     }
     
-    func track(buttonTapped symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
+    func track(buttonTap symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
         var params = [String: (any AnalyticsBaseParameterValue)]()
         
         params["name"] = symbolicName
@@ -92,19 +100,37 @@ public extension TAAnalyticsUIProtocol{
         if let extra = extra {
             params["extra"] = extra
         }
-        addParametersFor(view: view, params: &params, prefix: "view_")
+        
+        addParameters(for: view, to: &params, prefix: "view_")
         if let parentView = view.parentView {
-            addParametersFor(view: parentView, params: &params, prefix: "parent_view_")
+            addParameters(for: parentView, to: &params, prefix: "parent_view_")
         }
 
-        track(event: .UI_BUTTON_TAPPED, params: params, logCondition: .logAlways)
+        track(event: .UI_BUTTON_TAP, params: params, logCondition: .logAlways)
     }
     
-    internal func addParametersFor(view: AnalyticsView, params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
+    private func buildParameters(for view: AnalyticsView) -> [String: (any AnalyticsBaseParameterValue)] {
+        var params = [String: (any AnalyticsBaseParameterValue)]()
+        addParameters(for: view, to: &params, prefix: "")
+
+        if let parentView = view.parentView {
+            addParameters(for: parentView, to: &params, prefix: "parent_view_")
+        }
+
+        return params
+    }
+    
+    private func formatLastParentView(_ view: AnalyticsView) -> String {
+        return "\(view.name);\(String(describingOptional: view.type));\(String(describingOptional: view.groupDetails?.name));\(String(describingOptional: view.groupDetails?.order));\(String(describingOptional: view.groupDetails?.stage))"
+    }
+    
+    internal func addParameters(for view: AnalyticsView, to params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
         params["\(prefix)name"] = view.name
+
         if let type = view.type {
             params["\(prefix)type"] = type
         }
+
         if let groupDetails = view.groupDetails {
             params["\(prefix)group_name"] = groupDetails.name
             params["\(prefix)group_order"] = groupDetails.order

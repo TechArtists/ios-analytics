@@ -34,7 +34,6 @@ public protocol AnalyticsBaseParameterValue: CustomStringConvertible, Equatable 
 // When adding any new conformances, make sure to update all existing AnalyticsPlatform#convert methods
 
 extension String: AnalyticsBaseParameterValue {}
-
 extension Int: AnalyticsBaseParameterValue {}
 extension Double: AnalyticsBaseParameterValue {}
 extension Float: AnalyticsBaseParameterValue {}

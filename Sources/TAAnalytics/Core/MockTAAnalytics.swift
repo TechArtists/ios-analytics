@@ -39,6 +39,8 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     public var eventsSent = [(event: AnalyticsEvent, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [AnalyticsUserProperty: String]()
     public var lastParentViewShown: AnalyticsView?
+    public var stuckTimer: Timer?
+    public var correctionStuckTimer: Timer?
 
     public init() {}
     
@@ -89,6 +91,10 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     public var userID: String? = nil
     
     public func addAppLifecycleObservers() {
+        
+    }
+    
+    public func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval) {
         
     }
 }

@@ -1,5 +1,5 @@
 //
-//  TAButton.swift
+//  TAButtonView.swift
 //  TAAnalytics
 //
 //  Created by Robert Tataru on 13.01.2025.
@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-public struct TAButton<Label: View>: View {
-    public let name: String
+public struct TAButtonView<Label: View>: View {
+    public let analyticsName: String
     public let analyticsView: AnalyticsView
     public let label: Label
     public let action: () -> Void
     public let taAnalytics: TAAnalytics
     
     public init(
-        name: String,
+        analyticsName: String,
         analyticsView: AnalyticsView,
         taAnalytics: TAAnalytics,
         action: @escaping () -> Void,
         @ViewBuilder label: () -> Label
     ) {
-        self.name = name
+        self.analyticsName = analyticsName
         self.analyticsView = analyticsView
         self.label = label()
         self.action = action
@@ -30,7 +30,7 @@ public struct TAButton<Label: View>: View {
     
     public var body: some View {
         Button {
-            taAnalytics.track(buttonTapped: name, onView: analyticsView)
+            taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
             action()
         } label: {
             label

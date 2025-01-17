@@ -51,6 +51,9 @@ public class TAAnalytics: ObservableObject {
     
     public var lastParentViewShown: AnalyticsView?
     
+    public var stuckTimer: Timer?
+    public var correctionStuckTimer: Timer?
+    
     public init(config: TAAnalyticsConfig) {
         self.config = config
     }
