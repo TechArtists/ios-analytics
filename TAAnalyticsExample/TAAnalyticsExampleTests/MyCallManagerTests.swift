@@ -35,7 +35,7 @@ final class MyCallManagerTests: XCTestCase {
         let callManager = MyCallManager(analytics: mockAnalytics)
         
         //callManager.callTenDigit(phoneNumber: "1234567890")
-        XCTAssertEqual(mockAnalytics.eventsSent.last?.event, AnalyticsEvent.CALL_PLACED)
+        XCTAssertEqual(mockAnalytics.eventsSent.last?.event, EventAnalyticsModel.CALL_PLACED)
     }
 
     func testCallingBadNumber() throws {

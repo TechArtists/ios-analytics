@@ -10,8 +10,8 @@ import TAAnalytics
 
 class TAAnalyticsUnitTestConsumer: AnalyticsConsumer {
     
-    public var eventsSent = [(event: AnalyticsEventTrimmed, params: [String: (any AnalyticsBaseParameterValue)?])]()
-    public var userPropertiesSet = [AnalyticsUserPropertyTrimmed: String]()
+    public var eventsSent = [(event: EventAnalyticsModelTrimmed, params: [String: (any AnalyticsBaseParameterValue)?])]()
+    public var userPropertiesSet = [UserPropertyAnalyticsModelTrimmed: String]()
     
     public typealias T = TAAnalyticsUnitTestConsumer
     public var wrappedValue: Self {
@@ -29,21 +29,21 @@ class TAAnalyticsUnitTestConsumer: AnalyticsConsumer {
     func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws {
     }
     
-    func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
+    func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
         eventsSent.append((trimmedEvent, params ?? [:]))
     }
     
-    func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {
+    func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {
         guard let to = to else { return }
         userPropertiesSet[trimmedUserProperty] = to
     }
     
-    func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
-        AnalyticsEventTrimmed(String(event.rawValue.prefix(eventTrimLength)))
+    func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
+        EventAnalyticsModelTrimmed(String(event.rawValue.prefix(eventTrimLength)))
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
-        AnalyticsUserPropertyTrimmed(String(userProperty.rawValue.prefix(userPropertyTrimLength)))
+    public func trim(userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModelTrimmed {
+        UserPropertyAnalyticsModelTrimmed(String(userProperty.rawValue.prefix(userPropertyTrimLength)))
     }
         
     

@@ -45,17 +45,17 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return parameter
     }
     
-    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : (any AnalyticsBaseParameterValue)]?) {
+    public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : (any AnalyticsBaseParameterValue)]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
         os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, trimmedEvent.rawValue, String(describingOptional: paramsString))
     }
     
-    public func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
-        AnalyticsEventTrimmed(event.rawValue.ta_trim(toLength: 40, debugType: "event"))
+    public func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
+        EventAnalyticsModelTrimmed(event.rawValue.ta_trim(toLength: 40, debugType: "event"))
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
-        AnalyticsUserPropertyTrimmed(userProperty.rawValue.ta_trim(toLength: 24, debugType: "user property"))
+    public func trim(userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModelTrimmed {
+        UserPropertyAnalyticsModelTrimmed(userProperty.rawValue.ta_trim(toLength: 24, debugType: "user property"))
     }
     
     public var wrappedValue: Self {
@@ -77,7 +77,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
         return "sendEvent: '\(eventRawValue)', params: [\(String(describingOptional: paramsString))]"
     }
 
-    public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {        
+    public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {        
         os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, trimmedUserProperty.rawValue, String(describingOptional: to))
     }
     

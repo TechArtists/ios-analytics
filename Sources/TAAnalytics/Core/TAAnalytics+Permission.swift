@@ -43,17 +43,17 @@ public protocol TAAnalyticsPermissionProtocol: TAAnalyticsUIProtocol {
 extension TAAnalyticsPermissionProtocol {
     
     public func logPermissionScreenShow(for permissionType: String) {
-        let view = AnalyticsView(name: "permission", type: permissionType)
+        let view = ViewAnalyticsModel(name: "permission", type: permissionType)
         track(viewShow: view)
     }
 
     public func logPermissionButtonTap(allowed: Bool, permissionType: String) {
-        let view = AnalyticsView(name: "permission", type: permissionType)
+        let view = ViewAnalyticsModel(name: "permission", type: permissionType)
         track(buttonTap: allowed ? "allow" : "dont allow", onView: view)
     }
 
     public func logPermissionButtonTap(status: String, permissionType: String) {
-        let view = AnalyticsView(name: "permission", type: permissionType)
+        let view = ViewAnalyticsModel(name: "permission", type: permissionType)
         track(buttonTap: status, onView: view)
     }
 

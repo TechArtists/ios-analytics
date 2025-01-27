@@ -39,12 +39,12 @@ public protocol TAAnalyticsBaseProtocol: AnyObject {
     /// - Parameters:
     ///   - event:
     ///   - params: Note that if the parameter value is `nil`, the parameter will not be removed before sending
-    ///   - logCondition: if the event should be logged for each ocurrence. Note that this only applies on a per `AnalyticsEvent` level, parameters are not included
-    func track(event: AnalyticsEvent, params: [String: (any AnalyticsBaseParameterValue)?]?, logCondition: EventLogCondition)
+    ///   - logCondition: if the event should be logged for each ocurrence. Note that this only applies on a per `EventAnalyticsModel` level, parameters are not included
+    func track(event: EventAnalyticsModel, params: [String: (any AnalyticsBaseParameterValue)?]?, logCondition: EventLogCondition)
     
-    func set(userProperty: AnalyticsUserProperty, to: String?)
+    func set(userProperty: UserPropertyAnalyticsModel, to: String?)
     
-    func get(userProperty: AnalyticsUserProperty) -> String?
+    func get(userProperty: UserPropertyAnalyticsModel) -> String?
 }
 
 // MARK: -
@@ -56,7 +56,7 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     }
     
     public func track(
-        event: AnalyticsEvent,
+        event: EventAnalyticsModel,
         params: [String: (any AnalyticsBaseParameterValue)?]? = nil,
         logCondition: EventLogCondition = .logAlways
     ) {
@@ -87,7 +87,7 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         }
     }
     
-    public func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
         self.setInUserDefaults(to, forKey: "userProperty_\(prefixedUserProperty.rawValue)")
         self.eventQueueBuffer.startedConsumers.forEach { consumer in
@@ -95,12 +95,12 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         }
     }
 
-    public func get(userProperty: AnalyticsUserProperty) -> String? {
+    public func get(userProperty: UserPropertyAnalyticsModel) -> String? {
         let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
         return self.stringFromUserDefaults(forKey: "userProperty_\(prefixedUserProperty.rawValue)")
     }
 
-    private func prefixEventIfNeeded(_ event: AnalyticsEvent) -> AnalyticsEvent {
+    private func prefixEventIfNeeded(_ event: EventAnalyticsModel) -> EventAnalyticsModel {
         if event.isInternalEvent {
             return event.eventBy(prefixing: config.automaticallyTrackedEventsPrefixConfig.eventPrefix)
         }
@@ -109,7 +109,7 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         }
     }
     
-    private func prefixUserPropertyIfNeeded(_ userProperty: AnalyticsUserProperty) -> AnalyticsUserProperty {
+    private func prefixUserPropertyIfNeeded(_ userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModel {
         if userProperty.isInternalUserProperty {
             return userProperty.userPropertyBy(prefixing: config.automaticallyTrackedEventsPrefixConfig.userPropertyPrefix)
         }

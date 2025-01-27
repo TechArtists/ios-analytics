@@ -23,26 +23,25 @@
 import Foundation
 import UIKit
 import CoreTelephony
-import TAAnalyticsFirebaseConsumer
 
 import TAAnalytics
 
-extension AnalyticsEvent {
-    static let DID_RECEIVE_MEMORY_WARNING = AnalyticsEvent("did_receive_memory_warning")
-    static let CALL_PLACED = AnalyticsEvent("call_placed")
+extension EventAnalyticsModel {
+    static let DID_RECEIVE_MEMORY_WARNING = EventAnalyticsModel("did_receive_memory_warning")
+    static let CALL_PLACED = EventAnalyticsModel("call_placed")
 }
 
-extension AnalyticsUserProperty {
-    static let INSTALL_ORIENTATION = AnalyticsUserProperty("install_orientation")
+extension UserPropertyAnalyticsModel {
+    static let INSTALL_ORIENTATION = UserPropertyAnalyticsModel("install_orientation")
 }
 
-extension AnalyticsView {
-    static let CONTACTS_PERMISSION_DENIED         = AnalyticsView(name: "contacts", type: "permission denied")
-    static let CONTACTS_PERMISSION_NOT_DETERMINED = AnalyticsView(name: "contacts", type: "permission not determined")
-    static let CONTACTS_WITH_PERMISSION           = AnalyticsView(name: "contacts") // or type:"with permission"
+extension ViewAnalyticsModel {
+    static let CONTACTS_PERMISSION_DENIED         = ViewAnalyticsModel(name: "contacts", type: "permission denied")
+    static let CONTACTS_PERMISSION_NOT_DETERMINED = ViewAnalyticsModel(name: "contacts", type: "permission not determined")
+    static let CONTACTS_WITH_PERMISSION           = ViewAnalyticsModel(name: "contacts") // or type:"with permission"
 
     /// the type will be set at runtime, as the id of the user
-    static let CONTACT = AnalyticsView("contact")
+    static let CONTACT = ViewAnalyticsModel("contact")
 }
 
 @objc class AppDelegate: NSObject, UIApplicationDelegate {
@@ -61,7 +60,7 @@ extension AnalyticsView {
                                        consumers: [
                                                 OSLogAnalyticsConsumer(),
                                                 EventEmitterConsumer(),
-                                                FirebaseAnalyticsConsumer()
+                                                //FirebaseAnalyticsConsumer()
                                        ]
                                     )
         analytics = TAAnalytics(config: config)

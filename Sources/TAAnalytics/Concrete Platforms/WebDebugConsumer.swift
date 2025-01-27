@@ -71,7 +71,7 @@ public class WebDebugConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnly
         }
     }
     
-    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
+    public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
         var jsonParams = [String: Any]()
         jsonParams["name"] = trimmedEvent.rawValue
         jsonParams["parameters"] = params
@@ -79,15 +79,15 @@ public class WebDebugConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnly
         sendToDebugServer(endpoint: .sendEvent, postData: jsonParams)
     }
     
-    public func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
-        AnalyticsEventTrimmed(event.rawValue.ta_trim(toLength: 40, debugType: "event"))
+    public func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
+        EventAnalyticsModelTrimmed(event.rawValue.ta_trim(toLength: 40, debugType: "event"))
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
-        AnalyticsUserPropertyTrimmed(userProperty.rawValue.ta_trim(toLength: 24, debugType: "user property"))
+    public func trim(userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModelTrimmed {
+        UserPropertyAnalyticsModelTrimmed(userProperty.rawValue.ta_trim(toLength: 24, debugType: "user property"))
     }
     
-    public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {
+    public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {
         var jsonParams = [String: Any]()
         jsonParams["name"] = trimmedUserProperty.rawValue
         jsonParams["value"] = to

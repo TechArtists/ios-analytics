@@ -30,7 +30,7 @@ struct ContactDetailView: View {
 
     @EnvironmentObject var analytics: TAAnalytics
 
-    private var analyticsView: AnalyticsView { .CONTACT.withType(type: contact.identifier) }
+    private var analyticsView: ViewAnalyticsModel { .CONTACT.withType(type: contact.identifier) }
     
     let contact: CNContact
     
@@ -77,9 +77,14 @@ struct ContactDetailView: View {
         return HStack(spacing: 10){
             Text("\(label.capitalized):")
             Spacer()
-            Button(phoneNumber) {
-                analytics.track(buttonTap: "call", onView: analyticsView)
+            TAAnalyticsButtonView(
+                analyticsName: "call",
+                analyticsView: analyticsView,
+                taAnalytics: analytics
+            ) { 
                 MyCallManager(analytics: analytics).callIfAtLeastFourDigits(phoneNumber: phoneNumber)
+            } label: {
+                Text(phoneNumber)
             }
         }
     }

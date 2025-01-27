@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 
 public struct DeferredQueuedEvent {
-    let event: AnalyticsEvent
+    let event: EventAnalyticsModel
     let dateAdded: Date
     let parameters: [String: (any AnalyticsBaseParameterValue)]?
 }
@@ -68,7 +68,7 @@ actor EventBuffer {
     }
     
     func addEvent(
-        _ event: AnalyticsEvent,
+        _ event: EventAnalyticsModel,
         params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
         if startedConsumers.isEmpty {
@@ -84,7 +84,7 @@ actor EventBuffer {
     }
     
     private func trackEventInStartedConsumers(
-        _ event: AnalyticsEvent,
+        _ event: EventAnalyticsModel,
         params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
         for consumer in startedConsumers {

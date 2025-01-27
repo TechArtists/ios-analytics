@@ -31,7 +31,7 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
 
     /// Logs an `error foo` event with some details about the error
     ///
-    /// The AnalyticsEvent is sent alongside these parameters if an `error` parameter is present:
+    /// The EventAnalyticsModel is sent alongside these parameters if an `error` parameter is present:
     ///
     ///      error_domain: String?
     ///      error_code: Int?
@@ -49,7 +49,7 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
 public extension TAAnalyticsErrorProtocol {
     /// Logs an `error_foo` event with some details about the error
     ///
-    /// The AnalyticsEvent is sent alongside these parameters if an `error` parameter is present:
+    /// The EventAnalyticsModel is sent alongside these parameters if an `error` parameter is present:
     ///
     ///      domain: String?
     ///      code: Int?
@@ -69,7 +69,7 @@ public extension TAAnalyticsErrorProtocol {
             params["error_description"] = nserror.localizedDescription
         }
         extraParams?.forEach({ key, value in params[key] = value })
-        track(event: AnalyticsEvent("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
+        track(event: EventAnalyticsModel("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
     }
 }
 

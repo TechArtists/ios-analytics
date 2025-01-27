@@ -11,7 +11,7 @@ import Foundation
 
 class TAAnalyticsUITests {
     let analytics: TAAnalytics
-    let testView = AnalyticsView(name: "TestView", type: "TestType")
+    let testView = ViewAnalyticsModel(name: "TestView", type: "TestType")
     let unitTestConsumer: TAAnalyticsUnitTestConsumer
     
     init() async {
@@ -40,7 +40,7 @@ class TAAnalyticsUITests {
     @Test("Stuck timer canceled by new view")
     func testStuckTimerCanceledByNewView() async throws {
         analytics.track(viewShow: testView, stuckTimer: 5)
-        let newView = AnalyticsView(name: "NewView", type: nil)
+        let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
         let event = await expectEvent(named: "error_stuck_on_ui_view_show", timeout: 6)
@@ -54,7 +54,7 @@ class TAAnalyticsUITests {
         _ = try await requireEvent(named: "error_stuck_on_ui_view_show")
         
         // Show a new view after the stuck error
-        let newView = AnalyticsView(name: "NewView", type: nil)
+        let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
         let correctedEvent = try await requireEvent(named: "corrected_error_stuck_on_ui_view_show", timeout: 5)

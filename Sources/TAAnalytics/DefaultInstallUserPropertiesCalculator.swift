@@ -27,9 +27,9 @@ import OSLog
 class DefaultInstallUserPropertiesCalculator {
     
     let analytics: TAAnalyticsBaseProtocol
-    let userPropertiesToCalculate: [AnalyticsUserProperty]
+    let userPropertiesToCalculate: [UserPropertyAnalyticsModel]
     
-    init(analytics: TAAnalyticsBaseProtocol, userPropertiesToCalculate: [AnalyticsUserProperty]){
+    init(analytics: TAAnalyticsBaseProtocol, userPropertiesToCalculate: [UserPropertyAnalyticsModel]){
         self.analytics = analytics
         self.userPropertiesToCalculate = userPropertiesToCalculate
     }

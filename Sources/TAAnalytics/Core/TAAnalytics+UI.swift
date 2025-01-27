@@ -29,7 +29,7 @@ import Foundation
 public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuckUIProtocol {
     /// Sends an `ui_view_show` event  and sets up a timer to detect if the user is stuck on the view.
     ///
-    /// The AnalyticsEvent has the following parameters:
+    /// The EventAnalyticsModel has the following parameters:
     ///
     ///      name: String
     ///      type: String?
@@ -41,11 +41,11 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     /// - Parameters:
     ///   - viewShow: the view that was just shown
     ///  - stuckTimer: The duration in seconds after which an `error_stuck_on_ui_view_show` event is triggered if the user remains on the view.
-    func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval?)
+    func track(viewShow view: ViewAnalyticsModel, stuckTimer: TimeInterval?)
     
     /// Sends an `ui_button_tap` event.
     ///
-    /// The AnalyticsEvent has the following parameters:
+    /// The EventAnalyticsModel has the following parameters:
     ///
     ///      name: String
     ///      extra: String?
@@ -59,20 +59,20 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///   - view: the view the button has been shown on
     ///   - extra: any extra information that should be attached (e.g. Maybe once users "Subscribe", you want to also know the subscription plan they are subscribing to. That plan id, can go into `extra`)
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
-    func track(buttonTap symbolicName: String, onView view: AnalyticsView, extra: String?, index: Int?)
+    func track(buttonTap symbolicName: String, onView view: ViewAnalyticsModel, extra: String?, index: Int?)
     
-    var lastParentViewShown: AnalyticsView? { get set}
+    var lastParentViewShown: ViewAnalyticsModel? { get set}
 }
 
 // MARK: - Default Implementations
 
 public extension TAAnalyticsUIProtocol {
 
-    func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval? = nil) {
+    func track(viewShow view: ViewAnalyticsModel, stuckTimer: TimeInterval? = nil) {
         cancelStuckTimer()
         trackCorrectedStuckEventIfNeeded(viewName: view.name)
 
-        var params = buildParameters(for: view)
+        let params = buildParameters(for: view)
 
         if let stuckTimer {
             UserDefaults.standard.set(params, forKey: stuckViewParamsKey)
@@ -90,7 +90,7 @@ public extension TAAnalyticsUIProtocol {
         track(event: .ui_view_show, params: params, logCondition: .logAlways)
     }
     
-    func track(buttonTap symbolicName: String, onView view: AnalyticsView, extra: String? = nil, index: Int? = nil){
+    func track(buttonTap symbolicName: String, onView view: ViewAnalyticsModel, extra: String? = nil, index: Int? = nil){
         var params = [String: (any AnalyticsBaseParameterValue)]()
         
         params["name"] = symbolicName
@@ -109,7 +109,7 @@ public extension TAAnalyticsUIProtocol {
         track(event: .UI_BUTTON_TAP, params: params, logCondition: .logAlways)
     }
     
-    private func buildParameters(for view: AnalyticsView) -> [String: (any AnalyticsBaseParameterValue)] {
+    private func buildParameters(for view: ViewAnalyticsModel) -> [String: (any AnalyticsBaseParameterValue)] {
         var params = [String: (any AnalyticsBaseParameterValue)]()
         addParameters(for: view, to: &params, prefix: "")
 
@@ -120,11 +120,11 @@ public extension TAAnalyticsUIProtocol {
         return params
     }
     
-    private func formatLastParentView(_ view: AnalyticsView) -> String {
+    private func formatLastParentView(_ view: ViewAnalyticsModel) -> String {
         return "\(view.name);\(String(describingOptional: view.type));\(String(describingOptional: view.groupDetails?.name));\(String(describingOptional: view.groupDetails?.order));\(String(describingOptional: view.groupDetails?.stage))"
     }
     
-    internal func addParameters(for view: AnalyticsView, to params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
+    internal func addParameters(for view: ViewAnalyticsModel, to params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
         params["\(prefix)name"] = view.name
 
         if let type = view.type {

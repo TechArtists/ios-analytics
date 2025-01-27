@@ -1,4 +1,4 @@
-//  AnalyticsView.swift
+//  ViewAnalyticsModel.swift
 //  Created by Adi on 10/24/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
@@ -24,11 +24,11 @@
 import Foundation
 
 ///   - parentView: the parent view of this view. If you're showing a full screen view controller, then this should be nil. If you want to track when a specific error message label has been shown, then in that case the `parentView` should be the filled.
-public class AnalyticsView: ObservableObject, Hashable, Equatable {
+public class ViewAnalyticsModel: ObservableObject, Hashable, Equatable {
     public let name: String
     public let type: String?
     
-    public let parentView: AnalyticsView?
+    public let parentView: ViewAnalyticsModel?
     
     public let groupDetails: AnalyticsViewGroupDetails?
     
@@ -53,14 +53,14 @@ public class AnalyticsView: ObservableObject, Hashable, Equatable {
         self.groupDetails = nil
     }
     
-    public init(name: String, type: String?, parentView: AnalyticsView){
+    public init(name: String, type: String?, parentView: ViewAnalyticsModel){
         self.name = name
         self.type = type
         self.parentView = parentView
         self.groupDetails = nil
     }
     
-    public init(name: String, type: String?, parentView: AnalyticsView, groupDetails: AnalyticsViewGroupDetails?) {
+    public init(name: String, type: String?, parentView: ViewAnalyticsModel, groupDetails: AnalyticsViewGroupDetails?) {
         self.name = name
         self.type = type
         self.parentView = parentView
@@ -74,11 +74,11 @@ public class AnalyticsView: ObservableObject, Hashable, Equatable {
         self.groupDetails = groupDetails
     }
 
-    public func withType(type: String?) -> AnalyticsView {
-        return AnalyticsView(name: name, type: type)
+    public func withType(type: String?) -> ViewAnalyticsModel {
+        return ViewAnalyticsModel(name: name, type: type)
     }
     
-    public static func == (lhs: AnalyticsView, rhs: AnalyticsView) -> Bool {
+    public static func == (lhs: ViewAnalyticsModel, rhs: ViewAnalyticsModel) -> Bool {
         return lhs.name == rhs.name && lhs.type == rhs.type && lhs.parentView == rhs.parentView
     }
     

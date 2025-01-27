@@ -1,4 +1,4 @@
-//  AnalyticsUserProperty.swift
+//  EventAnalyticsModel.swift
 //  Created by Adi on 10/24/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
@@ -23,56 +23,34 @@
 
 import Foundation
 
-public final class AnalyticsInstallUserProperty: Hashable, Equatable, RawRepresentable {
-   public let rawValue: String
-    public let isInternalUserProperty: Bool
-   
-   public init(_ rawValue: String){
-       self.rawValue = rawValue
-       self.isInternalUserProperty = false
-   }
-   
-   public init?(rawValue: String){
-       self.rawValue = rawValue
-       self.isInternalUserProperty = false
-   }
-    
-    internal init(_ rawValue: String, isTAInternalUserProperty: Bool) {
-        self.rawValue = rawValue
-        self.isInternalUserProperty = isTAInternalUserProperty
-    }
-}
-
-public final class AnalyticsUserProperty : Hashable, Equatable, RawRepresentable {
-   
+public final class EventAnalyticsModel: Hashable, Equatable, RawRepresentable {
     public let rawValue: String
-    public let isInternalUserProperty: Bool
+    let isInternalEvent: Bool
     
-    /// At most 24 alphanumeric characters or underscores
-    /// Usually in snake_case, but it would be best to consult the BI for their preference.
-    public init(_ rawValue: String) {
+    /// "firebase_", "google_", and "ga_" prefixes are reserved
+    /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
+    public init(_ rawValue: String){
         self.rawValue = rawValue
-        self.isInternalUserProperty = false
+        self.isInternalEvent = false
     }
-    /// At most 24 alphanumeric characters or underscores
-    /// Usually in snake_case, but it would be best to consult the BI for their preference.
+    /// "firebase_", "google_", and "ga_" prefixes are reserved
+    /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
     public init?(rawValue: String) {
         self.rawValue = rawValue
-        self.isInternalUserProperty = false
+        self.isInternalEvent = false
     }
     
-    internal init(_ rawValue: String, isInternalUserProperty: Bool) {
+    internal init(_ rawValue: String, isTAInternalEvent: Bool) {
         self.rawValue = rawValue
-        self.isInternalUserProperty = isInternalUserProperty
+        self.isInternalEvent = isTAInternalEvent
     }
     
-    public func userPropertyBy(prefixing: String) -> AnalyticsUserProperty {
-        return .init(prefixing + rawValue, isInternalUserProperty: self.isInternalUserProperty)
+    public func eventBy(prefixing: String) -> EventAnalyticsModel {
+        return .init(prefixing + rawValue, isTAInternalEvent: isInternalEvent)
     }
-
 }
 
-public final class AnalyticsUserPropertyTrimmed: Hashable, Equatable, RawRepresentable {
+public final class EventAnalyticsModelTrimmed: Hashable, Equatable, RawRepresentable {
     public let rawValue: String
     
     public init(_ rawValue: String){

@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-public protocol TABaseView: View {
+public protocol TAAnalyticsView: View {
     associatedtype ViewBody : View
     
     @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
     
-    var analyticsView: AnalyticsView { get }
+    var analyticsView: ViewAnalyticsModel { get }
     
     var taAnalytics: TAAnalytics { get }
 }
 
-public extension TABaseView {
+public extension TAAnalyticsView {
     @ViewBuilder
     @MainActor
     var body: some View {

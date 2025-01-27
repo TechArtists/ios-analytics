@@ -49,10 +49,10 @@ class TAAnalyticsUIEventsTests {
     @Test
     func testLastViewShowOnlyRemembersParentViews() async throws {
 
-        let step1 = AnalyticsView(name: "step 1", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 1, isFinalScreen: false))
-        let step1Subview = AnalyticsView(name: "incorrect email label", type: "foo", parentView: step1)
-        let step2 = AnalyticsView(name: "step 2", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 2, isFinalScreen: false))
-        let step3 = AnalyticsView(name: "step 3", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 3, isFinalScreen: true))
+        let step1 = ViewAnalyticsModel(name: "step 1", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 1, isFinalScreen: false))
+        let step1Subview = ViewAnalyticsModel(name: "incorrect email label", type: "foo", parentView: step1)
+        let step2 = ViewAnalyticsModel(name: "step 2", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 2, isFinalScreen: false))
+        let step3 = ViewAnalyticsModel(name: "step 3", type: nil, groupDetails: AnalyticsViewGroupDetails(name: "onboarding", order: 3, isFinalScreen: true))
 
         analytics.track(viewShow: step1)
         analytics.track(viewShow: step1Subview)

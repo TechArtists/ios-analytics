@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-public struct TAButtonView<Label: View>: View {
+public struct TAAnalyticsButtonView<Label: View>: View {
     public let analyticsName: String
-    public let analyticsView: AnalyticsView
+    public let analyticsView: ViewAnalyticsModel
     public let label: Label
     public let action: () -> Void
     public let taAnalytics: TAAnalytics
     
     public init(
         analyticsName: String,
-        analyticsView: AnalyticsView,
+        analyticsView: ViewAnalyticsModel,
         taAnalytics: TAAnalytics,
         action: @escaping () -> Void,
         @ViewBuilder label: () -> Label

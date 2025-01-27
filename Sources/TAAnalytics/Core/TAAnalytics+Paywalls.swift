@@ -109,7 +109,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         }
 
         track(event: .PAYWALL_SHOW, params: params, logCondition: .logAlways)
-        track(viewShow: AnalyticsView(name: "paywall", type: placement))
+        track(viewShow: ViewAnalyticsModel(name: "paywall", type: placement))
     }
     
     public func trackPaywallClose(placement: String, id: String?) {
@@ -134,7 +134,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         }
 
         track(event: .PAYWALL_PURCHASE_TAP, params: params, logCondition: .logAlways)
-        track(buttonTap: "purchase", onView: AnalyticsView(name: "paywall", type: paywallPlacement), extra: buttonName, index: nil)
+        track(buttonTap: "purchase", onView: ViewAnalyticsModel(name: "paywall", type: paywallPlacement), extra: buttonName, index: nil)
     }
 
     public func trackErrorPaywallPurchase(error: Error?, productIdentifier: String, paywallPlacement: String, paywallID: String?) {

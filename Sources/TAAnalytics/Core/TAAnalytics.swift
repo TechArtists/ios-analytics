@@ -47,9 +47,9 @@ public class TAAnalytics: ObservableObject {
     internal var eventQueueBuffer: EventBuffer = .init(allConsumers: [])
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
-    internal var appSessionEvents = Set<AnalyticsEvent>()
+    internal var appSessionEvents = Set<EventAnalyticsModel>()
     
-    public var lastParentViewShown: AnalyticsView?
+    public var lastParentViewShown: ViewAnalyticsModel?
     
     public var stuckTimer: Timer?
     public var correctionStuckTimer: Timer?
@@ -241,7 +241,7 @@ public class TAAnalytics: ObservableObject {
     /// - Parameters:
     ///   - defaultIfNotExists: defaults to 1 and is returned if there is no valid int saved in UserDefaults
     /// - Returns: the existing value from UserDefaults incremented by 1. Note that this will not save the new value in UserDefaults.
-    internal func getNextCounterValueFrom(userProperty: AnalyticsUserProperty, defaultIfNotExists: Int = 1) -> Int{
+    internal func getNextCounterValueFrom(userProperty: UserPropertyAnalyticsModel, defaultIfNotExists: Int = 1) -> Int{
         if let existingLaunchID = self.get(userProperty: userProperty),
            let previousLaunchID = Int(existingLaunchID){
             return previousLaunchID + 1

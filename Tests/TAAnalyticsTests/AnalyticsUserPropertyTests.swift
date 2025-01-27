@@ -27,11 +27,11 @@ import XCTest
 final class AnalyticsUserPropertyTests: XCTestCase {
     
     func testItDoesnTrim() throws {
-        XCTAssertEqual(AnalyticsUserProperty("short_value").rawValue, "short_value")
+        XCTAssertEqual(UserPropertyAnalyticsModel("short_value").rawValue, "short_value")
     }
     
     func testItTrims() throws {
-        XCTAssertEqual(AnalyticsUserProperty("long_value_longer_than_24_characters").rawValue, "long_value_longer_than_2")
+        XCTAssertEqual(UserPropertyAnalyticsModel("long_value_longer_than_24_characters").rawValue, "long_value_longer_than_2")
     }
 
 }

@@ -11,13 +11,13 @@ public class EventEmitterConsumer: AnalyticsConsumer {
 
     public typealias T = EventEmitterConsumer
     
-    public var eventStream: AsyncStream<AnalyticsEventTrimmed>?
+    public var eventStream: AsyncStream<EventAnalyticsModelTrimmed>?
     
-    private var continuationEvent: AsyncStream<AnalyticsEventTrimmed>.Continuation?
+    private var continuationEvent: AsyncStream<EventAnalyticsModelTrimmed>.Continuation?
     
-    public var propertyStream: AsyncStream<AnalyticsUserPropertyTrimmed>?
+    public var propertyStream: AsyncStream<UserPropertyAnalyticsModelTrimmed>?
     
-    private var continuationProperty: AsyncStream<AnalyticsUserPropertyTrimmed>.Continuation?
+    private var continuationProperty: AsyncStream<UserPropertyAnalyticsModelTrimmed>.Continuation?
     
     public init() {}
     
@@ -26,21 +26,21 @@ public class EventEmitterConsumer: AnalyticsConsumer {
         (propertyStream, continuationProperty) = AsyncStream.makeStream()
     }
     
-    public func track(trimmedEvent: AnalyticsEventTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
+    public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
         
         continuationEvent?.yield(trimmedEvent)
     }
     
-    public func set(trimmedUserProperty: AnalyticsUserPropertyTrimmed, to: String?) {
+    public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {
         continuationProperty?.yield(trimmedUserProperty)
     }
     
-    public func trim(event: AnalyticsEvent) -> AnalyticsEventTrimmed {
-        AnalyticsEventTrimmed(event.rawValue)
+    public func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
+        EventAnalyticsModelTrimmed(event.rawValue)
     }
     
-    public func trim(userProperty: AnalyticsUserProperty) -> AnalyticsUserPropertyTrimmed {
-        AnalyticsUserPropertyTrimmed(userProperty.rawValue)
+    public func trim(userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModelTrimmed {
+        UserPropertyAnalyticsModelTrimmed(userProperty.rawValue)
     }
     
     public var wrappedValue: Self {

@@ -52,7 +52,7 @@ class TAAnalyticsTrimTests {
 
     @Test
     func testTrimmingUserProperties() {
-        let trimmedUserProperty = unitTestConsumer.trim(userProperty: AnalyticsUserProperty("ta_test_test_test"))
+        let trimmedUserProperty = unitTestConsumer.trim(userProperty: UserPropertyAnalyticsModel("ta_test_test_test"))
         unitTestConsumer.set(trimmedUserProperty: trimmedUserProperty, to: "")
         
         #expect(unitTestConsumer.userPropertiesSet.contains(where: { $0.key.rawValue == "ta_test" }))

@@ -59,9 +59,9 @@ public struct TAAnalyticsConfig {
     let enabledProcessTypes: [ProcessType]
     let currentInstallType: InstallType
     let userDefaults: UserDefaults
-    let instalUserProperties: [AnalyticsUserProperty]
+    let instalUserProperties: [UserPropertyAnalyticsModel]
     let maxTimeoutForConsumerStart: Double
-    let trackEventFilter: (( _ event: AnalyticsEvent, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
+    let trackEventFilter: (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
 
     /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
     let automaticallyTrackedEventsPrefixConfig: PrefixConfig
@@ -86,11 +86,11 @@ public struct TAAnalyticsConfig {
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
-                instalUserProperties: [AnalyticsUserProperty] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
+                instalUserProperties: [UserPropertyAnalyticsModel] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
                 maxTimeoutForConsumerStart: Double = 10,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "ta_", userPropertyPrefix: "ta_"),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
-                trackEventFilter: @escaping (( _ event: AnalyticsEvent, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
+                trackEventFilter: @escaping (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
     ) {
         self.analyticsVersion = analyticsVersion
         self.consumers = consumers

@@ -1,4 +1,4 @@
-//  AnalyticsEventTests.swift
+//  EventAnalyticsModelTests.swift
 //  Created by Adi on 10/24/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
@@ -23,7 +23,7 @@
 import XCTest
 @testable import TAAnalytics
 
-final class AnalyticsEventTests: XCTestCase {
+final class EventAnalyticsModelTests: XCTestCase {
     
 //    static let mockOB = MockTAAnalytics()
     
@@ -32,7 +32,7 @@ final class AnalyticsEventTests: XCTestCase {
     }
     
     func testItDoesnTrim() throws {
-        XCTAssertEqual(AnalyticsEvent("short_value").rawValue, "short_value")
+        XCTAssertEqual(EventAnalyticsModel("short_value").rawValue, "short_value")
     }
     
     func testFoo() throws {

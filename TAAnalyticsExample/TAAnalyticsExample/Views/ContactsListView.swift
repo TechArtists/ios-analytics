@@ -31,7 +31,7 @@ struct ContactsListView: View {
 
     @EnvironmentObject var analytics: TAAnalytics
     
-    var analyticsView: AnalyticsView {
+    var viewAnalyticsModel: ViewAnalyticsModel {
         switch contactsPermission.authorizationStatus {
             case .notDetermined: return .CONTACTS_PERMISSION_NOT_DETERMINED
             case .authorized: return .CONTACTS_WITH_PERMISSION
@@ -68,20 +68,29 @@ struct ContactsListView: View {
                     noPermissionHeaderView
                     Text("Please allow contacts permission for the app to work 🙏.")
                         .multilineTextAlignment(.center)
-                    Button("Request Contact Permission") {
-                        analytics.track(buttonTap: "request contacts permission", onView: analyticsView)
-                        contactsPermission.requestAccess(analytics: analytics)
-                    }
+                    
+                    TAAnalyticsButtonView(
+                        analyticsName: "request contacts permission",
+                        analyticsView: viewAnalyticsModel,
+                        taAnalytics: analytics) {
+                            contactsPermission.requestAccess(analytics: analytics)
+                        } label: {
+                            Text("Request Contact Permission")
+                        }
                     Spacer()
                 }
             } else if contactsPermission.authorizationStatus == .denied {
                 VStack(alignment: .center,spacing: 20) {
                     noPermissionHeaderView
                     Text("Please allow contacts permission from the settings")
-                    Button("Open Settings") {
-                        analytics.track(buttonTap: "open settings", onView: analyticsView)
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                    }
+                    TAAnalyticsButtonView(
+                        analyticsName: "open settings",
+                        analyticsView: viewAnalyticsModel,
+                        taAnalytics: analytics) {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        } label: {
+                            Text("Open Settings")
+                        }
                     Spacer()
                 }
             } else {
@@ -91,7 +100,7 @@ struct ContactsListView: View {
                             contact in
                             NavigationLinkWithTap(
                                 tapHandler: {
-                                    analytics.track(buttonTap: "contact", onView: analyticsView)
+                                    analytics.track(buttonTap: "contact", onView: viewAnalyticsModel)
                                 },
                                 destination: ContactDetailView(contact: contact))
                             {
@@ -107,7 +116,7 @@ struct ContactsListView: View {
         }
         .navigationTitle(Text("Contacts"))
         .onAppear() {
-            analytics.track(viewShow: analyticsView)
+            analytics.track(viewShow: viewAnalyticsModel)
             contactsPermission.fetchContacts()
             
             analytics.config.consumers.forEach { consumer in

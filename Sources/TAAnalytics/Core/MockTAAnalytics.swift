@@ -33,12 +33,12 @@ import UIKit
 ///     foo.doStuff()
 ///
 ///     XCTAssertEqual(foo.stuffItDid, 42)
-///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, AnalyticsEvent.EVENT_I_EXPECTED)
+///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, EventAnalyticsModel.EVENT_I_EXPECTED)
 public class MockTAAnalytics : TAAnalyticsProtocol {
     
-    public var eventsSent = [(event: AnalyticsEvent, params: [String: (any AnalyticsBaseParameterValue)?])]()
-    public var userPropertiesSet = [AnalyticsUserProperty: String]()
-    public var lastParentViewShown: AnalyticsView?
+    public var eventsSent = [(event: EventAnalyticsModel, params: [String: (any AnalyticsBaseParameterValue)?])]()
+    public var userPropertiesSet = [UserPropertyAnalyticsModel: String]()
+    public var lastParentViewShown: ViewAnalyticsModel?
     public var stuckTimer: Timer?
     public var correctionStuckTimer: Timer?
 
@@ -60,16 +60,16 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
         }
     }
 
-    public func track(event: AnalyticsEvent, params: [String : (any AnalyticsBaseParameterValue)?]? = nil, logCondition: EventLogCondition = .logAlways) {
+    public func track(event: EventAnalyticsModel, params: [String : (any AnalyticsBaseParameterValue)?]? = nil, logCondition: EventLogCondition = .logAlways) {
         eventsSent.append((event, params ?? [:]))
     }
         
-    public func set(userProperty: AnalyticsUserProperty, to: String?) {
+    public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         guard let to = to else { return }
         userPropertiesSet[userProperty] = to
     }
 
-    public func get(userProperty: AnalyticsUserProperty) -> String? {
+    public func get(userProperty: UserPropertyAnalyticsModel) -> String? {
         return userPropertiesSet[userProperty]
     }
 
@@ -94,7 +94,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
         
     }
     
-    public func track(viewShow view: AnalyticsView, stuckTimer: TimeInterval) {
+    public func track(viewShow view: ViewAnalyticsModel, stuckTimer: TimeInterval) {
         
     }
 }

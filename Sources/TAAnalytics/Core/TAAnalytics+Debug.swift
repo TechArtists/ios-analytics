@@ -26,7 +26,7 @@ public protocol TAAnalyticsDebugProtocol: TAAnalyticsBaseProtocol {
 public extension TAAnalyticsDebugProtocol {
     func trackDebugEvent(eventSuffix: String, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
         let eventName = "debug_\(eventSuffix)"
-        track(event: AnalyticsEvent(eventName), params: extraParams, logCondition: .logAlways)
+        track(event: EventAnalyticsModel(eventName), params: extraParams, logCondition: .logAlways)
     }
 }
 
