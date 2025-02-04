@@ -4,19 +4,18 @@ import PackageDescription
 
 let package = Package(
     name: "TAAnalytics",
-    platforms: [ .iOS(.v13), .macOS(.v10_13)],
+    platforms: [ .iOS(.v14), .macOS(.v10_14)],
     products: [
         .library(
             name: "TAAnalytics",
             targets: ["TAAnalytics"]
             )
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
         .target(
-            name: "TAAnalytics",
-            dependencies: []),
+            name: "TAAnalytics"
+        ),
         .testTarget(
             name: "TAAnalyticsTests",
             dependencies: ["TAAnalytics"]),

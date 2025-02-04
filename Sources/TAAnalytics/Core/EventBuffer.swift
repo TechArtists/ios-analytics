@@ -89,13 +89,7 @@ actor EventBuffer {
     ) {
         for consumer in startedConsumers {
             consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
-            os_log(
-                "Consumer: '%{public}@' has logged event: '%{public}@'",
-                log: LOGGER,
-                type: .info,
-                String(describing: consumer),
-                consumer.trim(event: event).rawValue
-            )
+            TALogger.log("Consumer: '\(String(describing: consumer))' has logged event: '\(consumer.trim(event: event).rawValue)'", level: .info)
         }
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }

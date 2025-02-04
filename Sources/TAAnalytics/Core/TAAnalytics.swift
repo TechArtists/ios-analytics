@@ -91,13 +91,7 @@ public class TAAnalytics: ObservableObject {
     }
     
     private func logStartupDetails() {
-        os_log("Starting with install type: '%{public}@', process type '%{public}@', enabled process types '%{public}@'",
-               log: LOGGER,
-               type: .info,
-               String(describing: config.currentInstallType),
-               String(describing: config.currentProcessType),
-               String(describing: config.enabledProcessTypes)
-        )
+        TALogger.log("Starting with install type: '\(String(describing: config.currentInstallType))', process type '\(String(describing: config.currentProcessType))', enabled process types '\(String(describing: config.enabledProcessTypes))'", level: .info)
     }
     
     private func startConsumers() async {
@@ -117,26 +111,14 @@ public class TAAnalytics: ObservableObject {
                             )
                         }
                         
-                        os_log("Consumer: '%{public}@' has been started", log: LOGGER, type: .info, String(describing: consumer))
+                        TALogger.log("Consumer: '\(String(describing: consumer))' has been started", level: .info)
                         return consumer
                     } catch is TimeoutError {
-                        os_log(
-                            "Consumer: '%{public}@' did NOT start because maximum start timeout of '%{public}@' seconds was reached",
-                            log: LOGGER,
-                            type: .info,
-                            String(describing: consumer),
-                            String(describing: self.config.maxTimeoutForConsumerStart)
-                        )
+                        TALogger.log("Consumer: '\(String(describing: consumer))' did NOT start because maximum start timeout of '\(String(describing: self.config.maxTimeoutForConsumerStart))' seconds was reached", level: .info)
                         return nil
                     } catch {
-                        os_log(
-                            "Consumer: '%{public}@' did NOT start for this install types: '%{public}@' and threw error: '%{public}@'",
-                            log: LOGGER,
-                            type: .info,
-                            String(describing: consumer),
-                            String(describing: self.config.currentInstallType),
-                            error.localizedDescription
-                        )
+                        TALogger.log("Consumer: '\(String(describing: consumer))' did NOT start for this install type: '\(String(describing: self.config.currentInstallType))' and threw error: '\(error.localizedDescription)'", level: .info)
+
                         return nil
                     }
                 }
@@ -201,7 +183,7 @@ public class TAAnalytics: ObservableObject {
         shouldLogFirstOpen: Bool = true,
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) {
-        os_log("Is first open", log: LOGGER, type: .info)
+        TALogger.log("Is first open", level: .info)
         
         calculateAndSetUserProperties()
         

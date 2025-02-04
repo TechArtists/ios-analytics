@@ -50,10 +50,7 @@ class DefaultInstallUserPropertiesCalculator {
             case .INSTALL_UI_APPEARANCE:
                 setInstallUIAppearance()
             default:
-                os_log("No mapping defined for install user property %{public}@"
-                       , log: LOGGER
-                       , type: .error
-                       , userProperty.rawValue)
+                TALogger.log("No mapping defined for install user property \(userProperty.rawValue)", level: .error)
             }
         }
     }

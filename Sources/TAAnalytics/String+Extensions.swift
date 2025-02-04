@@ -42,10 +42,7 @@ extension String {
     internal func ta_trim(toLength length: Int, debugType: String) -> String {
         if self.count > length {
             let trimmedString = String(self.prefix(length))
-            os_log("Trimming %{public}@ to length %ld ('%{public}@' -> '%{public}@'",
-                   log: LOGGER,
-                   type: .error,
-                   debugType, length, self, trimmedString)
+            TALogger.log("Trimming \(debugType) to length \(length) ('\(self)' -> '\(trimmedString)')", level: .error)
             return trimmedString
         }
         return self

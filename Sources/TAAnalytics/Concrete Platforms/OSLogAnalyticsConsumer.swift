@@ -47,7 +47,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     
     public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : (any AnalyticsBaseParameterValue)]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-        os_log("sendEvent: '%{public}@', params: [%@]", log: logger, type: .info, trimmedEvent.rawValue, String(describingOptional: paramsString))
+        TALogger.log("sendEvent: \(trimmedEvent.rawValue), params: \(String(describingOptional: paramsString))", level: .info)
     }
     
     public func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
@@ -78,7 +78,7 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
     }
 
     public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {        
-        os_log("setUserProperty: '%{public}@', value: '%@'", log: logger, type: .info, trimmedUserProperty.rawValue, String(describingOptional: to))
+        TALogger.log("setUserProperty: '\(trimmedUserProperty.rawValue)', value: '\(String(describingOptional: to))'", level: .info)
     }
     
     /// Returns a debug string for a set(userProperty:to:) function call.
@@ -92,5 +92,4 @@ public class OSLogAnalyticsConsumer: AnalyticsConsumer {
             return "setUserProperty: '\(userPropertyRawValue)', value: '\(String(describingOptional:to))'"
         }
     }
-
 }

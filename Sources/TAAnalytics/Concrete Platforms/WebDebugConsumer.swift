@@ -152,7 +152,7 @@ public class WebDebugConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnly
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         
-        os_log("Sending to debug server %{public}@", log: LOGGER, type: .info, String(describingOptional: postData["name"]))
+        TALogger.log("Sending to debug server \(String(describingOptional: postData["name"]))", level: .info)
         self.debugServerFailedURLRequests.forEach { sendToDebugServer(urlRequest: $0.0, name: $0.1, hasFailedAlready: true) }
         sendToDebugServer(urlRequest: request, name: postData["name"] as? String, hasFailedAlready: false)
     }
@@ -161,22 +161,23 @@ public class WebDebugConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnly
         let task = URLSession.shared.dataTask(with: urlRequest) { maybeData, maybeResponse, maybeError in
             
             if let error = maybeError {
-                os_log("Found error when sending name: %{public}@, error: %{public}@", log: LOGGER, type: .error, String(describingOptional: name),  String(describingOptional: error))
+                TALogger.log("Found error when sending name: \(String(describingOptional: name)), error: \(String(describingOptional: error))", level: .error)
                 
                 if (error as NSError).domain == NSURLErrorDomain {
                     if !hasFailedAlready {
-                        os_log("Adding to stale queue", log: LOGGER, type: .error)
+                        TALogger.log("Adding to stale queue", level: .error)
                         self.debugServerFailedURLRequests.append((urlRequest, name))
                     } else {
-                        os_log("Not adding to stale queue", log: LOGGER, type: .error)
+                        TALogger.log("Not adding to stale queue", level: .error)
                     }
                 }
             } else {
                 if hasFailedAlready {
-                    os_log("   Sent stale to debug server %@", log: LOGGER, type: .error, String(describingOptional: name))
+                    TALogger.log("Sent stale to debug server \(String(describingOptional: name))", level: .error)
                     self.debugServerFailedURLRequests.removeAll(where: { $0 == (urlRequest, name) })
                 } else {
-                    os_log("   Sent to debug server %@", log: LOGGER, type: .error, String(describingOptional: name))
+                    TALogger.log("Sent to debug server \(String(describingOptional: name))", level: .error)
+
                 }
             }
         }
