@@ -4,9 +4,9 @@ This is an opiniated analytics framework wrapper that you can use for your produ
 
 It serves a couple of important points:
 
-1. It supports an opiniated standard event structure, so that you'll have more sane event names (vs `foo_clicked`, `tap_bar`, `baz`)
-2. It provides a common interface so that you can send the same event to multiple consumers, minimizing bugs.
-3. It has workarounds for common bugs, enforcing a more clean dataset (aka your BIs will thank you).
+    1. It supports an opiniated standard event structure, so that you'll have more sane event names (vs `foo_clicked`, `tap_bar`, `baz`)
+    2. It provides a common interface so that you can send the same event to multiple consumers, minimizing bugs.
+    3. It has workarounds for common bugs, enforcing a more clean dataset (aka your BIs will thank you).
  
 
 # Standard Event Structure
@@ -71,8 +71,23 @@ One common interface to send. Most analytics consumers have the same capabilitie
 ```
 
 
-## Configuration points
+# Configuration points
 
+## Logging with TALogger
+
+`TAAnalytics` includes a built-in logging system using OSLog, allowing for structured and efficient logging.
+
+By default, logs will be sent via OSLog. Clients can override this to forward logs elsewhere (e.g., a server or a file).
+
+**Custom Log Handler**
+
+```swift
+TALogger.activeLogHandler = { message, level in
+    MyCustomLogger.shared.writeLog("[\(level)] \(message)")
+}
+```
+
+Once set, TALogger.log(...) inside the package will use the custom logging system.
 
 ## Goodies
 
