@@ -5,46 +5,23 @@
 //  Created by Robert Tataru on 03.02.2025.
 //
 
-#if canImport(Logging)
-import Logging
-#endif
-
 import OSLog
 
-struct TALogger {
-    #if canImport(Logging)
-    public static let logger = Logger(label: "com.tech-artists.analytics")
-    #else
-    public static let logger = Logger(subsystem: "", category: "analytics")
-    #endif
+typealias TALogger = TAAnalyticsLogger
+
+public struct TAAnalyticsLogger {
+    
+    public typealias LogHandler = (_ message: String, _ level: OSLogType) -> Void
+    
+    static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "analytics")
+    
+    private static let defaultHandler: LogHandler = { message, level in
+        logger.log(level: level, "\(message)")
+    }
+    
+    public static var activeLogHandler: LogHandler = defaultHandler
     
     public static func log(_ message: String, level: OSLogType) {
-    #if canImport(Logging)
-            logger.log(level: level.toLoggerLevel(), "\(message)")
-        #else
-            logger.log(level: level, "\(message)")
-        #endif
+        activeLogHandler(message, level)
     }
 }
-
-#if canImport(Logging)
-extension OSLogType {
-    func toLoggerLevel() -> Logging.Logger.Level {
-        switch self {
-        case OSLogType.debug:
-            return Logging.Logger.Level.debug
-        case OSLogType.info:
-            return Logging.Logger.Level.info
-        case OSLogType.`default`:
-            return Logging.Logger.Level.notice
-        case OSLogType.error:
-            return Logging.Logger.Level.error
-        case OSLogType.fault:
-            return Logging.Logger.Level.critical
-        default:
-            return Logging.Logger.Level.notice
-        }
-    }
-}
-#endif
-
