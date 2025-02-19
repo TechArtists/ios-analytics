@@ -1,10 +1,10 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 
 import PackageDescription
 
 let package = Package(
     name: "TAAnalytics",
-    platforms: [ .iOS(.v14), .macOS(.v10_14)],
+    platforms: [ .iOS(.v15), .macOS(.v10_14)],
     products: [
         .library(
             name: "TAAnalytics",
