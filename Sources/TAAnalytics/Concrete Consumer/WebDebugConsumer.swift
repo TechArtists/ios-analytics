@@ -1,7 +1,7 @@
 //  KeemojiAPIAnalyticsConsumer.swift
 //  Created by Adi on 11/9/22
 //
-//  Copyright (c) 2022 Tech Artists Agency SRL (http://TA.com/)
+//  Copyright (c) 2022 Tech Artists Agency SRL
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
