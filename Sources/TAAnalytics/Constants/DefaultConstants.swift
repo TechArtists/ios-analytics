@@ -52,13 +52,13 @@ public extension EventAnalyticsModel {
     static let ENGAGEMENT_PRIMARY = EventAnalyticsModel("engagement_primary", isTAInternalEvent: true)
     
     /// Sent when the onboarding starts and the very first screen is shown
-    static let ONBOARDING_START = EventAnalyticsModel("onboarding_start", isTAInternalEvent: true)
+    static let ONBOARDING_ENTER = EventAnalyticsModel("onboarding_enter", isTAInternalEvent: true)
     /// Sent when the onboarding is finished
-    static let ONBOARDING_END = EventAnalyticsModel("onboarding_end", isTAInternalEvent: true)
+    static let ONBOARDING_EXIT = EventAnalyticsModel("onboarding_exit", isTAInternalEvent: true)
     //// Sent when the account signup starts
-    static let ACCOUNT_SIGNUP_START = EventAnalyticsModel("account_signup_start", isTAInternalEvent: true)
+    static let ACCOUNT_SIGNUP_ENTER = EventAnalyticsModel("account_signup_enter", isTAInternalEvent: true)
     //// Sent when the account signup ends
-    static let ACCOUNT_SIGNUP_END = EventAnalyticsModel("account_signup_end", isTAInternalEvent: true)
+    static let ACCOUNT_SIGNUP_EXIT = EventAnalyticsModel("account_signup_exit", isTAInternalEvent: true)
     
     /// Parameters `placement`, `id` (optional)
     /// This also sends the `ui_view_show` event in the background with `name="paywall"` and `type=<placement>`
