@@ -30,19 +30,34 @@ import Foundation
 /// alongside the `domain`, `code` & `localizedDescription`
 public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
 
-    /// Logs an `error foo` event with some details about the error
+    /// Logs an `error` event with some details about the error
     ///
-    /// The EventAnalyticsModel is sent alongside these parameters if an `error` parameter is present:
+    /// If an `error` is passed, these extra parameters will be added:
     ///
     ///      error_domain: String?
     ///      error_code: Int?
     ///      error_description: String?
     ///
     /// - Parameters:
-    ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error_foo`)
+    ///   - reason: a developer reason about what triggered the error state (e.g. `couldnt find any valid JWT token`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func trackErrorEvent(eventSuffix: String, error: Error?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    func trackErrorEvent(reason: String, error: Error?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    
+    /// Logs an `error_corrected` event with some details about the error. Use this if you want to specify that the previous error tracked state has been solved.
+    /// Useful to be able to measure false positives from the analytics.
+    ///
+    /// If an `error_corrected` is passed, these extra parameters will be added:
+    ///
+    ///      error_domain: String?
+    ///      error_code: Int?
+    ///      error_description: String?
+    ///
+    /// - Parameters:
+    ///   - reason: a developer reason about what triggered the error state that has since corrected (e.g. `couldnt find any valid JWT token`)
+    ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
+    ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
+    func trackErrorCorrectedEvent(reason: String, error: Error?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 }
 
 // MARK: - Default Implementations
@@ -61,8 +76,10 @@ public extension TAAnalyticsErrorProtocol {
     ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error foo`)
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
-    func trackErrorEvent(eventSuffix: String, error: Error? = nil, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
+    func trackErrorEvent(reason: String, error: Error? = nil, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
+        params["reason"] = reason
+        
         if let error = error {
             let nserror = error as NSError
             params["error_domain"] = nserror.domain
@@ -70,8 +87,25 @@ public extension TAAnalyticsErrorProtocol {
             params["error_description"] = nserror.localizedDescription
         }
         extraParams?.forEach({ key, value in params[key] = value })
-        track(event: EventAnalyticsModel("error_\(eventSuffix)"), params: params, logCondition: .logAlways)
+        track(event: .ERROR, params: params, logCondition: .logAlways)
     }
+    
+    func trackErrorCorrectedEvent(reason: String, error: Error? = nil, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
+        var params = [String: (any AnalyticsBaseParameterValue)]()
+        params["reason"] = reason
+        
+        if let error = error {
+            let nserror = error as NSError
+            params["error_domain"] = nserror.domain
+            params["error_code"] = nserror.code
+            params["error_description"] = nserror.localizedDescription
+        }
+        extraParams?.forEach({ key, value in params[key] = value })
+        track(event: .ERROR_CORRECTED, params: params, logCondition: .logAlways)
+    }
+
+    
+    
 }
 
 // MARK: - Empty Conformance

@@ -27,17 +27,19 @@ import Foundation
 public extension EventAnalyticsModel {
     static let FIRST_OPEN = EventAnalyticsModel("first_open", isTAInternalEvent: true)
     
-    
-    static let ui_view_show = EventAnalyticsModel("ui_view_show")
+    static let UI_VIEW_SHOW = EventAnalyticsModel("ui_view_show")
     static let UI_BUTTON_TAP = EventAnalyticsModel("ui_button_tap")
-    
-    static let error_stuck_on_ui_view_show = EventAnalyticsModel("error_stuck_on_ui_view_show")
-    static let corrected_error_stuck_on_ui_view_show = EventAnalyticsModel("corrected_error_stuck_on_ui_view_show")
-    
+        
     /// Sent when the app goes to the foreground as detected by `UIApplication.willEnterForegroundNotification`. It has an `is_cold_launch` boolean parameter
     static let APP_OPEN = EventAnalyticsModel("app_open", isTAInternalEvent: true)
     /// Sent when the app goes to the background as detected by `UIApplication.didEnterBackgroundNotification`. It also has parameters for the `last_parent_view` that was shown (aka no subviews).
     static let APP_CLOSE = EventAnalyticsModel("app_close", isTAInternalEvent: true)
+    
+    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed
+    static let ERROR = EventAnalyticsModel("error", isTAInternalEvent: true)
+    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed. Use this when you want to specify that the error state has been resolved
+    static let ERROR_CORRECTED = EventAnalyticsModel("error_corrected", isTAInternalEvent: true)
+    
     
     /// Parameters `from_version`, `to_version` (retrieved via `CFBundleShortVersionString` & `from_build`, `to_build` (retrieved via `CFBundleVersion`)
     static let APP_VERSION_UPDATE = EventAnalyticsModel("app_version_update", isTAInternalEvent: true)

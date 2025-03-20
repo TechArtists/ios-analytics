@@ -49,36 +49,55 @@ class TAAnalyticsUITests {
     
     @Test("Stuck event triggered after timer")
     func testStuckEventTriggeredAfterTimer() async throws {
-        analytics.track(viewShow: testView, stuckTimer: 2)
+        analytics.track(viewShow: testView, stuckTimeout: 2)
         
-        let deferredQueuedEvent = try await requireEvent(named: "error_stuck_on_ui_view_show", timeout: 5)
-        
-        #expect(deferredQueuedEvent.parameters?["name"] as? String == testView.name)
+        let deferredQueuedEvent = try await requireEvent(named: "error", matching:  { event in
+            return event.parameters?["reason"] as? String == StuckUIManager.REASON
+        }, timeout: 5)
+        #expect(deferredQueuedEvent.parameters?["view_name"] as? String == testView.name)
+        #expect(deferredQueuedEvent.parameters?["view_type"] as? String == testView.type)
     }
     
     @Test("Stuck timer canceled by new view")
     func testStuckTimerCanceledByNewView() async throws {
-        analytics.track(viewShow: testView, stuckTimer: 5)
+        analytics.track(viewShow: testView, stuckTimeout: 5)
+
+        // wait until the main async is done, so that the above track(viewShow:) gets a chance to schedule the stuck timer
+        await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                continuation.resume()
+            }
+        }
+        
         let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
-        let event = await expectEvent(named: "error_stuck_on_ui_view_show", timeout: 6)
-        #expect(event == nil || (event?.parameters?["name"] as? String != testView.name))
+        let event = await expectEvent(named: "error", timeout: 6)
+        #expect(event == nil || (event?.parameters?["view_name"] as? String != testView.name))
     }
     
+    @available(iOS 16.0, *)
     @Test("Corrected error event after stuck")
     func testCorrectedErrorEventAfterStuck() async throws {
-        analytics.track(viewShow: testView, stuckTimer: 2)
+        analytics.track(viewShow: testView, stuckTimeout: 2)
         
-        _ = try await requireEvent(named: "error_stuck_on_ui_view_show")
+        
+        let _ = try await requireEvent(named: "error", matching:  { event in
+            return event.parameters?["reason"] as? String == StuckUIManager.REASON
+        }, timeout: 5)
         
         // Show a new view after the stuck error
+        try? await Task.sleep(for: .seconds(1))
+        
         let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
-        let correctedEvent = try await requireEvent(named: "corrected_error_stuck_on_ui_view_show", timeout: 5)
-        
-        #expect(correctedEvent.parameters?["name"] as? String == testView.name)
+        let correctedEvent = try await requireEvent(named: "error_corrected", timeout: 5)
+
+        // 2 seconds for the stuck timer + 1 second for our sleep, the error corrected itself after at least 3s
+        #expect(correctedEvent.parameters?["duration"] as? Double ?? 0 >= 3)
+        #expect(correctedEvent.parameters?["view_name"] as? String == testView.name)
+        #expect(correctedEvent.parameters?["view_type"] as? String == testView.type)
     }
         
     func requireEvent(

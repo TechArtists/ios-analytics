@@ -24,54 +24,70 @@
 
 import Foundation
 
-///   - parentView: the parent view of this view. If you're showing a full screen view controller, then this should be nil. If you want to track when a specific error message label has been shown, then in that case the `parentView` should be the filled.
-public class ViewAnalyticsModel: ObservableObject, Hashable, Equatable {
+public protocol ViewAnalyticsModelProtocol {}
+
+public class SecondaryViewAnalyticsModel: ViewAnalyticsModelProtocol, ObservableObject, Hashable, Equatable {
+    
     public let name: String
     public let type: String?
     
-    public let parentView: ViewAnalyticsModel?
+    public let mainView: ViewAnalyticsModel
     
+    public init(name: String, mainView: ViewAnalyticsModel){
+        self.name = name
+        self.type = nil
+        self.mainView = mainView
+    }
+
+    public init(name: String, type: String?, mainView: ViewAnalyticsModel){
+        self.name = name
+        self.type = type
+        self.mainView = mainView
+    }
+
+    public func withType(type: String?) -> SecondaryViewAnalyticsModel {
+        return SecondaryViewAnalyticsModel(name: name, type: type, mainView: mainView)
+    }
+    
+    public static func == (lhs: SecondaryViewAnalyticsModel, rhs: SecondaryViewAnalyticsModel) -> Bool {
+        return lhs.name == rhs.name && lhs.type == rhs.type && lhs.mainView == rhs.mainView
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(type)
+        hasher.combine(mainView)
+    }
+}
+
+
+public class ViewAnalyticsModel: ViewAnalyticsModelProtocol, ObservableObject, Hashable, Equatable {
+    public let name: String
+    public let type: String?
+        
     public let groupDetails: AnalyticsViewGroupDetails?
     
     public init(_ name: String){
         self.name = name
         self.type = nil
-        self.parentView = nil
         self.groupDetails = nil
     }
     
     public init(name: String){
         self.name = name
         self.type = nil
-        self.parentView = nil
         self.groupDetails = nil
     }
     
     public init(name: String, type: String?){
         self.name = name
         self.type = type
-        self.parentView = nil
         self.groupDetails = nil
     }
-    
-    public init(name: String, type: String?, parentView: ViewAnalyticsModel){
-        self.name = name
-        self.type = type
-        self.parentView = parentView
-        self.groupDetails = nil
-    }
-    
-    public init(name: String, type: String?, parentView: ViewAnalyticsModel, groupDetails: AnalyticsViewGroupDetails?) {
-        self.name = name
-        self.type = type
-        self.parentView = parentView
-        self.groupDetails = groupDetails
-    }
-    
+            
     public init(name: String, type: String?, groupDetails: AnalyticsViewGroupDetails?){
         self.name = name
         self.type = type
-        self.parentView = nil
         self.groupDetails = groupDetails
     }
 
@@ -80,17 +96,18 @@ public class ViewAnalyticsModel: ObservableObject, Hashable, Equatable {
     }
     
     public static func == (lhs: ViewAnalyticsModel, rhs: ViewAnalyticsModel) -> Bool {
-        return lhs.name == rhs.name && lhs.type == rhs.type && lhs.parentView == rhs.parentView
+        return lhs.name == rhs.name && lhs.type == rhs.type && lhs.groupDetails == rhs.groupDetails
     }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(type)
-        hasher.combine(parentView)
+        hasher.combine(groupDetails)
     }
 }
 
-public class AnalyticsViewGroupDetails {
+public class AnalyticsViewGroupDetails: Hashable, Equatable {
+    
     public enum Stage: CustomStringConvertible {
         case start
         case middle
@@ -119,5 +136,16 @@ public class AnalyticsViewGroupDetails {
         } else {
             self.stage = .middle
         }
+    }
+     
+    
+    public static func == (lhs: AnalyticsViewGroupDetails, rhs: AnalyticsViewGroupDetails) -> Bool {
+        return lhs.name == rhs.name && lhs.order == rhs.order && lhs.stage == rhs.stage
+    }
+ 
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(order)
+        hasher.combine(stage)
     }
 }
