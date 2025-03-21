@@ -101,11 +101,6 @@ public extension UserPropertyAnalyticsModel {
 public extension UserPropertyAnalyticsModel {
     static let ANALYTICS_VERSION = UserPropertyAnalyticsModel("analytics_version", isInternalUserProperty: true)
     
-    static let APP_VERSION = UserPropertyAnalyticsModel("app_version", isInternalUserProperty: true)
-    static let DEVICE_LANGUAGE = UserPropertyAnalyticsModel("device_language", isInternalUserProperty: true)
-    static let INSTALL_DEVICE_LANGUAGE = InstallUserPropertyAnalyticsModel("device_language", isTAInternalUserProperty: true)
-    static let INSTALL_DEVICE_LANGUAGE2 = InstallUserPropertyAnalyticsModel("install_device_language", isTAInternalUserProperty: true)
-    
     /// The date of the install, in ISO 8601 format (YYYY-MM-DD)
     static let INSTALL_DATE    = UserPropertyAnalyticsModel("install_date", isInternalUserProperty: true)
     /// The version of the app at install time
@@ -120,19 +115,18 @@ public extension UserPropertyAnalyticsModel {
     static let INSTALL_DYNAMIC_TYPE  = UserPropertyAnalyticsModel("install_dynamic_type", isInternalUserProperty: true)
 
     /// Ever increasing counter on each cold app launch, starting from 1 at first open.
-    static let COLD_APP_LAUNCH_COUNT = UserPropertyAnalyticsModel("cold_app_launch_count", isInternalUserProperty: true)
+    static let APP_COLD_LAUNCH_COUNT = UserPropertyAnalyticsModel("app_cold_launch_count", isInternalUserProperty: true)
     /// Ever increasing counter on each app open, starting from 1 at first open
     static let APP_OPEN_COUNT = UserPropertyAnalyticsModel("app_open_count", isInternalUserProperty: true)
     
     /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;group_name;group_order;group_stage`
-    static let LAST_PARENT_VIEW_SHOWN = UserPropertyAnalyticsModel("last_parent_view_shown", isInternalUserProperty: true)
+    static let LAST_VIEW_SHOW = UserPropertyAnalyticsModel("last_view_show", isInternalUserProperty: true)
+        
     
-    // TODO: adi add Experiments or ABTesting mechanism that's dependent on feature flags
+    // TODO: adi sd add Experiments or ABTesting mechanism that's dependent on feature flags
     // prefix all curent running experiments with `ab_%`
     
     /// If the variant is control/test.
-    // TODO: move this out
-//    static let INSTALL_VARIANT = AnalyticsUserProperty("install_variant")
     // TODO: Move this out
     /// The attribution network at install time
 //    static let INSTALL_ATTR_NETWORK     = AnalyticsUserProperty("install_attr_network")

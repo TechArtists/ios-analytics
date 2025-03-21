@@ -50,7 +50,7 @@ public class TAAnalytics: ObservableObject {
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<EventAnalyticsModel>()
     
-    public var lastParentViewShown: ViewAnalyticsModel?
+    public var lastViewShow: ViewAnalyticsModel?
     
     public var stuckUIManager: StuckUIManager?
     
@@ -175,7 +175,7 @@ public class TAAnalytics: ObservableObject {
 
     private func configureUserProperties() {
         set(userProperty: .ANALYTICS_VERSION, to: self.config.analyticsVersion)
-        set(userProperty: .COLD_APP_LAUNCH_COUNT, to: "\(self.getNextCounterValueFrom(userProperty: .COLD_APP_LAUNCH_COUNT))")
+        set(userProperty: .APP_COLD_LAUNCH_COUNT, to: "\(self.getNextCounterValueFrom(userProperty: .APP_COLD_LAUNCH_COUNT))")
     }
 
     private func handleFirstOpen(

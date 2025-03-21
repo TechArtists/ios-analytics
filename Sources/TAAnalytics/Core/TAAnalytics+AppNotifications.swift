@@ -60,11 +60,9 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
             // add user property for last view types shown
             var params = [String: (any AnalyticsBaseParameterValue)]()
 
-            params["last_parent_view_name"] = self.lastParentViewShown?.name
-            params["last_parent_view_type"] = self.lastParentViewShown?.type
-            params["last_parent_view_group_name"] = self.lastParentViewShown?.groupDetails?.name
-            params["last_parent_view_group_order"] = self.lastParentViewShown?.groupDetails?.order
-            params["last_parent_view_group_stage"] = self.lastParentViewShown?.groupDetails?.stage.description
+            if let view = self.lastViewShow {
+                self.addParameters(for: view, to: &params, prefix: "view_")
+            }
 
             self.track(event: .APP_CLOSE, params: params)
         }

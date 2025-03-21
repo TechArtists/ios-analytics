@@ -116,7 +116,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String: (any AnalyticsBaseParameterValue)]?) -> Bool {
         if config.currentProcessType == .app && isFirstOpen {
             let params = paramsCallback()
-            track(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
+            track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
             return true
         }
         return false

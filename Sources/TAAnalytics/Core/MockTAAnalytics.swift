@@ -38,7 +38,6 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     
     public var eventsSent = [(event: EventAnalyticsModel, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [UserPropertyAnalyticsModel: String]()
-    public var lastParentViewShown: ViewAnalyticsModel?
     public var lastViewShow: ViewAnalyticsModel?
     public var stuckUIManager: StuckUIManager?
 
