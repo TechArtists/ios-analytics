@@ -62,18 +62,14 @@ public extension EventAnalyticsModel {
     
     /// Parameters `placement`, `id` (optional)
     /// This also sends the `ui_view_show` event in the background with `name="paywall"` and `type=<placement>`
-    static let PAYWALL_SHOW = EventAnalyticsModel("paywall_show", isTAInternalEvent: true)
+    static let PAYWALL_ENTER = EventAnalyticsModel("paywall_show", isTAInternalEvent: true)
     /// Parameters `placement`, `id` (optional)
-    static let PAYWALL_CLOSE = EventAnalyticsModel("paywall_close", isTAInternalEvent: true)
+    static let PAYWALL_EXIT = EventAnalyticsModel("paywall_close", isTAInternalEvent: true)
     /// Parameters `button_name`, `product_identifier`, `paywall_placement`, `paywall_id` (optional),
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
     static let PAYWALL_PURCHASE_TAP = EventAnalyticsModel("paywall_purchase_tap", isTAInternalEvent: true)
-    /// Purchase that happened once the user tried to purchase. TODO:// add those SKError events?
-    static let ERROR_PAYWALL_PURCHASE = EventAnalyticsModel("error_paywall_purchase", isTAInternalEvent: true)
-    /// The paywall couldn't be shown
-    static let ERROR_PAYWALL_SHOW = EventAnalyticsModel("error_paywall_show", isTAInternalEvent: true)
-    
-    
+
+    // TODO: these subscription as well
     static let SUBSCRIPTION_START_PAID_PAY_AS_YOU_GO = EventAnalyticsModel("subscripton_start_paid_pay_as_you_go", isTAInternalEvent: true)
     static let SUBSCRIPTION_START_PAID_PAY_UP_FRONT = EventAnalyticsModel("subscripton_start_paid_pay_up_front", isTAInternalEvent: true)
     static let SUBSCRIPTION_START_TRIAL = EventAnalyticsModel("subscripton_star_trial", isTAInternalEvent: true)
