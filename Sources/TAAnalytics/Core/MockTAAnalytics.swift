@@ -82,7 +82,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     
     @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : (any AnalyticsBaseParameterValue)]?) -> Bool {
         let params = paramsCallback()
-        track(event: .FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
+        track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
         return true
     }
     

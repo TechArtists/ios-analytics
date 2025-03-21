@@ -57,10 +57,9 @@ class TAAnalyticsBase {
         params["key2"] = nil
         params["key3"] = "value3"
         
-        analytics.track(event: .FIRST_OPEN, params: params, logCondition: .logAlways)
+        analytics.track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logAlways)
         
-         //TODO: confirm that the only parameters sent are key1 & key3
-        let deferredEvent = try await requireEvent(named: "ta_first_open")
+        let deferredEvent = try await requireEvent(named: "our_first_open")
         #expect(deferredEvent.parameters?.count == 2)
         #expect((deferredEvent.parameters?["key1"] as! String) == "value1")
         #expect(deferredEvent.parameters?["key2"] == nil)

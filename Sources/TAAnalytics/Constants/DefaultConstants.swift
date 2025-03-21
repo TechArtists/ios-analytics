@@ -25,7 +25,7 @@
 import Foundation
 
 public extension EventAnalyticsModel {
-    static let FIRST_OPEN = EventAnalyticsModel("first_open", isTAInternalEvent: true)
+    static let OUR_FIRST_OPEN = EventAnalyticsModel("our_first_open", isTAInternalEvent: true)
     
     static let UI_VIEW_SHOW = EventAnalyticsModel("ui_view_show")
     static let UI_BUTTON_TAP = EventAnalyticsModel("ui_button_tap")
