@@ -60,7 +60,7 @@ public struct TAAnalyticsConfig {
     let enabledProcessTypes: [ProcessType]
     let currentInstallType: InstallType
     let userDefaults: UserDefaults
-    let instalUserProperties: [UserPropertyAnalyticsModel]
+    let installUserProperties: [UserPropertyAnalyticsModel]
     let maxTimeoutForConsumerStart: Double
     let trackEventFilter: (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
 
@@ -87,7 +87,7 @@ public struct TAAnalyticsConfig {
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
-                instalUserProperties: [UserPropertyAnalyticsModel] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_PLATFORM_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
+                instalUserProperties: [UserPropertyAnalyticsModel] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_OS_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
                 maxTimeoutForConsumerStart: Double = 10,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
@@ -99,7 +99,7 @@ public struct TAAnalyticsConfig {
         self.enabledProcessTypes = enabledProcessTypes
         self.userDefaults = userDefaults
         self.currentInstallType = Self.findInstallType()
-        self.instalUserProperties = instalUserProperties
+        self.installUserProperties = instalUserProperties
         self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
         self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
         self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig

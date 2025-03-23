@@ -35,17 +35,21 @@ public protocol TAAnalyticsDebugProtocol: TAAnalyticsBaseProtocol {
     /// Logs a `debug_foo` event with optional details.
     ///
     /// - Parameters:
-    ///   - eventSuffix: The suffix appended to the event name (e.g., `foo` results in `debug_foo`).
+    ///   - reason: a developer reason about what triggered the debug state (e.g. `couldnt find any valid JWT token`)
     ///   - extraParams: Additional parameters to include with the event.
-    func trackDebugEvent(eventSuffix: String, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    func trackDebugEvent(reason: String, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 }
 
 // MARK: - Default Implementations
 
 public extension TAAnalyticsDebugProtocol {
-    func trackDebugEvent(eventSuffix: String, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
-        let eventName = "debug_\(eventSuffix)"
-        track(event: EventAnalyticsModel(eventName), params: extraParams, logCondition: .logAlways)
+    func trackDebugEvent(reason: String, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {
+        let eventName = "debug"
+        var params = [String: (any AnalyticsBaseParameterValue)]()
+        params["reason"] = reason
+        extraParams?.forEach({ key, value in params[key] = value })
+
+        track(event: EventAnalyticsModel(eventName), params: params, logCondition: .logAlways)
     }
 }
 

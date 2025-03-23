@@ -35,28 +35,28 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///      name: String
     ///      type: String?
     ///      group_name: String?
-    ///      group_order: String?
+    ///      group_order: Int?
     ///      group_stage: String?
-    ///      parent_view_{name, type, group_name, group_order, group_stage}: String?
-    ///
-    ///      ui_view_show name=map  -> Is Child = False
-    ///      ui_view_show name=add favorite, parent_view_name=map -> Is Child = True
-    
-    ///      secondary_name: String
-    ///      secondary_type: String?
-    ///      secondary_group_name: String?
-    ///      secondary_group_order: String?
-    ///      secondary_group_stage: String?
-    ///      name, type, group_name, group_order, group_stage: String?
-    ///
-    ///     ui_view_show name=map  -> Is Child = False
-    ///     ui_view_show name=map secondary_name=add favorite
     ///
     /// - Parameters:
     ///   - viewShow: the view that was just shown
     ///   - stuckTimeout: The duration in seconds after which an `error (reason=stuck on ui_view_show, duration=)` event is triggered if the user remains on the view. If another view is shown after this duration finishes, an `error_corrected (reason=stuck on ui_view_show, duration=elapsed)` will be sent. For example, if you expect a transitory view like the splash screen to only be shown for 5 seconds, but it's shown after 7.5, this will send an `error (.. duration=5)` event followed by an `error_corrected (.. duration=7.5)` one.
     func track(viewShow view: ViewAnalyticsModel, stuckTimeout: TimeInterval?)
     
+    /// Sends an `ui_view_show` event  for any secondary view that's shown inside/on top of a normal view.
+    ///
+    /// The EventAnalyticsModel has the following parameters:
+    ///
+    ///      secondary_view_name: String
+    ///      secondary_view_type: String?
+    ///      name: String
+    ///      type: String?
+    ///      group_name: String?
+    ///      group_order: Int?
+    ///      group_stage: String?
+    ///
+    /// - Parameters:
+    ///   - viewShow: the view that was just shown
     func track(viewShow secondaryView: SecondaryViewAnalyticsModel)
 
     /// Sends an `ui_button_tap` event.
@@ -67,8 +67,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///      extra: String?
     ///      order: Int?, that is 1-based. It is equal to `index + 1`
     ///      view_{name, type, group_name, group_order, group_stage}: String?
-    ///      parent_view_{name, type, group_name, group_order, group_stage}: String?
-    ///      where view_name is Mandatory
+    ///      secondary_view_{name, type}: String?
     ///
     /// - Parameters:
     ///   - symbolicName: usually use the symbolic name of the button, not the actual localized name (e.g. "Subscribe", event though the button might be called "Try Free Before Subscribing"

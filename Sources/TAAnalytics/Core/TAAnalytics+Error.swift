@@ -73,7 +73,7 @@ public extension TAAnalyticsErrorProtocol {
     ///
     ///
     /// - Parameters:
-    ///   - eventSuffix: the suffix that will be appended to the event name (e.g. `error foo`)
+    ///   - reason: the reason that will be added as the event parameter "reason"
     ///   - error: if there is a specific `Error` that triggered this. If so, `domain`, `code` & `description` parameters are added
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
     func trackErrorEvent(reason: String, error: Error? = nil, extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil) {

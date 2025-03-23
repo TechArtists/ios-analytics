@@ -26,6 +26,10 @@
 
 import Foundation
 
+
+/// Consumer that provides streams for any events & user properties consumed.
+///
+/// Useful if you want to do some specific actions when a certain event is sent or user property set.
 public class EventEmitterConsumer: AnalyticsConsumer {
 
     public typealias T = EventEmitterConsumer

@@ -109,15 +109,15 @@ public class ViewAnalyticsModel: ViewAnalyticsModelProtocol, ObservableObject, H
 public class AnalyticsViewGroupDetails: Hashable, Equatable {
     
     public enum Stage: CustomStringConvertible {
-        case start
-        case middle
-        case end // useful on the data to just see a minimal start -> end funnel
+        case enter
+        case intermediate
+        case exit // useful on the data to just see a minimal start -> end funnel
 
         public var description: String {
             switch self {
-            case .start: return "start"
-            case .middle: return "middle"
-            case .end: return "end"
+            case .enter: return "start"
+            case .intermediate: return "middle"
+            case .exit: return "end"
             }
         }
     }
@@ -130,11 +130,11 @@ public class AnalyticsViewGroupDetails: Hashable, Equatable {
         self.name = name
         self.order = order
         if order == 1 {
-            self.stage = .start
+            self.stage = .enter
         } else if isFinalScreen {
-            self.stage = .end
+            self.stage = .exit
         } else {
-            self.stage = .middle
+            self.stage = .intermediate
         }
     }
      

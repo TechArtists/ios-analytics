@@ -73,11 +73,11 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     }
 
     private static var staticLoadCount = 0
-    public var loadCount: Int { return Self.staticLoadCount }
+    public var coldLaunchCount: Int { return Self.staticLoadCount }
     
-    public var installAgeRelativeTime: Int? = nil
+    public var installAgeRelativeDays: Int? = nil
     
-    public var installAgeLocalizedCalendar: Int? = nil
+    public var installAgeLocalizedCalendarDays: Int? = nil
     
     @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : (any AnalyticsBaseParameterValue)]?) -> Bool {
         let params = paramsCallback()

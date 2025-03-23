@@ -28,17 +28,17 @@ import Foundation
 
 public protocol TAAnalyticsOpenCountsProtocol {
     /// The load count for the specific app/extension. The very first load has a count of 1
-    var loadCount: Int { get }
+    var coldLaunchCount: Int { get }
     
     /// If this is the first open for the specific app/extension
     var isFirstOpen: Bool { get }
     
     /// The number of days since the app was installed. Age 0 means that it's within the first 24h of it being installed
-    var installAgeRelativeTime: Int? { get }
+    var installAgeRelativeDays: Int? { get }
 
     /// The number of calendar days since the app was installed. Age 0 means that it's the same day.
     /// If a user installs the app at 23:59:59 UTC, 1 minute later this `installAgeCalendar` will be 1
-    var installAgeLocalizedCalendar: Int? { get }
+    var installAgeLocalizedCalendarDays: Int? { get }
     
 
     /// It sends the `ob app open` event if this is the first app open event.
@@ -51,7 +51,7 @@ public protocol TAAnalyticsOpenCountsProtocol {
 
 public extension TAAnalyticsOpenCountsProtocol {
     var isFirstOpen: Bool {
-        return loadCount == 1
+        return coldLaunchCount == 1
     }
 }
 
@@ -59,28 +59,26 @@ public extension TAAnalyticsOpenCountsProtocol {
 
 extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     
-    public var loadCount: Int {
-        return self.integerFromUserDefaults(forKey: loadCountKey) ?? 0
+    public var coldLaunchCount: Int {
+        return self.integerFromUserDefaults(forKey: coldLaunchCountKey) ?? 0
     }
     
-    internal func incrementLoadCount() {
-        let newLoadCount = loadCount + 1
-        self.setInUserDefaults(newLoadCount, forKey: loadCountKey)
-
-        self.setInUserDefaults(Date(), forKey: "installDate")
+    internal func incrementColdLaunchCount() {
+        let newLoadCount = coldLaunchCount + 1
+        self.setInUserDefaults(newLoadCount, forKey: coldLaunchCountKey)
     }
     
-    private var loadCountKey : String {
-        var key = "appLoadCount"
+    private var coldLaunchCountKey : String {
+        var key = "coldLaunchCount"
         // this bundle ID will be specific for the app or each extension
         if let bundleID = Bundle.main.bundleIdentifier {
-            key = "\(bundleID)_appLoadCount"
+            key = "\(bundleID)_coldLaunchCount"
         }
         return key
     }
     
     
-    public var installAgeRelativeTime: Int? {
+    public var installAgeRelativeDays: Int? {
         if let startDate = self.objectFromUserDefaults(forKey: "installDate") as? Date {
             return relativeAgeBetween(startDate: startDate, endDate: Date())
         }
@@ -94,7 +92,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     }
     
     
-    public var installAgeLocalizedCalendar: Int? {
+    public var installAgeLocalizedCalendarDays: Int? {
         if let startDate = self.objectFromUserDefaults(forKey: "installDate") as? Date {
             return calendarAgeBetween(startDate: startDate, endDate: Date(), timeZone: TimeZone.current)
         }

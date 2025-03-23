@@ -102,7 +102,7 @@ public extension UserPropertyAnalyticsModel {
     /// The version of the app at install time
     static let INSTALL_VERSION = UserPropertyAnalyticsModel("install_version", isInternalUserProperty: true)
     /// The version of the platform/operating system
-    static let INSTALL_PLATFORM_VERSION = UserPropertyAnalyticsModel("install_platform_version", isInternalUserProperty: true)
+    static let INSTALL_OS_VERSION = UserPropertyAnalyticsModel("install_os_version", isInternalUserProperty: true)
     /// If this is jailbroken at install time
     static let INSTALL_IS_JAILBROKEN = UserPropertyAnalyticsModel("install_is_jailbroken", isInternalUserProperty: true)
     /// The ui appearance at install time

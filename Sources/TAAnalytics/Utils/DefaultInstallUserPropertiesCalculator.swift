@@ -42,8 +42,8 @@ class DefaultInstallUserPropertiesCalculator {
                 setInstallDate()
             case .INSTALL_VERSION:
                 setInstallVersion()
-            case .INSTALL_PLATFORM_VERSION:
-                setInstallPlatformVersion()
+            case .INSTALL_OS_VERSION:
+                setInstallOSVersion()
             case .INSTALL_IS_JAILBROKEN:
                 setInstallIsJailbroken()
             case .INSTALL_DYNAMIC_TYPE:
@@ -69,10 +69,10 @@ class DefaultInstallUserPropertiesCalculator {
         analytics.set(userProperty: .INSTALL_VERSION, to: installVersion)
     }
     
-    private func setInstallPlatformVersion() {
+    private func setInstallOSVersion() {
         let v = ProcessInfo().operatingSystemVersion
         let vString = "\(v.majorVersion).\(v.minorVersion).\(v.patchVersion)"
-        analytics.set(userProperty: .INSTALL_PLATFORM_VERSION, to: vString)
+        analytics.set(userProperty: .INSTALL_OS_VERSION, to: vString)
     }
 
     private func setInstallIsJailbroken() {

@@ -73,7 +73,7 @@ public class TAAnalytics: ObservableObject {
         
         configureUserProperties()
         
-        incrementLoadCount()
+        incrementColdLaunchCount()
         
         sendAppVersionEventUpdatedIfNeeded()
         
@@ -199,7 +199,7 @@ public class TAAnalytics: ObservableObject {
     private func calculateAndSetUserProperties() {
         let calculator = DefaultInstallUserPropertiesCalculator(
             analytics: self,
-            userPropertiesToCalculate: self.config.instalUserProperties
+            userPropertiesToCalculate: self.config.installUserProperties
         )
         calculator.calculateUserPropertiesAndSetThem()
     }
