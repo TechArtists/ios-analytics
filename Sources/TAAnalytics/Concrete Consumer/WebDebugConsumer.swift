@@ -25,8 +25,6 @@ import Foundation
 import UIKit
 import OSLog
 
-// TechArtists.Agency <- site
-
 public enum InstallTypeError: Error {
     case invalidInstallType
 }
