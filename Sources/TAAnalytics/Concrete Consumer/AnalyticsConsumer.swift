@@ -53,16 +53,16 @@ public protocol AnalyticsConsumer<T> where T: AnyObject {
     var wrappedValue: T { get }
 }
 
+/// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
+public protocol AnalyticsConsumerWithReadOnlyUserPseudoID {
+    func getUserPseudoID() -> String?
+    
+}
 
 /// If the consumer also support a user ID, though only setting it (e.g. Crashlytics)
 public protocol AnalyticsConsumerWithWriteOnlyUserID: AnyObject {
     /// Swift forces us to also define a getter, but it will never be called for this protocol
     func set(userID: String?)
-}
-
-/// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
-public protocol AnalyticsConsumerWithReadOnlyUserPseudoID {
-    func getUserID() -> String?
 }
 
 /// Some Analytics Consumers can also support a user pseudo ID (Firebase, mostly)
