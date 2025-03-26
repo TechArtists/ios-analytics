@@ -108,7 +108,7 @@ struct CreateAccountView: View {
         )
         .task {
             guard let eventStream = analytics.config.consumers
-                .compactMap({ $0.wrappedValue as? EventEmitterConsumer })
+                .compactMap({ $0 as? EventEmitterConsumer })
                 .first?
                 .eventStream else { return }
             

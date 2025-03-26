@@ -36,7 +36,7 @@ public protocol TAAnalyticsUserIDsProtocol {
 extension TAAnalytics: TAAnalyticsUserIDsProtocol {
     
     public var userPseudoID: String? {
-        return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserID()
+        return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserPseudoID()
     }
 
     public var userID: String? {
