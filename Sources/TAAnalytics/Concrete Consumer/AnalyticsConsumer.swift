@@ -27,7 +27,7 @@ import Foundation
 
 /// `AnalyticsConsumer` is a protocol that defines methods for starting an analytics consumer, logging events, and setting user properties.
 /// Classes that conform to this protocol will handle these operations for different analytics consumers.
-public protocol AnalyticsConsumer<T> where T: AnyObject {
+public protocol AnalyticsConsumer<T> {
     
     associatedtype T
     
