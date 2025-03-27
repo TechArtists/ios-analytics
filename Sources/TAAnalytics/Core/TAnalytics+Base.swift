@@ -25,7 +25,7 @@
 import Foundation
 import OSLog
 
-// MARK: -
+// MARK: TAAnalyticsBaseProtocol
 
 /// Base protocol for logging events & setting user properties
 public protocol TAAnalyticsBaseProtocol: AnyObject {
@@ -48,7 +48,7 @@ public protocol TAAnalyticsBaseProtocol: AnyObject {
     func get(userProperty: UserPropertyAnalyticsModel) -> String?
 }
 
-// MARK: -
+// MARK: TAAnalyticsBaseProtocol Conformance
 
 extension TAAnalytics: TAAnalyticsBaseProtocol {
     

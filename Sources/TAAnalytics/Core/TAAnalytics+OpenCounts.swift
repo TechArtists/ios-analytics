@@ -79,7 +79,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     
     
     public var installAgeRelativeDays: Int? {
-        if let startDate = self.objectFromUserDefaults(forKey: "installDate") as? Date {
+        if let startDate = self.objectFromUserDefaults(forKey: UserDefaultKeys.installDate) as? Date {
             return relativeAgeBetween(startDate: startDate, endDate: Date())
         }
         return nil
@@ -93,7 +93,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     
     
     public var installAgeLocalizedCalendarDays: Int? {
-        if let startDate = self.objectFromUserDefaults(forKey: "installDate") as? Date {
+        if let startDate = self.objectFromUserDefaults(forKey: UserDefaultKeys.installDate) as? Date {
             return calendarAgeBetween(startDate: startDate, endDate: Date(), timeZone: TimeZone.current)
         }
         return nil

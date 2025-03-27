@@ -80,6 +80,11 @@ public extension EventAnalyticsModel {
 
     static let SUBSCRIPTION_RENEWAL = EventAnalyticsModel("subscripton_renewal", isTAInternalEvent: true)
     static let SUBSCRIPTION_TRIAL_CONVERTED_TO_PAID = EventAnalyticsModel("subscripton_trial_converted_to_paid", isTAInternalEvent: true)
+    
+    static let ATT_PROMPT_NOT_ALLOWED = EventAnalyticsModel("att_prompt_not_allowed", isTAInternalEvent: true)
+    static let ATT_PROMPT_SHOW        = EventAnalyticsModel("att_prompt_show", isTAInternalEvent: true)
+    static let ATT_PROMPT_GRANTED     = EventAnalyticsModel("att_prompt_granted", isTAInternalEvent: true)
+    static let ATT_PROMPT_DENIED      = EventAnalyticsModel("att_prompt_denied", isTAInternalEvent: true)
 }
 
 public extension UserPropertyAnalyticsModel {

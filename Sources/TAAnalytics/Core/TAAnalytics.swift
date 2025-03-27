@@ -22,24 +22,11 @@
 //  THE SOFTWARE.
 //
 
-
-// SPM forces us to have macOS as a platform in Package.swift
-// but FirebaseAnalytics isn't available on macOS.
-// Until that gets resolved, we'll have to leave this here
-#if os(macOS)
-import OSLog
-
-internal let LOGGER = OSLog(subsystem: "TA", category: "TAAnalytics")
-
-#else
 import UIKit
 import OSLog
 
-internal let LOGGER = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")
-
 public class TAAnalytics: ObservableObject {
     public static let userdefaultsKeyPrefix = "TAAnalytics"
-    public static let logger = LOGGER
     
     public private(set) var config: TAAnalyticsConfig
     
@@ -138,14 +125,14 @@ public class TAAnalytics: ObservableObject {
             return
         }
 
-        let defaultsAppVersion = stringFromUserDefaults(forKey: "appVersion")
-        let defaultsBuild = stringFromUserDefaults(forKey: "build")
+        let defaultsAppVersion = stringFromUserDefaults(forKey: UserDefaultKeys.appVersion)
+        let defaultsBuild = stringFromUserDefaults(forKey: UserDefaultKeys.build)
 
         // Check and update app version
         if defaultsAppVersion != appVersion || defaultsBuild != build {
 
-            setInUserDefaults(appVersion, forKey: "appVersion")
-            setInUserDefaults(build, forKey: "build")
+            setInUserDefaults(appVersion, forKey: UserDefaultKeys.appVersion)
+            setInUserDefaults(build, forKey: UserDefaultKeys.build)
 
             track(event: .APP_VERSION_UPDATE,
                   params: [ "from_version": defaultsAppVersion,
@@ -160,10 +147,10 @@ public class TAAnalytics: ObservableObject {
         let os = ProcessInfo.processInfo.operatingSystemVersion
         let osString = "\(os.majorVersion).\(os.minorVersion).\(os.patchVersion)"
         
-        let defaultsOSVersion = stringFromUserDefaults(forKey: "osVersion")
+        let defaultsOSVersion = stringFromUserDefaults(forKey: UserDefaultKeys.osVersion)
         
         if defaultsOSVersion != osString {
-            setInUserDefaults(osString, forKey: "osVersion")
+            setInUserDefaults(osString, forKey: UserDefaultKeys.osVersion)
             if let defaultsOSVersion {
                 track(event: .OS_VERSION_UPDATE,
                       params: ["from_version": defaultsOSVersion,
@@ -273,5 +260,3 @@ public class TAAnalytics: ObservableObject {
         saveDictionaryToUserDefaults(storedDict)
     }
 }
-
-#endif

@@ -1,6 +1,8 @@
-//  TAAnalytics+UserIDs.swift
-//  Created by Adi on 10/24/22
 //
+//  UserDefaultKeys.swift
+//  TAAnalytics
+//
+//  Created by Robert Tataru on 27.03.2025.
 //  Copyright (c) 2022 Tech Artists Agency SRL
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,29 +26,13 @@
 
 import Foundation
 
-// MARK: -
-
-public protocol TAAnalyticsUserIDsProtocol {
-    var userPseudoID: String? { get }
-    var userID: String? { get set}
-}
-
-// MARK: -
-
-extension TAAnalytics: TAAnalyticsUserIDsProtocol {
+struct UserDefaultKeys {
     
-    public var userPseudoID: String? {
-        return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserPseudoID()
-    }
-
-    public var userID: String? {
-        get {
-            return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
-        }
-        set {
-            self.eventQueueBuffer.startedConsumers
-                .compactMap { $0 as? AnalyticsConsumerWithWriteOnlyUserID }
-                .forEach { $0.set(userID: newValue) }
-        }
-    }
+    static let appVersion             = "appVersion"
+    static let build                  = "build"
+    static let osVersion              = "osVersion"
+    static let permissionATTRequested = "permissionATTRequested"
+    static let coldLaunchCount        = "coldLaunchCount"
+    static let installDate            = "installDate"
+    static let keemojiAPIRandomUUID   = "keemojiAPIRandomUUID"
 }
