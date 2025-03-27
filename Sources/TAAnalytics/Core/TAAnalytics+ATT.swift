@@ -65,10 +65,15 @@ public protocol TAAnalyticsATTProtocol: TAAnalyticsBaseProtocol {
 
 extension TAAnalytics: TAAnalyticsATTProtocol {
     
-    /// Requests ATT permission and logs appropriate analytics events based on the result.
+    /// Handles the ATT permission request lifecycle and tracks the appropriate event.
     ///
-    /// Tracks `.ATT_PROMPT_NOT_ALLOWED`, `.ATT_PROMPT_SHOW`, `.ATT_PROMPT_GRANTED`, or `.ATT_PROMPT_DENIED` events,
-    /// and saves a flag in `UserDefaults` to avoid duplicate tracking.
+    /// - If permission is not allowed (e.g., due to MDM or parental controls), logs `.ATT_PROMPT_NOT_ALLOWED`.
+    /// - If permission is requestable (`.notDetermined`), calls `requestTrackingAuthorization()` and logs:
+    ///     - `.ATT_PROMPT_SHOW` immediately,
+    ///     - `.ATT_PROMPT_GRANTED` or `.ATT_PROMPT_DENIED` based on user choice.
+    /// - Marks ATT permission as requested using `UserDefaults` key `permissionATTRequested`
+    ///
+    /// - Returns: The resulting `ATTrackingManager.AuthorizationStatus`.
     public func requestAttPermission() async -> ATTrackingManager.AuthorizationStatus {
         let status = ATTrackingManager.trackingAuthorizationStatus
         let permissionRequested = self.boolFromUserDefaults(forKey: UserDefaultKeys.permissionATTRequested) ?? false
@@ -96,7 +101,9 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         return status
     }
     
-    /// Tracks the `.ATT_PROMPT_NOT_ALLOWED` event with optional parameters.
+    /// Logs `.ATT_PROMPT_NOT_ALLOWED` when ATT cannot be requested.
+    ///
+    /// This happens on first launch if ATT is disabled in settings or the device is under MDM/parental restrictions.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
     public func trackATTPromptNotAllowed(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
@@ -106,7 +113,9 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         track(event: .ATT_PROMPT_NOT_ALLOWED, params: params, logCondition: .logAlways)
     }
     
-    /// Tracks the `.ATT_PROMPT_SHOW` event with optional parameters.
+    /// Logs `.ATT_PROMPT_SHOW` when the ATT prompt is shown via `requestTrackingAuthorization()`.
+    ///
+    /// Tracked only when ATT status is `.notDetermined`, indicating a first-time request.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
     public func trackATTPromptShow(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
@@ -119,7 +128,9 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         track(viewShow: view)
     }
     
-    /// Tracks the `.ATT_PROMPT_GRANTED` event with optional parameters.
+    /// Logs `.ATT_PROMPT_GRANTED` after the user explicitly allows tracking.
+    ///
+    /// This follows an ATT prompt and is only sent after `.ATT_PROMPT_SHOW`.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
     public func trackATTPromptGranted(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
@@ -132,7 +143,9 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         track(viewShow: view)
     }
     
-    /// Tracks the `.ATT_PROMPT_DENIED` event with optional parameters.
+    /// Logs `.ATT_PROMPT_DENIED` after the user explicitly denies tracking.
+    ///
+    /// This follows an ATT prompt and is only sent after `.ATT_PROMPT_SHOW`.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
     public func trackATTPromptDenied(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
