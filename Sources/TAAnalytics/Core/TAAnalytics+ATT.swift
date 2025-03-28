@@ -26,6 +26,7 @@
 
 import Foundation
 import AppTrackingTransparency
+import AdSupport
 
 // MARK: - TAAnalyticsDebugProtocol
 
@@ -89,7 +90,10 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
             self.setInUserDefaults(true, forKey: UserDefaultKeys.permissionATTRequested)
             switch status {
             case .authorized:
-                trackATTPromptGranted(extraParams: status.eventParameters)
+                let params = ["advertisingIdentifier": "\(ASIdentifierManager.shared().advertisingIdentifier)"]
+                trackATTPromptGranted(
+                    extraParams: status.eventParameters.merging(params) { (_, new) in new }
+                )
             case .denied, .restricted:
                 trackATTPromptDenied(extraParams: status.eventParameters)
             default:
