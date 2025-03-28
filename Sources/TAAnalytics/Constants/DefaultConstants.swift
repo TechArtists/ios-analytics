@@ -69,18 +69,11 @@ public extension EventAnalyticsModel {
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
     static let PAYWALL_PURCHASE_TAP = EventAnalyticsModel("paywall_purchase_tap", isTAInternalEvent: true)
 
-    // TODO: these subscription as well
-    static let SUBSCRIPTION_START_PAID_PAY_AS_YOU_GO = EventAnalyticsModel("subscripton_start_paid_pay_as_you_go", isTAInternalEvent: true)
-    static let SUBSCRIPTION_START_PAID_PAY_UP_FRONT = EventAnalyticsModel("subscripton_start_paid_pay_up_front", isTAInternalEvent: true)
-    static let SUBSCRIPTION_START_TRIAL = EventAnalyticsModel("subscripton_star_trial", isTAInternalEvent: true)
-
+    static let SUBSCRIPTION_START_INTRO = EventAnalyticsModel("subscripton_start_intro", isTAInternalEvent: true)
     static let SUBSCRIPTION_START_PAID_REGULAR = EventAnalyticsModel("subscripton_start_paid_regular", isTAInternalEvent: true)
+    static let SUBSCRIPTION_START_NEW = EventAnalyticsModel("subscripton_start_new", isTAInternalEvent: true)
+    static let SUBSCRIPTION_RESTORE   = EventAnalyticsModel("subscripton_restore", isTAInternalEvent: true)
 
-    static let SUBSCRIPTION_START = EventAnalyticsModel("subscripton_start", isTAInternalEvent: true)
-
-    static let SUBSCRIPTION_RENEWAL = EventAnalyticsModel("subscripton_renewal", isTAInternalEvent: true)
-    static let SUBSCRIPTION_TRIAL_CONVERTED_TO_PAID = EventAnalyticsModel("subscripton_trial_converted_to_paid", isTAInternalEvent: true)
-    
     static let ATT_PROMPT_NOT_ALLOWED = EventAnalyticsModel("att_prompt_not_allowed", isTAInternalEvent: true)
     static let ATT_PROMPT_SHOW        = EventAnalyticsModel("att_prompt_show", isTAInternalEvent: true)
     static let ATT_PROMPT_TAP_ALLOW   = EventAnalyticsModel("att_prompt_tap_allow", isTAInternalEvent: true)

@@ -327,6 +327,24 @@ For ATT specifically, you can also make use of a dedicated method that tracks th
 Note that calling the specific `trackPaywallEnter()` method will track both a `paywall_enter` event as well as a corresponding a `ui_view_show name="paywall" type=<placement>` event for consistency. Similar for `trackPaywallPurchaseTap()` that also triggers an `ui_button_tap view_name="paywall" type=<placement>`.
 
 
+### Subscription Starts
+
+ Event Name | Parameter Name & Type | Comments 
+ --- | --- | --- 
+ `subscription_start_intro` |   | a subscription that start with an introductory offer: trial, pay as you go, pay up front
+|               |  `placement:String`  | the placement
+|               | `product_id:String` | the id of the product
+|               | `type:Enum = {trial, paid intro pay as you go, paid intro pay up front, paid regular, <custom>}` | type of subscription
+|               | `paywall_id:String?` | the id of the product
+|               | `paywall_name:String?` | the id of the product
+|               | `value:Float` | 
+|               | `price:Float` | 
+|               | `currency:String` | 
+|               | `quantity:1` | 
+`subscription_start_paid_regular` | same as above  | subscription that is paid from the start
+`subscription_start_new` | same as above  | either one of the two above
+`subscription_start_restore` | same as above  | subscription that is restored
+
 ### Engagement
 
 You can track engagement, as defined by whatever you consider engagement in your app via these 2 built-in events:

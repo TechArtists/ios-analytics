@@ -1,7 +1,7 @@
-//  TAAnalytics+UI.swift
-//  Created by Adi on 10/25/22
+//  TAAnalytics+Subscriptions.swift
+//  Created by Adi on 2025-03-21
 //
-//  Copyright (c) 2022 Tech Artists Agency SRL
+//  Copyright (c) 2025 Tech Artists Agency SRL
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,24 @@ public enum TAPaywallExitReason: CustomStringConvertible {
         }
     }
 }
+
+public protocol TAPaywallAnalytics {
+    /// the placement that triggered the paywall
+    var analyticsPlacement: String { get }
+
+    /// the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
+    var anayticsID: String? { get }
+
+    /// the name of the paywall, optional. It needs to be paired with the ID, but it's usually more human readable
+    var analyticsName: String? { get }
+}
+
+public struct TAPaywallAnalyticsImpl: TAPaywallAnalytics {
+    public var analyticsPlacement: String
+    public var anayticsID: String?
+    public var analyticsName: String?
+}
+
 /// Defines specific events for showing views & tapping buttons
 public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     
@@ -49,24 +67,24 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     ///
     ///      placement: String
     ///      id: String?
+    ///      name: String?
     ///
     /// It also sends a `ui_view_show` event with `name="paywall"` and `type=<placement>`
     ///
     /// - Parameters:
-    ///   - placement: the placement that triggered the paywall
-    ///   - id: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    ///   - name: the name of the paywall, optional. It needs to be paired with the ID, but it's usually more human readable
-    func trackPaywallEnter(placement: String, id: String?, name: String?)
+    func trackPaywallEnter(paywall: TAPaywallAnalytics)
 
     /// Sends an `paywall_close` event with these parameters:
     ///
     ///      placement: String
     ///      id: String?
+    ///      name: String?
+    ///      reason: String
     ///
     /// - Parameters:
-    ///   - placement: the placement that triggered the paywall
+    ///   - paywall: the paywall
     ///   - id: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackPaywallExit(placement: String, id: String?, name: String?, reason:TAPaywallExitReason)
+    func trackPaywallExit(paywall: TAPaywallAnalytics, reason:TAPaywallExitReason)
     
     /// Sends an `paywall_purchase_tap` event with these parameters:
     ///
@@ -81,7 +99,7 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     ///   - productIdentifier: the product identifier of the in app purchase/subscription users are trying to purchase
     ///   - placement: the placement that triggered the paywall
     ///   - paywallID: the id of the paywall, optional. For example, you might have 2 different types of paywalls that are shown in an A/B test, each with their own ID.
-    func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, placement: String, paywallID: String?, paywallName: String?)
+    func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, paywall: TAPaywallAnalytics)
 
 }
 
@@ -89,54 +107,54 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
 
 extension TAAnalytics: TAAnalyticsPaywallsProtocol {
 
-    public func trackPaywallEnter(placement: String, id: String?, name: String?) {
+    public func trackPaywallEnter(paywall: TAPaywallAnalytics) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
-        params["placement"] = placement
-        if let id = id {
-            params["id"] = id
+        params["placement"] = paywall.analyticsPlacement
+        if let id = paywall.anayticsID {
+            params["id"] = paywall.anayticsID
         }
-        if let name = name {
-            params["name"] = name
+        if let name = paywall.analyticsName {
+            params["name"] = paywall.analyticsName
         }
 
         track(event: .PAYWALL_ENTER, params: params, logCondition: .logAlways)
-        track(viewShow: ViewAnalyticsModel(name: "paywall", type: placement))
+        track(viewShow: ViewAnalyticsModel(name: "paywall", type: paywall.analyticsPlacement))
     }
     
-    public func trackPaywallExit(placement: String, id: String?, name: String?, reason:TAPaywallExitReason){
+    public func trackPaywallExit(paywall: TAPaywallAnalytics, reason:TAPaywallExitReason){
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
-        params["placement"] = placement
+        params["placement"] = paywall.analyticsPlacement
         params["reason"] = reason.description
         
-        if let id = id {
-            params["id"] = id
+        if let id = paywall.anayticsID {
+            params["id"] = paywall.anayticsID
         }
-        if let name = name {
-            params["name"] = name
+        if let name = paywall.analyticsName {
+            params["name"] = paywall.analyticsName
         }
 
         track(event: .PAYWALL_EXIT, params: params, logCondition: .logAlways)
     }
 
 
-    public func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, placement: String, paywallID: String?, paywallName: String?) {
+    public func trackPaywallPurchaseTap(buttonName: String, productIdentifier: String, paywall: TAPaywallAnalytics) {
         
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["button_name"] = buttonName
         params["product_id"] = productIdentifier
-        params["placement"] = placement
-        if let id = paywallID {
-            params["paywall_id"] = id
+        params["placement"] = paywall.analyticsPlacement
+        if let id = paywall.anayticsID {
+            params["paywall_id"] = paywall.anayticsID
         }
-        if let name = paywallName {
-            params["paywall_name"] = name
+        if let name = paywall.analyticsName {
+            params["paywall_name"] = paywall.analyticsName
         }
 
         track(event: .PAYWALL_PURCHASE_TAP, params: params, logCondition: .logAlways)
-        track(buttonTap: buttonName, onView: ViewAnalyticsModel(name: "paywall", type: placement), extra: nil, index: nil)
+        track(buttonTap: buttonName, onView: ViewAnalyticsModel(name: "paywall", type: paywall.analyticsPlacement), extra: nil, index: nil)
     }
     
 }
