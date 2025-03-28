@@ -47,11 +47,11 @@ public class TAAnalytics: ObservableObject {
     
     /// - Parameters:
     ///   - customInstallUserPropertiesCompletion: completion called before logging the `first open` event. Use this to set any custom install time user properties specific to your app, that are not available by default via `TAAnalyticsConfig#instalUserProperties`
-    ///   - shouldLogFirstOpen: if the first open event should be logged. Normally you want this set to `true`, but in some instances, if this is called in `AppDelegate#didFinishLaunching`, a specific parameter you'd want to might not be available. In that case, set this to `false` and then manually call `TAAnalytics#maybeLogTAFirstOpen` when you have all the data
-    ///   - firstOpenParameterCallback: if `shouldLogFirstOpen` is `true`, then this will be called only when trying to send the `first open` event. It's set as a callback instead of getting the parameters directly so that any (expensive) operations in the parameter calculation will only be performed when necessary.
+    ///   - shouldTrackFirstOpen: if the first open event should be logged. Normally you want this set to `true`, but in some instances, if this is called in `AppDelegate#didFinishLaunching`, a specific parameter you'd want to might not be available. In that case, set this to `false` and then manually call `TAAnalytics#maybeTrackTAFirstOpen` when you have all the data
+    ///   - firstOpenParameterCallback: if `shouldTrackFirstOpen` is `true`, then this will be called only when trying to send the `first open` event. It's set as a callback instead of getting the parameters directly so that any (expensive) operations in the parameter calculation will only be performed when necessary.
     public func start(
         customInstallUserPropertiesCompletion: (() -> ())? = nil,
-        shouldLogFirstOpen: Bool = true,
+        shouldTrackFirstOpen: Bool = true,
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) async {
         logStartupDetails()
@@ -69,7 +69,7 @@ public class TAAnalytics: ObservableObject {
         if isFirstOpen {
             handleFirstOpen(
                 customInstallUserPropertiesCompletion: customInstallUserPropertiesCompletion,
-                shouldLogFirstOpen: shouldLogFirstOpen,
+                shouldTrackFirstOpen: shouldTrackFirstOpen,
                 firstOpenParameterCallback: firstOpenParameterCallback
             )
         }
@@ -167,7 +167,7 @@ public class TAAnalytics: ObservableObject {
 
     private func handleFirstOpen(
         customInstallUserPropertiesCompletion: (() -> ())? = nil,
-        shouldLogFirstOpen: Bool = true,
+        shouldTrackFirstOpen: Bool = true,
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) {
         TALogger.log("Is first open", level: .info)
@@ -176,8 +176,8 @@ public class TAAnalytics: ObservableObject {
         
         customInstallUserPropertiesCompletion?()
         
-        if shouldLogFirstOpen {
-            logFirstOpen(firstOpenParameterCallback: firstOpenParameterCallback)
+        if shouldTrackFirstOpen {
+            trackFirstOpen(firstOpenParameterCallback: firstOpenParameterCallback)
         }
         
         synchronizeUserID()
@@ -191,9 +191,9 @@ public class TAAnalytics: ObservableObject {
         calculator.calculateUserPropertiesAndSetThem()
     }
 
-    private func logFirstOpen(firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)?) {
+    private func trackFirstOpen(firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)?) {
         let firstOpenParams = firstOpenParameterCallback?()
-        maybeLogTAFirstOpen { return firstOpenParams }
+        maybeTrackTAFirstOpen { return firstOpenParams }
     }
 
     // set user id & re-set user properties

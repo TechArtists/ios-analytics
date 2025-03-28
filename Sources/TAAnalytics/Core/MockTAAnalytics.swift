@@ -55,7 +55,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
         customInstallUserPropertiesCompletion?()
         if shouldLogFirstOpen {
             let params = firstOpenParameterCallback?()
-            self.maybeLogTAFirstOpen(paramsCallback: { return params })
+            self.maybeTrackTAFirstOpen(paramsCallback: { return params })
         }
     }
 
@@ -79,7 +79,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     
     public var installAgeLocalizedCalendarDays: Int? = nil
     
-    @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String : (any AnalyticsBaseParameterValue)]?) -> Bool {
+    @discardableResult public func maybeTrackTAFirstOpen(paramsCallback: () -> [String : (any AnalyticsBaseParameterValue)]?) -> Bool {
         let params = paramsCallback()
         track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
         return true

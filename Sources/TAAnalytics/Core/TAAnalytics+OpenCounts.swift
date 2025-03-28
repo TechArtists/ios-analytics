@@ -46,7 +46,7 @@ public protocol TAAnalyticsOpenCountsProtocol {
     ///
     /// - Parameter paramsCallback: any specific parameters you want to anotate the `ob app open` event with.  It's modeled as a callback so that the expensive parameters you want to add on `ob first open` won't be calculated each time
     /// - Returns: if the first open event was sent or not
-    @discardableResult func maybeLogTAFirstOpen(paramsCallback: () -> [String: (any AnalyticsBaseParameterValue)]?) -> Bool
+    @discardableResult func maybeTrackTAFirstOpen(paramsCallback: () -> [String: (any AnalyticsBaseParameterValue)]?) -> Bool
 }
 
 public extension TAAnalyticsOpenCountsProtocol {
@@ -111,7 +111,7 @@ extension TAAnalytics: TAAnalyticsOpenCountsProtocol {
     }
     
     
-    @discardableResult public func maybeLogTAFirstOpen(paramsCallback: () -> [String: (any AnalyticsBaseParameterValue)]?) -> Bool {
+    @discardableResult public func maybeTrackTAFirstOpen(paramsCallback: () -> [String: (any AnalyticsBaseParameterValue)]?) -> Bool {
         if config.currentProcessType == .app && isFirstOpen {
             let params = paramsCallback()
             track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logOnlyOncePerLifetime)
