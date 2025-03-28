@@ -48,7 +48,7 @@ public class MockTAAnalytics : TAAnalyticsProtocol {
     }
 
     public func start(customInstallUserPropertiesCompletion: (() -> ())? = nil,
-                      shouldLogFirstOpen: Bool = true,
+                      shouldTrackFirstOpen shouldLogFirstOpen: Bool = true,
                       firstOpenParameterCallback: (() -> [String: (any AnalyticsBaseParameterValue)]?)? = nil ) {
         Self.staticLoadCount += 1
         

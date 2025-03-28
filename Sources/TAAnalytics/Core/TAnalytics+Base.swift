@@ -33,8 +33,8 @@ public protocol TAAnalyticsBaseProtocol: AnyObject {
     var currentProcessType: TAAnalyticsConfig.ProcessType { get }
     
     func start(customInstallUserPropertiesCompletion: (() -> ())?,
-                      shouldLogFirstOpen: Bool,
-                      firstOpenParameterCallback: (() -> [String: (any AnalyticsBaseParameterValue)]?)?) async
+               shouldTrackFirstOpen: Bool,
+               firstOpenParameterCallback: (() -> [String: (any AnalyticsBaseParameterValue)]?)?) async
     
     ///
     /// - Parameters:

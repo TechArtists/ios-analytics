@@ -170,6 +170,4 @@ extension TAAnalytics: TAAnalyticsSubscriptionsProtocol {
             params["paywall_name"] = sub.paywall.analyticsName
         }
     }
-    
-    
 }
