@@ -65,7 +65,7 @@ public extension EventAnalyticsModel {
     static let PAYWALL_ENTER = EventAnalyticsModel("paywall_show", isTAInternalEvent: true)
     /// Parameters `placement`, `id` (optional)
     static let PAYWALL_EXIT = EventAnalyticsModel("paywall_close", isTAInternalEvent: true)
-    /// Parameters `button_name`, `product_identifier`, `paywall_placement`, `paywall_id` (optional),
+    /// Parameters `button_name`, `product_id`, `paywall_placement`, `paywall_id` (optional),
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
     static let PAYWALL_PURCHASE_TAP = EventAnalyticsModel("paywall_purchase_tap", isTAInternalEvent: true)
 

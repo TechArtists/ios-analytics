@@ -315,7 +315,7 @@ For ATT specifically, you can also make use of a dedicated method that tracks th
 |               | `name:String?` | the name of the paywall
  `paywall_purchase_tap` | `placement:String`  | the trigger why the placement was shown
 |               | `button_name:String` | symbolic name for the button 
-|               | `product_identifier:String` | the id of the store product being purchased
+|               | `product_id:String` | the id of the store product being purchased
 |               | `paywall_id:String?` | the id of the paywall
 |               | `paywall_name:String?` | the name of the paywall
  `paywall_exit` | `placement:String`  | the trigger why the placement was shown

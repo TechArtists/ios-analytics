@@ -73,7 +73,7 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     ///      button_name: String
     ///      paywall_placement: String
     ///      paywall_id: String?
-    ///      product_identifier: String
+    ///      product_id: String
     ///
     /// It also sends a `ui_button_tap` event with `name="subscribe"`, `extra=<buttonName>`, `view_name="paywall"`, `view_type=<placement>`
     /// - Parameters:
@@ -126,7 +126,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         var params = [String: (any AnalyticsBaseParameterValue)]()
 
         params["button_name"] = buttonName
-        params["product_identifier"] = productIdentifier
+        params["product_id"] = productIdentifier
         params["placement"] = placement
         if let id = paywallID {
             params["paywall_id"] = id
