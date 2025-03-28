@@ -30,13 +30,13 @@ import Foundation
 public protocol TAAnalyticsPermissionProtocol: TAAnalyticsUIProtocol {
     /// Logs a `ui_view_show` event with `view_name="permission"` and `view_type=permissionType`
     /// - Parameter permissionType: however you want to identify the permission (e.g. "notifications", "photos")
-    func logPermissionScreenShow(for permissionType: TAPermissionType)
+    func trackPermissionScreenShow(for permissionType: TAPermissionType)
     
     /// Logs a `ui_button_tap` event with `name="allow"/"dont allow"`, `view_name="permission"`, `view_type=permissionType`
-    func logPermissionButtonTap(allowed: Bool, permissionType: TAPermissionType)
+    func trackPermissionButtonTap(allowed: Bool, permissionType: TAPermissionType)
     
     /// Logs a `ui_button_tap` event with `name=status`, `view_name="permission"`, `view_type=permissionType`
-    func logPermissionButtonTap(status: String, permissionType: TAPermissionType)
+    func trackPermissionButtonTap(status: String, permissionType: TAPermissionType)
 }
 
 // MARK: - Default Implementations
@@ -62,17 +62,17 @@ public enum TAPermissionType: CustomStringConvertible {
 
 extension TAAnalyticsPermissionProtocol {
     
-    public func logPermissionScreenShow(for permissionType: TAPermissionType) {
+    public func trackPermissionScreenShow(for permissionType: TAPermissionType) {
         let view = ViewAnalyticsModel(name: "permission", type: permissionType.description)
         track(viewShow: view)
     }
 
-    public func logPermissionButtonTap(allowed: Bool, permissionType: TAPermissionType) {
+    public func trackPermissionButtonTap(allowed: Bool, permissionType: TAPermissionType) {
         let view = ViewAnalyticsModel(name: "permission", type: permissionType.description)
         track(buttonTap: allowed ? "allow" : "dont allow", onView: view)
     }
 
-    public func logPermissionButtonTap(status: String, permissionType: TAPermissionType) {
+    public func trackPermissionButtonTap(status: String, permissionType: TAPermissionType) {
         let view = ViewAnalyticsModel(name: "permission", type: permissionType.description)
         track(buttonTap: status, onView: view)
     }

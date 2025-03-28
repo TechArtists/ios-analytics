@@ -34,12 +34,12 @@ import AdSupport
 ///
 /// This protocol provides methods for requesting ATT permission and tracking whether the prompt
 /// was shown, granted, denied, or not allowed.
-public protocol TAAnalyticsATTProtocol: TAAnalyticsBaseProtocol {
+public protocol TAAnalyticsATTProtocol: TAAnalyticsPermissionProtocol {
     
     /// Requests App Tracking Transparency (ATT) permission from the user.
     ///
     /// - Returns: The resulting `ATTrackingManager.AuthorizationStatus`.
-    func requestAttPermission() async -> ATTrackingManager.AuthorizationStatus
+    func requestAttPermission(extraParams: [String : (any AnalyticsBaseParameterValue)]?) async -> ATTrackingManager.AuthorizationStatus
     
     /// Tracks an event when the ATT prompt is not allowed to be shown.
     ///
@@ -75,7 +75,7 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
     /// - Marks ATT permission as requested using `UserDefaults` key `permissionATTRequested`
     ///
     /// - Returns: The resulting `ATTrackingManager.AuthorizationStatus`.
-    public func requestAttPermission() async -> ATTrackingManager.AuthorizationStatus {
+    public func requestAttPermission(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) async -> ATTrackingManager.AuthorizationStatus {
         let status = ATTrackingManager.trackingAuthorizationStatus
         let permissionRequested = self.boolFromUserDefaults(forKey: UserDefaultKeys.permissionATTRequested) ?? false
 
@@ -90,7 +90,7 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
             self.setInUserDefaults(true, forKey: UserDefaultKeys.permissionATTRequested)
             switch status {
             case .authorized:
-                let params = ["advertisingIdentifier": "\(ASIdentifierManager.shared().advertisingIdentifier)"]
+                let params = ["advertising_id": "\(ASIdentifierManager.shared().advertisingIdentifier)"]
                 trackATTPromptGranted(
                     extraParams: status.eventParameters.merging(params) { (_, new) in new }
                 )
@@ -128,8 +128,7 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
 
         track(event: .ATT_PROMPT_SHOW, params: params, logCondition: .logAlways)
         
-        let view = ViewAnalyticsModel(name: "permission", type: TAPermissionType.att.description)
-        track(viewShow: view)
+        trackPermissionScreenShow(for: .att)
     }
     
     /// Logs `.ATT_PROMPT_GRANTED` after the user explicitly allows tracking.
@@ -142,9 +141,7 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         extraParams?.forEach({ key, value in params[key] = value })
 
         track(event: .ATT_PROMPT_GRANTED, params: params, logCondition: .logAlways)
-        
-        let view = ViewAnalyticsModel(name: "permission", type: TAPermissionType.att.description)
-        track(viewShow: view)
+        trackPermissionButtonTap(allowed: true, permissionType: .att)
     }
     
     /// Logs `.ATT_PROMPT_DENIED` after the user explicitly denies tracking.
@@ -157,9 +154,7 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         extraParams?.forEach({ key, value in params[key] = value })
 
         track(event: .ATT_PROMPT_DENIED, params: params, logCondition: .logAlways)
-        
-        let view = ViewAnalyticsModel(name: "permission", type: TAPermissionType.att.description)
-        track(viewShow: view)
+        trackPermissionButtonTap(allowed: false, permissionType: .att)
     }
 }
 

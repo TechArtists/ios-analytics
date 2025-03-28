@@ -291,10 +291,19 @@ As with other parts, this library standardizes on a simple way of tracking user 
  Event Name | Parameter Name & Type | Comments 
  --- | --- | --- 
  `ui_view_show` | `name="permission"`  | 
-|                `type:Enum = {push notifications, att, location, microphone, <custom>}` | the specific permission
+|               | `type:Enum = {push notifications, att, location, microphone, <custom>}` | the specific permission
  `ui_button_tap` | `name=Enum = {allow, dont allow, <custom>`  | Either use the standard allow/dont allow terminilogy if it's a simple yes/no pop-up or provide a custom string. The former makes it easier on the data side.
 |            | `view_name="permission"`  | 
-|                `view_type:Enum = {push notifications, att, location, microphone, <custom>}` | the specific permission
+|            |    `view_type:Enum = {push notifications, att, location, microphone, <custom>}` | the specific permission
+
+For ATT specifically, you can also make use of a dedicated method that tracks these events explicitly too. ATT is important enough that it warrants its own event.
+
+ Event Name | Parameter Name & Type | Comments 
+ --- | --- | --- 
+ `att_prompt_not_allowed` |  | 
+ `att_prompt_show` |   | it also sends a corresponding `ui_view_show name=permission type=att` event for consistency
+ `att_prompt_granted` | `advertising_id:String`  | it also sends a corresponding `ui_button_tap` event for consistency
+ `att_prompt_denied` |   | 
 
 
 ### Paywall
