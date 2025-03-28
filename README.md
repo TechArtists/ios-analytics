@@ -302,8 +302,8 @@ For ATT specifically, you can also make use of a dedicated method that tracks th
  --- | --- | --- 
  `att_prompt_not_allowed` |  | 
  `att_prompt_show` |   | it also sends a corresponding `ui_view_show name=permission type=att` event for consistency
- `att_prompt_granted` | `advertising_id:String`  | it also sends a corresponding `ui_button_tap` event for consistency
- `att_prompt_denied` |   | 
+ `att_prompt_tap_allow` | `advertising_id:String`  | it also sends a corresponding `ui_button_tap` event for consistency
+ `att_prompt_tap_deny` |   | 
 
 
 ### Paywall

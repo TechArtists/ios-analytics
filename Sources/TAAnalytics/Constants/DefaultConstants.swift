@@ -83,8 +83,8 @@ public extension EventAnalyticsModel {
     
     static let ATT_PROMPT_NOT_ALLOWED = EventAnalyticsModel("att_prompt_not_allowed", isTAInternalEvent: true)
     static let ATT_PROMPT_SHOW        = EventAnalyticsModel("att_prompt_show", isTAInternalEvent: true)
-    static let ATT_PROMPT_GRANTED     = EventAnalyticsModel("att_prompt_granted", isTAInternalEvent: true)
-    static let ATT_PROMPT_DENIED      = EventAnalyticsModel("att_prompt_denied", isTAInternalEvent: true)
+    static let ATT_PROMPT_TAP_ALLOW   = EventAnalyticsModel("att_prompt_tap_allow", isTAInternalEvent: true)
+    static let ATT_PROMPT_TAP_DENY    = EventAnalyticsModel("att_prompt_tap_deny", isTAInternalEvent: true)
 }
 
 public extension UserPropertyAnalyticsModel {

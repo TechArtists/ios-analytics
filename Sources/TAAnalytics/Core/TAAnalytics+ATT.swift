@@ -54,12 +54,12 @@ public protocol TAAnalyticsATTProtocol: TAAnalyticsPermissionProtocol {
     /// Tracks an event when ATT permission is granted by the user.
     ///
     /// - Parameter extraParams: Optional additional event parameters.
-    func trackATTPromptGranted(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    func trackATTPromptTapAllow(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
     
     /// Tracks an event when ATT permission is denied by the user.
     ///
     /// - Parameter extraParams: Optional additional event parameters.
-    func trackATTPromptDenied(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    func trackATTPromptTapDeny(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 }
 
 // MARK: - Default Implementations
@@ -91,11 +91,11 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
             switch status {
             case .authorized:
                 let params = ["advertising_id": "\(ASIdentifierManager.shared().advertisingIdentifier)"]
-                trackATTPromptGranted(
+                trackATTPromptTapAllow(
                     extraParams: status.eventParameters.merging(params) { (_, new) in new }
                 )
             case .denied, .restricted:
-                trackATTPromptDenied(extraParams: status.eventParameters)
+                trackATTPromptTapDeny(extraParams: status.eventParameters)
             default:
                 break
             }
@@ -131,29 +131,29 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         trackPermissionScreenShow(for: .att)
     }
     
-    /// Logs `.ATT_PROMPT_GRANTED` after the user explicitly allows tracking.
+    /// Logs `.ATT_PROMPT_TAP_ALLOW` after the user explicitly allows tracking.
     ///
     /// This follows an ATT prompt and is only sent after `.ATT_PROMPT_SHOW`.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
-    public func trackATTPromptGranted(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
+    public func trackATTPromptTapAllow(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
         extraParams?.forEach({ key, value in params[key] = value })
 
-        track(event: .ATT_PROMPT_GRANTED, params: params, logCondition: .logAlways)
+        track(event: .ATT_PROMPT_TAP_ALLOW, params: params, logCondition: .logAlways)
         trackPermissionButtonTap(allowed: true, permissionType: .att)
     }
     
-    /// Logs `.ATT_PROMPT_DENIED` after the user explicitly denies tracking.
+    /// Logs `.ATT_PROMPT_TAP_DENY` after the user explicitly denies tracking.
     ///
     /// This follows an ATT prompt and is only sent after `.ATT_PROMPT_SHOW`.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
-    public func trackATTPromptDenied(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
+    public func trackATTPromptTapDeny(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
         extraParams?.forEach({ key, value in params[key] = value })
 
-        track(event: .ATT_PROMPT_DENIED, params: params, logCondition: .logAlways)
+        track(event: .ATT_PROMPT_TAP_DENY, params: params, logCondition: .logAlways)
         trackPermissionButtonTap(allowed: false, permissionType: .att)
     }
 }
