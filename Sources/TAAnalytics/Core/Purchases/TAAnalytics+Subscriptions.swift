@@ -25,7 +25,7 @@
 import Foundation
 
 // MARK: -
-public enum TASubscriptionType: CustomStringConvertible {
+public enum TASubscriptionType: CustomStringConvertible, Sendable {
     case trial
     case paidPayAsYouGo
     case paidPayUpFront
@@ -58,7 +58,6 @@ public struct TASubscriptionStartAnalyticsImpl: TASubscriptionStartAnalytics {
     public var price: Float
     public var currency: String
 }
-
 
 /// Defines specific events for showing views & tapping buttons
 public protocol TAAnalyticsSubscriptionsProtocol: TAAnalyticsBaseProtocol {
@@ -164,10 +163,10 @@ extension TAAnalytics: TAAnalyticsSubscriptionsProtocol {
         params["quantity"] = 1
 
         if let id = sub.paywall.anayticsID {
-            params["paywall_id"] = sub.paywall.anayticsID
+            params["paywall_id"] = id
         }
         if let name = sub.paywall.analyticsName {
-            params["paywall_name"] = sub.paywall.analyticsName
+            params["paywall_name"] = name
         }
     }
 }
