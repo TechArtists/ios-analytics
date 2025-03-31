@@ -58,6 +58,12 @@ public struct TAPaywallAnalyticsImpl: TAPaywallAnalytics {
     public var analyticsPlacement: String
     public var anayticsID: String?
     public var analyticsName: String?
+    
+    public init(analyticsPlacement: String, anayticsID: String? = nil, analyticsName: String? = nil) {
+        self.analyticsPlacement = analyticsPlacement
+        self.anayticsID = anayticsID
+        self.analyticsName = analyticsName
+    }
 }
 
 /// Defines specific events for showing views & tapping buttons

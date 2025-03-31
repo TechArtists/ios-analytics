@@ -57,6 +57,14 @@ public struct TASubscriptionStartAnalyticsImpl: TASubscriptionStartAnalytics {
     public var productID: String
     public var price: Float
     public var currency: String
+    
+    public init(subscriptionType: TASubscriptionType, paywall: any TAPaywallAnalytics, productID: String, price: Float, currency: String) {
+        self.subscriptionType = subscriptionType
+        self.paywall = paywall
+        self.productID = productID
+        self.price = price
+        self.currency = currency
+    }
 }
 
 /// Defines specific events for showing views & tapping buttons
