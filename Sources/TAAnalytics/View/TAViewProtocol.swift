@@ -52,7 +52,7 @@ public extension TAAnalyticsView {
 
 public protocol TAAnalyticsPaywalProvider {
     
-    var analyticsPaywal: any TAPaywallAnalytics { get }
+    var analyticsPaywall: any TAPaywallAnalytics { get }
 }
 
 public typealias TAAnalyticsPremiumView = TAAnalyticsView & TAAnalyticsPaywalProvider
