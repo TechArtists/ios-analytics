@@ -27,6 +27,7 @@
 import SwiftUI
 
 public protocol TAAnalyticsView: View {
+    
     associatedtype ViewBody : View
     
     @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
@@ -37,6 +38,7 @@ public protocol TAAnalyticsView: View {
 }
 
 public extension TAAnalyticsView {
+    
     @ViewBuilder
     @MainActor
     var body: some View {
@@ -47,3 +49,10 @@ public extension TAAnalyticsView {
             .environmentObject(analyticsView)
     }
 }
+
+public protocol TAAnalyticsPaywalProvider {
+    
+    var analyticsPaywal: any TAPaywallAnalytics { get }
+}
+
+public typealias TAAnalyticsPremiumView = TAAnalyticsView & TAAnalyticsPaywalProvider
