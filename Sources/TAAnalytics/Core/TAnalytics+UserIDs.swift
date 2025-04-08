@@ -36,16 +36,16 @@ public protocol TAAnalyticsUserIDsProtocol {
 extension TAAnalytics: TAAnalyticsUserIDsProtocol {
     
     public var userPseudoID: String? {
-        return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadOnlyUserPseudoID } as? AnalyticsConsumerWithReadOnlyUserPseudoID)?.getUserPseudoID()
+        return (self.eventQueueBuffer.startedAdaptors.first { $0 is AnalyticsAdaptorWithReadOnlyUserPseudoID } as? AnalyticsAdaptorWithReadOnlyUserPseudoID)?.getUserPseudoID()
     }
 
     public var userID: String? {
         get {
-            return (self.eventQueueBuffer.startedConsumers.first { $0 is AnalyticsConsumerWithReadWriteUserID } as? AnalyticsConsumerWithReadWriteUserID)?.getUserID()
+            return (self.eventQueueBuffer.startedAdaptors.first { $0 is AnalyticsAdaptorWithReadWriteUserID } as? AnalyticsAdaptorWithReadWriteUserID)?.getUserID()
         }
         set {
-            self.eventQueueBuffer.startedConsumers
-                .compactMap { $0 as? AnalyticsConsumerWithWriteOnlyUserID }
+            self.eventQueueBuffer.startedAdaptors
+                .compactMap { $0 as? AnalyticsAdaptorWithWriteOnlyUserID }
                 .forEach { $0.set(userID: newValue) }
         }
     }

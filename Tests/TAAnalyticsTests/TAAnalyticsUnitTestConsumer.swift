@@ -27,12 +27,12 @@
 import Foundation
 import TAAnalytics
 
-class TAAnalyticsUnitTestConsumer: AnalyticsConsumer {
+class TAAnalyticsUnitTestAdaptor: AnalyticsAdaptor {
     
     public var eventsSent = [(event: EventAnalyticsModelTrimmed, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [UserPropertyAnalyticsModelTrimmed: String]()
     
-    public typealias T = TAAnalyticsUnitTestConsumer
+    public typealias T = TAAnalyticsUnitTestAdaptor
     public var wrappedValue: Self {
         self
     }

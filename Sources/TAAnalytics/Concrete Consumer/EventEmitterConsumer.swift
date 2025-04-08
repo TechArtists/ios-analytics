@@ -1,5 +1,5 @@
 //
-//  EventEmitterConsumer.swift
+//  EventEmitterAdaptor.swift
 //  TAAnalytics
 //
 //  Created by Robert Tataru on 13.09.2024.
@@ -26,12 +26,12 @@
 
 import Foundation
 
-/// Consumer that provides streams for any events & user properties consumed.
+/// Adaptor that provides streams for any events & user properties consumed.
 ///
 /// Useful if you want to do some specific actions when a certain event is sent or user property set.
-public class EventEmitterConsumer: AnalyticsConsumer {
+public class EventEmitterAdaptor: AnalyticsAdaptor {
 
-    public typealias T = EventEmitterConsumer
+    public typealias T = EventEmitterAdaptor
     
     public var eventStream: AsyncStream<EventAnalyticsModelTrimmed>?
     

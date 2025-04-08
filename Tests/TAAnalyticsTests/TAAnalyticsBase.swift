@@ -32,17 +32,17 @@ enum EventStreamError: Error {
 
 class TAAnalyticsBase {
     let analytics: TAAnalytics
-    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     let notificationCenter = NotificationCenter.default
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
         let mockUserDefaults = UserDefaults(suiteName: "TATests")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor()
         analytics =  TAAnalytics(
             config: .init(
                 analyticsVersion: "0",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults
             )
         )
@@ -50,7 +50,7 @@ class TAAnalyticsBase {
     }
 
     @Test
-    func testThatNilsAreNotSentToConsumers() async throws {
+    func testThatNilsAreNotSentToAdaptors() async throws {
 
         var params = [String: (any AnalyticsBaseParameterValue)?]()
         params["key1"] = "value1"

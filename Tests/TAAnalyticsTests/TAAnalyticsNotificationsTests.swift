@@ -31,15 +31,15 @@ import UIKit
 class TAAnalyticsNotificationsTests {
 
     var analytics: TAAnalytics
-    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     var notificationCenter = NotificationCenter.default
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATestsNotifcations")
         let defaults = UserDefaults(suiteName: "TATestsNotifcations")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor()
         analytics =  TAAnalytics(
-            config: .init(analyticsVersion: "0", consumers: [unitTestConsumer], userDefaults: defaults)
+            config: .init(analyticsVersion: "0", adaptors: [unitTestAdaptor], userDefaults: defaults)
         )
         await analytics.start()
     }

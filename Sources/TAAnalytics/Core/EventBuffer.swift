@@ -76,39 +76,39 @@ struct Queue<T> {
 actor EventBuffer {
     private var eventQueue: Queue<DeferredQueuedEvent> = .init()
     
-    nonisolated(unsafe) private(set) var startedConsumers: [any AnalyticsConsumer] = []
+    nonisolated(unsafe) private(set) var startedAdaptors: [any AnalyticsAdaptor] = []
     
-    public let allConsumers: [any AnalyticsConsumer]
+    public let allAdaptors: [any AnalyticsAdaptor]
     
     nonisolated(unsafe) internal let passthroughStream = PassthroughAsyncStream<DeferredQueuedEvent>()
     
-    init(allConsumers: [any AnalyticsConsumer]) {
-        self.allConsumers = allConsumers
+    init(allAdaptors: [any AnalyticsAdaptor]) {
+        self.allAdaptors = allAdaptors
     }
     
     func addEvent(
         _ event: EventAnalyticsModel,
         params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
-        if startedConsumers.isEmpty {
+        if startedAdaptors.isEmpty {
             eventQueue.enqueue(.init(event: event, dateAdded: Date(), parameters: params))
         } else {
-            trackEventInStartedConsumers(event, params: params)
+            trackEventInStartedAdaptors(event, params: params)
         }
     }
     
-    func setupConsumers(with consumers: [any AnalyticsConsumer]) {
-        self.startedConsumers = consumers
+    func setupAdaptors(with adaptors: [any AnalyticsAdaptor]) {
+        self.startedAdaptors = adaptors
         flushDeferredEventQueue()
     }
     
-    private func trackEventInStartedConsumers(
+    private func trackEventInStartedAdaptors(
         _ event: EventAnalyticsModel,
         params: [String: (any AnalyticsBaseParameterValue)]? = nil
     ) {
-        for consumer in startedConsumers {
-            consumer.track(trimmedEvent: consumer.trim(event: event), params: params)
-            TALogger.log("Consumer: '\(String(describing: consumer))' has logged event: '\(consumer.trim(event: event).rawValue)'", level: .info)
+        for adaptor in startedAdaptors {
+            adaptor.track(trimmedEvent: adaptor.trim(event: event), params: params)
+            TALogger.log("Adaptor: '\(String(describing: adaptor))' has logged event: '\(adaptor.trim(event: event).rawValue)'", level: .info)
         }
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
@@ -118,7 +118,7 @@ actor EventBuffer {
             let event = deferredEvent.event
             var params = deferredEvent.parameters ?? [:]
             params["timeDelta"] = Date().timeIntervalSince(deferredEvent.dateAdded)
-            trackEventInStartedConsumers(event, params: params)
+            trackEventInStartedAdaptors(event, params: params)
         }
     }
 }

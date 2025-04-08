@@ -59,10 +59,10 @@ extension ViewAnalyticsModel {
         UITableView.appearance().backgroundColor = UIColor.clear
 
         let config = TAAnalyticsConfig(analyticsVersion: "1.0",
-                                       consumers: [
-                                                OSLogAnalyticsConsumer(),
-                                                EventEmitterConsumer(),
-                                                //FirebaseAnalyticsConsumer()
+                                       adaptors: [
+                                                OSLogAnalyticsAdaptor(),
+                                                EventEmitterAdaptor(),
+                                                //FirebaseAnalyticsAdaptor()
                                        ]
                                     )
         analytics = TAAnalytics(config: config)

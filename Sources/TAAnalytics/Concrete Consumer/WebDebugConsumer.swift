@@ -1,4 +1,4 @@
-//  KeemojiAPIAnalyticsConsumer.swift
+//  KeemojiAPIAnalyticsAdaptor.swift
 //  Created by Adi on 11/9/22
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL
@@ -29,8 +29,8 @@ public enum InstallTypeError: Error {
     case invalidInstallType
 }
 
-public class WebDebugConsumer: AnalyticsConsumer, AnalyticsConsumerWithWriteOnlyUserID {
-    public typealias T = WebDebugConsumer
+public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUserID {
+    public typealias T = WebDebugAdaptor
 
     var debugServerGlobalCounter: Int = 0
     var debugServerFailedURLRequests = [(URLRequest, String?)]()

@@ -27,16 +27,16 @@ import Foundation
 
 class TAAnalyticsTrimTests {
     let analytics: TAAnalytics
-    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
         let mockUserDefaults = UserDefaults(suiteName: "TATests")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer(eventTrimLength: 7, userPropertyTrimLength: 7)
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor(eventTrimLength: 7, userPropertyTrimLength: 7)
         analytics =  TAAnalytics(
             config: .init(
                 analyticsVersion: "0",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults
             )
         )
@@ -45,18 +45,18 @@ class TAAnalyticsTrimTests {
     
     @Test
     func testTrimmingEvents() async throws {
-        let trimmedEvent = unitTestConsumer.trim(event: .init("ta_test_test_test"))
-        unitTestConsumer.track(trimmedEvent: trimmedEvent, params: nil)
+        let trimmedEvent = unitTestAdaptor.trim(event: .init("ta_test_test_test"))
+        unitTestAdaptor.track(trimmedEvent: trimmedEvent, params: nil)
         
-        #expect(unitTestConsumer.eventsSent.contains(where: { $0.event.rawValue == "ta_test" }))
+        #expect(unitTestAdaptor.eventsSent.contains(where: { $0.event.rawValue == "ta_test" }))
     }
 
     @Test
     func testTrimmingUserProperties() {
-        let trimmedUserProperty = unitTestConsumer.trim(userProperty: UserPropertyAnalyticsModel("ta_test_test_test"))
-        unitTestConsumer.set(trimmedUserProperty: trimmedUserProperty, to: "")
+        let trimmedUserProperty = unitTestAdaptor.trim(userProperty: UserPropertyAnalyticsModel("ta_test_test_test"))
+        unitTestAdaptor.set(trimmedUserProperty: trimmedUserProperty, to: "")
         
-        #expect(unitTestConsumer.userPropertiesSet.contains(where: { $0.key.rawValue == "ta_test" }))
+        #expect(unitTestAdaptor.userPropertiesSet.contains(where: { $0.key.rawValue == "ta_test" }))
     }
     
     func requireEvent(

@@ -53,7 +53,7 @@ public struct TAAnalyticsConfig {
         }
     }
     
-    public let consumers: [any AnalyticsConsumer]
+    public let adaptors: [any AnalyticsAdaptor]
     
     let analyticsVersion: String
     let currentProcessType: ProcessType
@@ -61,7 +61,7 @@ public struct TAAnalyticsConfig {
     let currentInstallType: InstallType
     let userDefaults: UserDefaults
     let installUserProperties: [UserPropertyAnalyticsModel]
-    let maxTimeoutForConsumerStart: Double
+    let maxTimeoutForAdaptorStart: Double
     let trackEventFilter: (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
 
     /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
@@ -74,33 +74,33 @@ public struct TAAnalyticsConfig {
     ///
     /// - Parameters:
     ///   - analyticsVersion: Separate user property that tracks the version of the analytics events. Ideally, when you'd add/modify an event, this version would also be changed and communicated to the BI team, so that they know to only look for that specific event from analyticsVersion x.
-    ///   - consumers: analytics consumers to use
+    ///   - adaptors: analytics adaptors to use
     ///   - currentProcessType: defaults to `findProcessType()`
     ///   - enabledProcessTypes: what process types should have logging enabled. Defaults to `ProcessType.allCases`
     ///   - userDefaults: defaults to `UserDefaults.standard`
     ///   - instalUserProperties:
-    ///   - maxTimeoutForConsumerStart:
+    ///   - maxTimeoutForAdaptorStart:
     ///   - automaticallyTrackedEventsPrefixConfig: Prefix for events/userProperties automatically tracked by this internal library. Those manually sent by the app via `track..`/`set(userProperty..` will not be prefixed
     ///   - manuallyTrackedEventsPrefixConfig: Prefix for events/userProperties sent manually by you via `track..`/`set(userProperty..`
     public init(analyticsVersion: String,
-                consumers: [any AnalyticsConsumer],
+                adaptors: [any AnalyticsAdaptor],
                 currentProcessType: ProcessType = findProcessType(),
                 enabledProcessTypes: [ProcessType] = ProcessType.allCases,
                 userDefaults: UserDefaults = UserDefaults.standard,
                 instalUserProperties: [UserPropertyAnalyticsModel] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_OS_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
-                maxTimeoutForConsumerStart: Double = 10,
+                maxTimeoutForAdaptorStart: Double = 10,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 trackEventFilter: @escaping (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
     ) {
         self.analyticsVersion = analyticsVersion
-        self.consumers = consumers
+        self.adaptors = adaptors
         self.currentProcessType = currentProcessType
         self.enabledProcessTypes = enabledProcessTypes
         self.userDefaults = userDefaults
         self.currentInstallType = Self.findInstallType()
         self.installUserProperties = instalUserProperties
-        self.maxTimeoutForConsumerStart = maxTimeoutForConsumerStart
+        self.maxTimeoutForAdaptorStart = maxTimeoutForAdaptorStart
         self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
         self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig
         self.trackEventFilter = trackEventFilter

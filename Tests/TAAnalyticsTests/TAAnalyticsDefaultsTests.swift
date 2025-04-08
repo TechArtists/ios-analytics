@@ -37,7 +37,7 @@ class TAAnalyticsDefaultsTests {
         UserDefaults.standard.removeSuite(named: "TestDefaults")
         mockUserDefaults = UserDefaults(suiteName: "TestDefaults")
         
-        yourClassInstance = TAAnalytics(config: .init(analyticsVersion: "0", consumers: [], userDefaults: mockUserDefaults))
+        yourClassInstance = TAAnalytics(config: .init(analyticsVersion: "0", adaptors: [], userDefaults: mockUserDefaults))
     }
     
     @Test

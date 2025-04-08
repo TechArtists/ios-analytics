@@ -31,16 +31,16 @@ import Foundation
 class TAAnalyticsUITests {
     let analytics: TAAnalytics
     let testView = ViewAnalyticsModel(name: "TestView", type: "TestType")
-    let unitTestConsumer: TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor: TAAnalyticsUnitTestAdaptor
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
         let mockUserDefaults = UserDefaults(suiteName: "TATests")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer(eventTrimLength: 40, userPropertyTrimLength: 100)
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor(eventTrimLength: 40, userPropertyTrimLength: 100)
         analytics = TAAnalytics(
             config: .init(
                 analyticsVersion: "0",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults
             )
         )

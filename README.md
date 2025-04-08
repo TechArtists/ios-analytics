@@ -3,38 +3,38 @@
 This is an opiniated analytics framework wrapper that you can use for your product analytics needs. It abstracts away the underlying analytics platform (e.g. Firebase/MixPanel/Amplitude/etc) while providing several nice benefits:
 
 1. It supports an opiniated standard event structure, so that you'll have more sane event names (vs `foo_clicked`, `tap_bar`, `baz`)
-2. It provides a common interface so that you can send the same event to multiple consumers, minimizing bugs.
+2. It provides a common interface so that you can send the same event to multiple adaptors, minimizing bugs.
 3. It has checks & workarounds for common implementation bugs with , enforcing a more clean dataset (aka your BIs will thank you). For example:   
   - Trimming event names & property keys/values in Firebase. If they are too long, Firebase will just silently stop sending them.
-  - Warns you about reserved `event_names`. If you happen to use a reserved `event_name` (e.g. `app_background` in Firebase), most analytics consumers won't send the event at at all.
+  - Warns you about reserved `event_names`. If you happen to use a reserved `event_name` (e.g. `app_background` in Firebase), most analytics adaptors won't send the event at at all.
   - sending an unsupported type as a parameter value would result in the event not being sent at all. For example, Firebase doesn't support sending Swift Int values, they need to be wrapped in an `NSNumber` first.
 
 
-## Analytics Consumers
+## Analytics Adaptors
 
-When you initialize an `TAAnalytics` object you can pass it an array of consumers that will consume those events & user property changes. These consumers forward the data to the underlying analytics platform.
+When you initialize an `TAAnalytics` object you can pass it an array of adaptors that will consume those events & user property changes. These adaptors forward the data to the underlying analytics platform.
 
-Consumers can be implemented by implementing the `AnalyticsConsumer` protocol that provides mecanishms for guarding against starting it in Xcode/TestFlight/prod, character limits and others. 
+Adaptors can be implemented by implementing the `AnalyticsAdaptor` protocol that provides mecanishms for guarding against starting it in Xcode/TestFlight/prod, character limits and others. 
 
-These consumers are now available:
+These adaptors are now available:
 
- Consumer Name | Details | Location
+ Adaptor Name | Details | Location
  --- | --- | --- 
-OSLogAnalyticsConsumer | Log all tracked events & user properties to OSLog | inside this library
-EventEmitterConsumer | Provides streams for any events sent & user properties set. | inside this library
-AmplitudeAnalyticsConsumer | https://amplitude.com | https://github.com/TechArtists/ios-analytics-consumer-amplitude
-FirebaseAnalyticsConsumer | http://firebase.google.com | https://github.com/TechArtists/ios-analytics-consumer-firebase
-CrashlyticsAnalyticsConsumer | Logs all tracked events & user properties to Crashlytics. | https://github.com/TechArtists/ios-analytics-consumer-firebase 
-HeapAnalyticsConsmer | https://www.heap.io | https://github.com/TechArtists/ios-analytics-consumer-heap
-MixPanelAnalyticsConsumer | https://www.mixpanel.com | https://github.com/TechArtists/ios-analytics-consumer-mixpanel
-PendoAnalyticsConsumer | https://www.pendo.io | https://github.com/TechArtists/ios-analytics-consumer-pendoio
-SegmentAnalyticsConsumer | https://www.segment.com | https://github.com/TechArtists/ios-analytics-consumer-segment
-AppsFlyerAnalyticsConsumer | https://www.appsflyer.com | https://github.com/TechArtists/ios-analytics-consumer-appsflyer
-AdjustAnalyticsConsumer | https://www.adjust.com | https://github.com/TechArtists/ios-analytics-consumer-adjust
+OSLogAnalyticsAdaptor | Log all tracked events & user properties to OSLog | inside this library
+EventEmitterAdaptor | Provides streams for any events sent & user properties set. | inside this library
+AmplitudeAnalyticsAdaptor | https://amplitude.com | https://github.com/TechArtists/ios-analytics-adaptor-amplitude
+FirebaseAnalyticsAdaptor | http://firebase.google.com | https://github.com/TechArtists/ios-analytics-adaptor-firebase
+CrashlyticsAnalyticsAdaptor | Logs all tracked events & user properties to Crashlytics. | https://github.com/TechArtists/ios-analytics-adaptor-firebase 
+HeapAnalyticsAdaptor | https://www.heap.io | https://github.com/TechArtists/ios-analytics-adaptor-heap
+MixPanelAnalyticsAdaptor | https://www.mixpanel.com | https://github.com/TechArtists/ios-analytics-adaptor-mixpanel
+PendoAnalyticsAdaptor | https://www.pendo.io | https://github.com/TechArtists/ios-analytics-adaptor-pendoio
+SegmentAnalyticsAdaptor | https://www.segment.com | https://github.com/TechArtists/ios-analytics-adaptor-segment
+AppsFlyerAnalyticsAdaptor | https://www.appsflyer.com | https://github.com/TechArtists/ios-analytics-adaptor-appsflyer
+AdjustAnalyticsAdaptor | https://www.adjust.com | https://github.com/TechArtists/ios-analytics-adaptor-adjust
 
-### Multiple Consumers
+### Multiple Adaptors
 
-As a business you might use different consumers for these analytics providers. 
+As a business you might use different adaptors for these analytics providers. 
 
 For example, the product team might want to see all events in Amplitude/MixPanel as they have easier self-serve dashboards, while the data engineering team would like to see the events in Firebase, to manipulate them directly into BigQuery.
 The marketing team would also like some events to make it to an MMP like AppsFlyer/Adjust, so that they can use them as conversion actions for digital marketing.
@@ -43,19 +43,19 @@ Here's an example:
 
 ```
     let analytics = TAAnalytics(config: TAAnalyticsConfig(analyticsVersion: "1.0", 
-                    consumers: [
-                        OSLogAnalyticsConsumer(), 
-                        EventEmitterConsumer(),
-                        MixPanelConsumer(mixpanelToken:"TOKEN_GOES_HERE"),
-                        FirebaseAnalyticsConsumer(),
-                        CrashlyticsAnalyticsConsumer(isRedacted:false) 
+                    adaptors: [
+                        OSLogAnalyticsAdaptor(), 
+                        EventEmitterAdaptor(),
+                        MixPanelAdaptor(mixpanelToken:"TOKEN_GOES_HERE"),
+                        FirebaseAnalyticsAdaptor(),
+                        CrashlyticsAnalyticsAdaptor(isRedacted:false) 
                     ]
                   ))
 
     let mmpAnalytics = TAAnlytics(config: TAAnalyticsConfig(analyticsVersion: "1.0",
-                        consumers: [
-                        OSLogAnalyticsConsumer()
-                        AppsflyerAnalyticsConsumer(devKey: "DEV_KEY", appleAppID: "APP_ID")
+                        adaptors: [
+                        OSLogAnalyticsAdaptor()
+                        AppsflyerAnalyticsAdaptor(devKey: "DEV_KEY", appleAppID: "APP_ID")
                     ]
                   ))
     analytics.track(.FIRST_OPEN)

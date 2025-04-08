@@ -28,16 +28,16 @@ import Foundation
 class TAAnalyticsPrefixTests {
 
     let analytics: TAAnalytics
-    let unitTestConsumer: TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor: TAAnalyticsUnitTestAdaptor
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATestsPrefix")
         let mockUserDefaults = UserDefaults(suiteName: "TATestsPrefix")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor()
         analytics = TAAnalytics(
             config: TAAnalyticsConfig(
                 analyticsVersion: "1",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults,
                 automaticallyTrackedEventsPrefixConfig: TAAnalyticsConfig.PrefixConfig(
                     eventPrefix: "test_ev_",

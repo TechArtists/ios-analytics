@@ -64,7 +64,7 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         let paramsWithoutNils = params?.compactMapValues { $0 }
         let prefixedEvent = prefixEventIfNeeded(event)
 
-        func trackInConsumers() {
+        func trackInAdaptors() {
             guard config.trackEventFilter(event, params) else { return }
             
             Task { [weak self] in
@@ -74,15 +74,15 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         }
         switch logCondition {
         case .logAlways:
-            trackInConsumers()
+            trackInAdaptors()
         case .logOnlyOncePerLifetime:
             if self.boolFromUserDefaults(forKey: "onlyOnce_\(prefixedEvent.rawValue)") == false {
-                trackInConsumers()
+                trackInAdaptors()
                 self.setInUserDefaults(true, forKey: "onlyOnce_\(prefixedEvent.rawValue)")
             }
         case .logOnlyOncePerAppSession:
             if !self.appSessionEvents.contains(event) {
-                trackInConsumers()
+                trackInAdaptors()
                 appSessionEvents.insert(event)
             }
         }
@@ -91,8 +91,8 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
         self.setInUserDefaults(to, forKey: "userProperty_\(prefixedUserProperty.rawValue)")
-        self.eventQueueBuffer.startedConsumers.forEach { consumer in
-            consumer.set(trimmedUserProperty: consumer.trim(userProperty: prefixedUserProperty), to: to)
+        self.eventQueueBuffer.startedAdaptors.forEach { adaptor in
+            adaptor.set(trimmedUserProperty: adaptor.trim(userProperty: prefixedUserProperty), to: to)
         }
     }
 

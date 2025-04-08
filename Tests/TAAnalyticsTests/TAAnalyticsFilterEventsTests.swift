@@ -31,16 +31,16 @@ import Foundation
 class TAAnalyticsFilterEventsTests {
 
     let analytics: TAAnalytics
-    let unitTestConsumer: TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor: TAAnalyticsUnitTestAdaptor
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATestsPrefix")
         let mockUserDefaults = UserDefaults(suiteName: "TATestsPrefix")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor()
         analytics = TAAnalytics(
             config: TAAnalyticsConfig(
                 analyticsVersion: "1",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults,
                 trackEventFilter: { event, parameters in
                     if event.rawValue == "manual_test_filter_ta_test" {

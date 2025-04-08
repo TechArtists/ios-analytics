@@ -32,7 +32,7 @@ public class TAAnalytics: ObservableObject {
     
     internal var notificationCenterObservers = [Any]()
     
-    internal var eventQueueBuffer: EventBuffer = .init(allConsumers: [])
+    internal var eventQueueBuffer: EventBuffer = .init(allAdaptors: [])
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<EventAnalyticsModel>()
@@ -56,7 +56,7 @@ public class TAAnalytics: ObservableObject {
     ) async {
         logStartupDetails()
         
-        await startConsumers()
+        await startAdaptors()
         
         configureUserProperties()
         
@@ -81,30 +81,30 @@ public class TAAnalytics: ObservableObject {
         TALogger.log("Starting with install type: '\(String(describing: config.currentInstallType))', process type '\(String(describing: config.currentProcessType))', enabled process types '\(String(describing: config.enabledProcessTypes))'", level: .info)
     }
     
-    private func startConsumers() async {
-         let startedConsumers = await withTaskGroup(of: (any AnalyticsConsumer)?.self) { group in
-            for consumer in config.consumers {
+    private func startAdaptors() async {
+         let startedAdaptors = await withTaskGroup(of: (any AnalyticsAdaptor)?.self) { group in
+            for adaptor in config.adaptors {
                 group.addTask {
                     do {
-                        try await withThrowingTimeout(seconds: self.config.maxTimeoutForConsumerStart) {
-                            if consumer is EventEmitterConsumer {
+                        try await withThrowingTimeout(seconds: self.config.maxTimeoutForAdaptorStart) {
+                            if adaptor is EventEmitterAdaptor {
                                 try await Task.sleep(seconds: 4)
                             }
                             
-                            try await consumer.startFor(
+                            try await adaptor.startFor(
                                 installType: self.config.currentInstallType,
                                 userDefaults: self.config.userDefaults,
                                 TAAnalytics: self
                             )
                         }
                         
-                        TALogger.log("Consumer: '\(String(describing: consumer))' has been started", level: .info)
-                        return consumer
+                        TALogger.log("Adaptor: '\(String(describing: adaptor))' has been started", level: .info)
+                        return adaptor
                     } catch is TimeoutError {
-                        TALogger.log("Consumer: '\(String(describing: consumer))' did NOT start because maximum start timeout of '\(String(describing: self.config.maxTimeoutForConsumerStart))' seconds was reached", level: .info)
+                        TALogger.log("Adaptor: '\(String(describing: adaptor))' did NOT start because maximum start timeout of '\(String(describing: self.config.maxTimeoutForAdaptorStart))' seconds was reached", level: .info)
                         return nil
                     } catch {
-                        TALogger.log("Consumer: '\(String(describing: consumer))' did NOT start for this install type: '\(String(describing: self.config.currentInstallType))' and threw error: '\(error.localizedDescription)'", level: .info)
+                        TALogger.log("Adaptor: '\(String(describing: adaptor))' did NOT start for this install type: '\(String(describing: self.config.currentInstallType))' and threw error: '\(error.localizedDescription)'", level: .info)
 
                         return nil
                     }
@@ -114,7 +114,7 @@ public class TAAnalytics: ObservableObject {
              return await group.compactMap{ $0 }.reduce(into: []) { $0.append($1) }
         }
         
-        await self.eventQueueBuffer.setupConsumers(with: startedConsumers)
+        await self.eventQueueBuffer.setupAdaptors(with: startedAdaptors)
     }
     
     private func sendAppVersionEventUpdatedIfNeeded() {

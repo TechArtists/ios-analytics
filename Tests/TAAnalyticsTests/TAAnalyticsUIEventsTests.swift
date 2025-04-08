@@ -30,17 +30,17 @@ import UIKit
 class TAAnalyticsUIEventsTests {
     
     let analytics: TAAnalytics
-    let unitTestConsumer : TAAnalyticsUnitTestConsumer
+    let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     let notificationCenter = NotificationCenter.default
     
     init() async {
         UserDefaults.standard.removePersistentDomain(forName: "TATests")
         let mockUserDefaults = UserDefaults(suiteName: "TATests")!
-        unitTestConsumer = TAAnalyticsUnitTestConsumer()
+        unitTestAdaptor = TAAnalyticsUnitTestAdaptor()
         analytics = TAAnalytics(
             config: TAAnalyticsConfig(
                 analyticsVersion: "1",
-                consumers: [unitTestConsumer],
+                adaptors: [unitTestAdaptor],
                 userDefaults: mockUserDefaults
             )
         )

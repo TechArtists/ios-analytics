@@ -39,12 +39,12 @@ class ContactsPermission: ObservableObject {
     func requestAccess(analytics: TAAnalytics) {
         guard authorizationStatus == .notDetermined else { return }
         
-        analytics.logPermissionScreenShow(for: .custom("contacts"))
+        analytics.trackPermissionScreenShow(for: .custom("contacts"))
         
         self.contactStore.requestAccess(for: .contacts) { _, _ in
             let status = CNContactStore.authorizationStatus(for: .contacts)
 
-            analytics.logPermissionButtonTap(allowed: status == .authorized, permissionType: .custom("contacts"))
+            analytics.trackPermissionButtonTap(allowed: status == .authorized, permissionType: .custom("contacts"))
 
             if status == .authorized {
                 self.fetchContacts()

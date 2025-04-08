@@ -119,8 +119,8 @@ struct ContactsListView: View {
             analytics.track(viewShow: viewAnalyticsModel)
             contactsPermission.fetchContacts()
             
-            analytics.config.consumers.forEach { consumer in
-                print(type(of: consumer))
+            analytics.config.adaptors.forEach { adaptor in
+                print(type(of: adaptor))
             }
         }
     }

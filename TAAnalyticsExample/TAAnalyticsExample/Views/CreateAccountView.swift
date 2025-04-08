@@ -107,8 +107,8 @@ struct CreateAccountView: View {
                 .edgesIgnoringSafeArea(.all)
         )
         .task {
-            guard let eventStream = analytics.config.consumers
-                .compactMap({ $0 as? EventEmitterConsumer })
+            guard let eventStream = analytics.config.adaptors
+                .compactMap({ $0 as? EventEmitterAdaptor })
                 .first?
                 .eventStream else { return }
             

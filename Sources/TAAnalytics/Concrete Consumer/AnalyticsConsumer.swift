@@ -1,4 +1,4 @@
-//  AnalyticsConsumer.swift
+//  AnalyticsAdaptor.swift
 //  Created by Adi on 10/24/22.
 //
 //  Copyright (c) 2022 Tech Artists Agency SRL
@@ -25,13 +25,13 @@
 
 import Foundation
 
-/// `AnalyticsConsumer` is a protocol that defines methods for starting an analytics consumer, logging events, and setting user properties.
-/// Classes that conform to this protocol will handle these operations for different analytics consumers.
-public protocol AnalyticsConsumer<T> {
+/// `AnalyticsAdaptor` is a protocol that defines methods for starting an analytics adaptor, logging events, and setting user properties.
+/// Classes that conform to this protocol will handle these operations for different analytics adaptors.
+public protocol AnalyticsAdaptor<T> {
     
     associatedtype T
     
-    /// Starts the consumer if it can for the required
+    /// Starts the adaptor if it can for the required
     /// - Parameters:
     ///   - installType: installType
     ///   - userDefaults: user defaults to use
@@ -39,13 +39,13 @@ public protocol AnalyticsConsumer<T> {
     /// - Returns: `true` if it has been started, `false` otherwise
     func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws
         
-    /// Log event, enforces trimming before calling the consumer-specific implementation.
+    /// Log event, enforces trimming before calling the adaptor-specific implementation.
     func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String: any AnalyticsBaseParameterValue]?)
 
     /// Set user property
     func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?)
 
-    /// Consumers should implement this to define how they trim the event.
+    /// Adaptors should implement this to define how they trim the event.
     func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed
     
     func trim(userProperty: UserPropertyAnalyticsModel) -> UserPropertyAnalyticsModelTrimmed
@@ -53,20 +53,20 @@ public protocol AnalyticsConsumer<T> {
     var wrappedValue: T { get }
 }
 
-/// If the consumer also support a user ID, both writing & reading it (e.g. Crashlytics)
-public protocol AnalyticsConsumerWithReadOnlyUserPseudoID {
+/// If the adaptor also support a user ID, both writing & reading it (e.g. Crashlytics)
+public protocol AnalyticsAdaptorWithReadOnlyUserPseudoID {
     func getUserPseudoID() -> String?
     
 }
 
-/// If the consumer also support a user ID, though only setting it (e.g. Crashlytics)
-public protocol AnalyticsConsumerWithWriteOnlyUserID: AnyObject {
+/// If the adaptor also support a user ID, though only setting it (e.g. Crashlytics)
+public protocol AnalyticsAdaptorWithWriteOnlyUserID: AnyObject {
     /// Swift forces us to also define a getter, but it will never be called for this protocol
     func set(userID: String?)
 }
 
-/// Some Analytics Consumers can also support a user pseudo ID (Firebase, mostly)
-public protocol AnalyticsConsumerWithReadWriteUserID: AnyObject {
+/// Some Analytics Adaptors can also support a user pseudo ID (Firebase, mostly)
+public protocol AnalyticsAdaptorWithReadWriteUserID: AnyObject {
     func set(userID: String?)
     func getUserID() -> String?
 }

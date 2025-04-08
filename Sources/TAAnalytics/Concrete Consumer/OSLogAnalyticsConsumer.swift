@@ -1,4 +1,4 @@
-//  OSLogAnalyticConsumer.swift
+//  OSLogAnalyticAdaptor.swift
 //
 //  Created by Adi on 10/24/22.
 //
@@ -27,9 +27,9 @@ import Foundation
 import OSLog
 
 /// Logs to OSLog. `OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")`
-public class OSLogAnalyticsConsumer: AnalyticsConsumer {
+public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
     
-    public typealias T = OSLogAnalyticsConsumer
+    public typealias T = OSLogAnalyticsAdaptor
     
     private let logger : OSLog
     
