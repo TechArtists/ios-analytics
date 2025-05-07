@@ -32,7 +32,7 @@ public protocol TAAnalyticsAppNotificationsProtocol {
 }
 
 // TODO: move it into TAAnlytics
-var isFirstAppOpenThisProcess = false
+var isFirstAppOpenThisProcess = true
 
 extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
@@ -41,21 +41,22 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     ///   - **Background**: Logs `.APP_BACKGROUND`.
     public func addAppLifecycleObservers() {
         
-        let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { notification in
-
+        let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            guard let self else { return }
             // TODO: adi user defaults guard for is ready?
             self.set(userProperty: .APP_OPEN_COUNT,
                      to:"\(self.getNextCounterValueFrom(userProperty: .APP_OPEN_COUNT))")
             
-            if isFirstAppOpenThisProcess {
-                self.track(event: .APP_OPEN, params: ["is_cold_launch": true])
-                isFirstAppOpenThisProcess = true
-            } else {
-                self.track(event: .APP_OPEN, params: ["is_cold_launch": false])
+            let isColdLaunch = isFirstAppOpenThisProcess
+            isFirstAppOpenThisProcess = false
+            var params: [String: (any AnalyticsBaseParameterValue)] = ["is_cold_launch": isColdLaunch]
+            if let view = self.lastViewShow {
+                self.addParameters(for: view, to: &params, prefix: "view_")
             }
+            self.track(event: .APP_OPEN, params: params)
         }
-        let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { notification in
-            
+        let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            guard let self else { return }
             // TODO: add unit test for last view shown
             // add user property for last view types shown
             var params = [String: (any AnalyticsBaseParameterValue)]()
@@ -64,7 +65,7 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
                 self.addParameters(for: view, to: &params, prefix: "view_")
             }
 
-            self.track(event: .APP_CLOSE, params: params)
+            track(event: .APP_CLOSE, params: params)
         }
         
         notificationCenterObservers.append(obsForeground)
