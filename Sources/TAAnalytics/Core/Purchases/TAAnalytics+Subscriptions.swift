@@ -25,7 +25,7 @@
 import Foundation
 
 // MARK: -
-public enum TASubscriptionType: CustomStringConvertible, Sendable {
+public enum TASubscriptionType: CustomStringConvertible, Sendable, Equatable {
     case trial
     case paidPayAsYouGo
     case paidPayUpFront
