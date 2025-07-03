@@ -69,7 +69,7 @@ public struct TAAnalyticsConfig {
     /// Prefix for events/userProperties sent manually by you via `track..`/`set(userProperty..`
     let manuallyTrackedEventsPrefixConfig: PrefixConfig
     /// Custom flush interval that will overrride the default one for adaptors
-    let flushIntervalForAdaptors: TimeInterval?
+    public let flushIntervalForAdaptors: TimeInterval?
     
     // TODO: adi install user properties and dynamic what
     
