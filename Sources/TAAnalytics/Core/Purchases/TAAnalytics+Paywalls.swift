@@ -118,10 +118,10 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
 
         params["placement"] = paywall.analyticsPlacement
         if let id = paywall.anayticsID {
-            params["id"] = paywall.anayticsID
+            params["id"] = id
         }
         if let name = paywall.analyticsName {
-            params["name"] = paywall.analyticsName
+            params["name"] = name
         }
 
         track(event: .PAYWALL_ENTER, params: params, logCondition: .logAlways)
@@ -135,10 +135,10 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         params["reason"] = reason.description
         
         if let id = paywall.anayticsID {
-            params["id"] = paywall.anayticsID
+            params["id"] = id
         }
         if let name = paywall.analyticsName {
-            params["name"] = paywall.analyticsName
+            params["name"] = name
         }
 
         track(event: .PAYWALL_EXIT, params: params, logCondition: .logAlways)
@@ -153,10 +153,10 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         params["product_id"] = productIdentifier
         params["placement"] = paywall.analyticsPlacement
         if let id = paywall.anayticsID {
-            params["paywall_id"] = paywall.anayticsID
+            params["paywall_id"] = id
         }
         if let name = paywall.analyticsName {
-            params["paywall_name"] = paywall.analyticsName
+            params["paywall_name"] = name
         }
 
         track(event: .PAYWALL_PURCHASE_TAP, params: params, logCondition: .logAlways)
