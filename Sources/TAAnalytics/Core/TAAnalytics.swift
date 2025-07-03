@@ -94,7 +94,7 @@ public class TAAnalytics: ObservableObject {
                             try await adaptor.startFor(
                                 installType: self.config.currentInstallType,
                                 userDefaults: self.config.userDefaults,
-                                TAAnalytics: self
+                                taAnalytics: self
                             )
                         }
                         

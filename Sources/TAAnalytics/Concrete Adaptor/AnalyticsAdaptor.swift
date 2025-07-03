@@ -37,7 +37,7 @@ public protocol AnalyticsAdaptor<T> {
     ///   - userDefaults: user defaults to use
     ///   - TAAnalytics: if you do keep a reference to it, keep it `weak` and use it **after** this function has been called (to ensure that it was properly initialized)
     /// - Returns: `true` if it has been started, `false` otherwise
-    func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws
+    func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws
         
     /// Log event, enforces trimming before calling the adaptor-specific implementation.
     func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String: any AnalyticsBaseParameterValue]?)

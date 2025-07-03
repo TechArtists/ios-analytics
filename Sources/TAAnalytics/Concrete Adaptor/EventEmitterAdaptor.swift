@@ -43,7 +43,7 @@ public class EventEmitterAdaptor: AnalyticsAdaptor {
     
     public init() {}
     
-    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws {
+    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws {
         (eventStream, continuationEvent) = AsyncStream.makeStream()
         (propertyStream, continuationProperty) = AsyncStream.makeStream()
     }

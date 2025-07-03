@@ -68,6 +68,8 @@ public struct TAAnalyticsConfig {
     let automaticallyTrackedEventsPrefixConfig: PrefixConfig
     /// Prefix for events/userProperties sent manually by you via `track..`/`set(userProperty..`
     let manuallyTrackedEventsPrefixConfig: PrefixConfig
+    /// Custom flush interval that will overrride the default one for adaptors
+    let flushIntervalForAdaptors: TimeInterval?
     
     // TODO: adi install user properties and dynamic what
     
@@ -89,6 +91,7 @@ public struct TAAnalyticsConfig {
                 userDefaults: UserDefaults = UserDefaults.standard,
                 instalUserProperties: [UserPropertyAnalyticsModel] = [.INSTALL_DATE, .INSTALL_VERSION, .INSTALL_OS_VERSION, .INSTALL_IS_JAILBROKEN, .INSTALL_UI_APPEARANCE, .INSTALL_DYNAMIC_TYPE],
                 maxTimeoutForAdaptorStart: Double = 10,
+                flushIntervalForAdaptors: TimeInterval? = nil,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 trackEventFilter: @escaping (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
@@ -104,6 +107,7 @@ public struct TAAnalyticsConfig {
         self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
         self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig
         self.trackEventFilter = trackEventFilter
+        self.flushIntervalForAdaptors = flushIntervalForAdaptors
     }
     
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix

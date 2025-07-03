@@ -37,7 +37,7 @@ public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
         self.logger = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")
     }
     
-    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws {
+    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws {
         
     }
     

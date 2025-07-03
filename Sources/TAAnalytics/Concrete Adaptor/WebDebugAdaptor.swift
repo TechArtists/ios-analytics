@@ -36,15 +36,15 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
     var debugServerFailedURLRequests = [(URLRequest, String?)]()
 
     weak var userDefaults: UserDefaults? = nil
-    weak var TAAnalytics: TAAnalytics? = nil
+    weak var taAnalytics: TAAnalytics? = nil
     
     public init() {}
     
     lazy var userIDForInstance: String = {
-        if let userID = self.TAAnalytics?.userID {
+        if let userID = self.taAnalytics?.userID {
             return userID
         }
-        if let userPseudoID = self.TAAnalytics?.userPseudoID {
+        if let userPseudoID = self.taAnalytics?.userPseudoID {
             return userPseudoID
         }
         if let myRandomUUID = self.userDefaults?.string(forKey: "keemojiAPIRandomUUID") {
@@ -60,10 +60,10 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
         case setUserProperty = "setUserProperty"
     }
     
-    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws {
+    public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws {
         if installType != .AppStore {
             self.userDefaults = userDefaults
-            self.TAAnalytics = TAAnalytics
+            self.taAnalytics = taAnalytics
         } else {
             throw InstallTypeError.invalidInstallType
         }
