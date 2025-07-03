@@ -109,8 +109,15 @@ actor EventBuffer {
         for adaptor in startedAdaptors {
             adaptor.track(trimmedEvent: adaptor.trim(event: event), params: params)
             
-            let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-            TALogger.log("Adaptor: '\(String(describing: adaptor))' has logged event: '\(adaptor.trim(event: event).rawValue)', params: [\(String(describing: paramsString))]", level: .info)
+            let eventName = adaptor.trim(event: event).rawValue
+            let adaptorName = String(describing: adaptor)
+            
+            if let params = params, !params.isEmpty {
+                let paramsString = params.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
+                TALogger.log("Adaptor: '\(adaptorName)' has logged event: '\(eventName)', params: [\(paramsString)]", level: .info)
+            } else {
+                TALogger.log("Adaptor: '\(adaptorName)' has logged event: '\(eventName)'", level: .info)
+            }
         }
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
