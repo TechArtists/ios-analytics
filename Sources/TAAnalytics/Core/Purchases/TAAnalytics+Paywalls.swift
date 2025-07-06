@@ -80,7 +80,7 @@ public protocol TAAnalyticsPaywallsProtocol: TAAnalyticsBaseProtocol {
     /// - Parameters:
     func trackPaywallEnter(paywall: TAPaywallAnalytics)
 
-    /// Sends an `paywall_close` event with these parameters:
+    /// Sends an `paywall_exit` event with these parameters:
     ///
     ///      placement: String
     ///      id: String?
