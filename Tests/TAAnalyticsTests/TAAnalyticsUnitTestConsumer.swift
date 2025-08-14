@@ -45,7 +45,7 @@ class TAAnalyticsUnitTestAdaptor: AnalyticsAdaptor {
         self.userPropertyTrimLength = userPropertyTrimLength
     }
     
-    func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, TAAnalytics: TAAnalytics) async throws {
+    func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws {
     }
     
     func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {

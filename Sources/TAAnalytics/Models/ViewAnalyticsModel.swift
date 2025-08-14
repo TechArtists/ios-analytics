@@ -65,30 +65,30 @@ public class ViewAnalyticsModel: ViewAnalyticsModelProtocol, ObservableObject, H
     public let name: String
     public let type: String?
         
-    public let groupDetails: AnalyticsViewGroupDetails?
+    public let funnelStep: AnalyticsViewFunnelStepDetails?
     
     public init(_ name: String){
         self.name = name
         self.type = nil
-        self.groupDetails = nil
+        self.funnelStep = nil
     }
     
     public init(name: String){
         self.name = name
         self.type = nil
-        self.groupDetails = nil
+        self.funnelStep = nil
     }
     
     public init(name: String, type: String?){
         self.name = name
         self.type = type
-        self.groupDetails = nil
+        self.funnelStep = nil
     }
             
-    public init(name: String, type: String?, groupDetails: AnalyticsViewGroupDetails?){
+    public init(name: String, type: String?, funnelStep: AnalyticsViewFunnelStepDetails?){
         self.name = name
         self.type = type
-        self.groupDetails = groupDetails
+        self.funnelStep = funnelStep
     }
 
     public func withType(type: String?) -> ViewAnalyticsModel {
@@ -96,56 +96,40 @@ public class ViewAnalyticsModel: ViewAnalyticsModelProtocol, ObservableObject, H
     }
     
     public static func == (lhs: ViewAnalyticsModel, rhs: ViewAnalyticsModel) -> Bool {
-        return lhs.name == rhs.name && lhs.type == rhs.type && lhs.groupDetails == rhs.groupDetails
+        return lhs.name == rhs.name && lhs.type == rhs.type && lhs.funnelStep == rhs.funnelStep
     }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(type)
-        hasher.combine(groupDetails)
+        hasher.combine(funnelStep)
     }
 }
 
-public class AnalyticsViewGroupDetails: Hashable, Equatable {
+public class AnalyticsViewFunnelStepDetails: Hashable, Equatable {
     
-    public enum Stage: CustomStringConvertible {
-        case enter
-        case intermediate
-        case exit // useful on the data to just see a minimal start -> end funnel
-
-        public var description: String {
-            switch self {
-            case .enter: return "start"
-            case .intermediate: return "middle"
-            case .exit: return "end"
-            }
-        }
-    }
     
-    public let name: String
-    public let order: Int
-    public let stage: Stage
+    public let funnelName: String
+    public let step: Int
+    public let isOptionalStep: Bool
+    public let isFinalStep: Bool
     
-    public init(name: String, order: Int, isFinalScreen: Bool) {
-        self.name = name
-        self.order = order
-        if order == 1 {
-            self.stage = .enter
-        } else if isFinalScreen {
-            self.stage = .exit
-        } else {
-            self.stage = .intermediate
-        }
+    public init(funnelName: String, step: Int, isOptionalStep: Bool, isFinalStep: Bool) {
+        self.funnelName = funnelName
+        self.step = step
+        self.isOptionalStep = isOptionalStep
+        self.isFinalStep = isFinalStep
     }
      
     
-    public static func == (lhs: AnalyticsViewGroupDetails, rhs: AnalyticsViewGroupDetails) -> Bool {
-        return lhs.name == rhs.name && lhs.order == rhs.order && lhs.stage == rhs.stage
+    public static func == (lhs: AnalyticsViewFunnelStepDetails, rhs: AnalyticsViewFunnelStepDetails) -> Bool {
+        return lhs.funnelName == rhs.funnelName && lhs.step == rhs.step && lhs.isOptionalStep == rhs.isOptionalStep && lhs.isFinalStep == rhs.isFinalStep
     }
  
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-        hasher.combine(order)
-        hasher.combine(stage)
+        hasher.combine(funnelName)
+        hasher.combine(step)
+        hasher.combine(isFinalStep)
+        hasher.combine(isFinalStep)
     }
 }

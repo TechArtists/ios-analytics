@@ -205,9 +205,10 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
  `app_open`  | `is_cold_launch:Bool` | 
  `app_close` | `view_name:String?` | last view shown before the app was closed
 |            | `view_type:String?` | 
-|            | `group_name:String?` | 
-|            | `group_order:String?` | 
-|            | `group_stage:String?` | 
+|            | `funnel_name:String?` | 
+|            | `funnel_step:String?` | 
+|            | `funnel_step_is_optional:String?` | 
+|            | `funnel_step_is_final:String?` |
  
  User Property Name | Value | Comments 
  --- | --- | --- 
@@ -244,9 +245,10 @@ They both come with a rich set of parameters that can be customized for almost a
  --- | --- | --- 
  `ui_view_show` | `name:String` | the name of the view 
 |                | `type:String?`, optional | the type of the view. Useful when you want to distuinguish between multiple states of the same view. For example, showing a "contacts list" view and when there are no Contacts permissions granted, you can set the type to "no permissions". That way you can split the `name=contacts list` by the `type` to see how many see the "no permissions" view.
-|                | `group_name:String?`, optional | the name of the group the view belongs to, if any. A group is a sequence of multiple views/screens that encompass a business funnel (e.g. "onboarding", "reset password"). Marking the group makes it easy for the data team to analyse which one is which.
-|                | `group_order:Int?`, optional | the index inside the group of this view 
-|                | `group_stage:Enum? = {enter, intermediate, exit}`, optional | if this specific view is the first one of the group, last one or any other one 
+|                | `funnel_name:String?`, optional | the name of the group the view belongs to, if any. A group is a sequence of multiple views/screens that encompass a business funnel (e.g. "onboarding", "reset password"). Marking the group makes it easy for the data team to analyse which one is which.
+|                | `funnel_step:Int?`, optional | the index inside the group of this view 
+|                | `funnel_step_is_optional:Bool?`, optional | if this specific view is optional in the funnel, so it can be skipped for a segment of users 
+|                | `funnel_step_is_final:Bool?`, optional | if this specific view is the last one 
 |                | `secondary_name:String?`, optional | the name of the secondary view that shown inside/on top/related to a normal one. For example, showing a "Passwords needs to have at least 8 character" warning label on the "reset password" screen.
 |                | `secondary_type:String?`, optional | same for the above
  `ui_button_tap` | `name:String` | the name of the button. Try to use a symbolical name, not the localized one (e.g. "sign up", not "sign up" vs "Sign-up" vs "Register" vs "Inscribirse"). Using the same symbolical name for a longer period of time makes it easier to analyse long term trends.
@@ -254,9 +256,10 @@ They both come with a rich set of parameters that can be customized for almost a
 |                | `order:Int?`, optional | the order of this button, if applicable. For example, if you want to specify that the user tapped the 5th button in a list  
 |                | `view_name:String` | the name of the view where the button was tapped |
 |                | `view_type:String?` |  |
-|                | `group_name:String?`, optional |  |
-|                | `group_order:String?`, optional |  |
-|                | `group_stage:String?`, optional |  |
+|                | `funnel_name:String?`, optional |  |
+|                | `funnel_step:Int?`, optional |  |
+|                | `funnel_step_is_optional:Bool?`, optional | 
+|                | `funnel_step_is_final:Bool?`, optional |  
 |                | `secondary_view_name:String?` | the name of the secondary view where this button was tapped, if any |
 |                | `secondary_view_type:String?` |  |
 
@@ -354,9 +357,10 @@ You can track engagement, as defined by whatever you consider engagement in your
  `engagement` | `name:String`  | why this is considered engagement. For example, in a fitness app it might be "start workout", "log set" or "complete workout".
  |    | `view_name:String?`  | the last view shown before this engagement was fired.
  |    | `view_type:String?`  | the last view shown before this engagement was fired.
- |    | `view_group_name:String?`  | the last view shown before this engagement was fired.
- |    | `view_group_order:String?`  | the last view shown before this engagement was fired.
- |    | `view_group_stage:String?`  | the last view shown before this engagement was fired.
+ |    | `view_funnel_name:String?`  | the last view shown before this engagement was fired.
+ |    | `view_funnel_step:Int?`  | the last view shown before this engagement was fired.
+ |    | `view_funnel_step_is_optional:Bool?`  | the last view shown before this engagement was fired.
+ |    | `view_funnel_step_is_final:Bool?`  | the last view shown before this engagement was fired.
  `engagement_primary` | same as above  | same as above, but use this for engagements that you consider are the primary success driver of your app (e.g. completing a workout)
 
 

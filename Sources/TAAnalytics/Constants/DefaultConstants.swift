@@ -113,7 +113,7 @@ public extension UserPropertyAnalyticsModel {
     /// Ever increasing counter on each app open, starting from 1 at first open
     static let APP_OPEN_COUNT = UserPropertyAnalyticsModel("app_open_count", isInternalUserProperty: true)
     
-    /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;group_name;group_order;group_stage`
+    /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;funnel_name;funnel_step;funnel_step_is_optional;funnel_step_is_final`
     static let LAST_VIEW_SHOW = UserPropertyAnalyticsModel("last_view_show", isInternalUserProperty: true)
         
     

@@ -34,9 +34,10 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///
     ///      name: String
     ///      type: String?
-    ///      group_name: String?
-    ///      group_order: Int?
-    ///      group_stage: String?
+    ///      funnel_name: String?
+    ///      funnel_step: Int?
+    ///      funnel_step_is_optional: Bool?
+    ///      funnel_step_is_final: Bool?
     ///
     /// - Parameters:
     ///   - viewShow: the view that was just shown
@@ -51,9 +52,10 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///      secondary_view_type: String?
     ///      name: String
     ///      type: String?
-    ///      group_name: String?
-    ///      group_order: Int?
-    ///      group_stage: String?
+    ///      funnel_name: String?
+    ///      funnel_step: Int?
+    ///      funnel_step_is_optional: Bool?
+    ///      funnel_step_is_final: Bool?
     ///
     /// - Parameters:
     ///   - viewShow: the view that was just shown
@@ -66,7 +68,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///      name: String
     ///      extra: String?
     ///      order: Int?, that is 1-based. It is equal to `index + 1`
-    ///      view_{name, type, group_name, group_order, group_stage}: String?
+    ///      view_{name, type, funnel_name, funnel_step, funnel_step_is_optional, funnel_step_is_final}: String?
     ///      secondary_view_{name, type}: String?
     ///
     /// - Parameters:
@@ -143,7 +145,7 @@ public extension TAAnalyticsUIProtocol {
     }
         
     private func formatLastViewShow(_ view: ViewAnalyticsModel) -> String {
-        return "\(view.name);\(String(describingOptional: view.type));\(String(describingOptional: view.groupDetails?.name));\(String(describingOptional: view.groupDetails?.order));\(String(describingOptional: view.groupDetails?.stage))"
+        return "\(view.name);\(String(describingOptional: view.type));\(String(describingOptional: view.funnelStep?.funnelName));\(String(describingOptional: view.funnelStep?.step));\(String(describingOptional: view.funnelStep?.isOptionalStep));\(String(describingOptional: view.funnelStep?.isFinalStep))"
     }
     
     internal func addParameters(for view: ViewAnalyticsModel, to params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
@@ -153,10 +155,11 @@ public extension TAAnalyticsUIProtocol {
             params["\(prefix)type"] = type
         }
 
-        if let groupDetails = view.groupDetails {
-            params["\(prefix)group_name"] = groupDetails.name
-            params["\(prefix)group_order"] = groupDetails.order
-            params["\(prefix)group_stage"] = groupDetails.stage.description
+        if let funnelStepDetails = view.funnelStep {
+            params["\(prefix)funnel_name"] = funnelStepDetails.funnelName
+            params["\(prefix)funnel_step"] = funnelStepDetails.step
+            params["\(prefix)funnel_step_is_optional"] = funnelStepDetails.isOptionalStep
+            params["\(prefix)funnel_step_is_final"] = funnelStepDetails.isFinalStep
         }
     }
 }
