@@ -252,7 +252,8 @@ They both come with a rich set of parameters that can be customized for almost a
 |                | `secondary_name:String?`, optional | the name of the secondary view that shown inside/on top/related to a normal one. For example, showing a "Passwords needs to have at least 8 character" warning label on the "reset password" screen.
 |                | `secondary_type:String?`, optional | same for the above
  `ui_button_tap` | `name:String` | the name of the button. Try to use a symbolical name, not the localized one (e.g. "sign up", not "sign up" vs "Sign-up" vs "Register" vs "Inscribirse"). Using the same symbolical name for a longer period of time makes it easier to analyse long term trends.
-|                | `extra:String?`, optional | anything extra you would like to attach to this button tap.
+|                | `detail:String?`, optional | any extra detail you would like to attach to this button tap. For example, the response during on onboarding question (e.g. name = Continue, detail = female)
+|                | `is_default_detail:Bool?`, optional | if the detail is a default value vs it being user input (e.g. female was preselected)
 |                | `order:Int?`, optional | the order of this button, if applicable. For example, if you want to specify that the user tapped the 5th button in a list  
 |                | `view_name:String` | the name of the view where the button was tapped |
 |                | `view_type:String?` |  |

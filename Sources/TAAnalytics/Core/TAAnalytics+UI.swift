@@ -66,7 +66,8 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     /// The EventAnalyticsModel has the following parameters:
     ///
     ///      name: String
-    ///      extra: String?
+    ///      detail: String?
+    ///      is_default_detail: Bool?
     ///      order: Int?, that is 1-based. It is equal to `index + 1`
     ///      view_{name, type, funnel_name, funnel_step, funnel_step_is_optional, funnel_step_is_final}: String?
     ///      secondary_view_{name, type}: String?
@@ -74,9 +75,10 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     /// - Parameters:
     ///   - symbolicName: usually use the symbolic name of the button, not the actual localized name (e.g. "Subscribe", event though the button might be called "Try Free Before Subscribing"
     ///   - view: the view the button has been shown on
-    ///   - extra: any extra information that should be attached (e.g. Maybe once users "Subscribe", you want to also know the subscription plan they are subscribing to. That plan id, can go into `extra`)
+    ///   - detail: any extra detail that should be attached (e.g. Users that respond to on onboarding questionnaie and you  want to write down their resopnse, so "detail=male" for on an onboarding gender question)
+    ///   - isDefaultDetail: if the extra details was already pre-selected (e.g. male was already checked) or if the user had to exlicitly select it
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
-    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, extra: String?, index: Int?)
+    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, detail: String?, isDefaultDetail: Bool?, index: Int?)
     
     var lastViewShow: ViewAnalyticsModel? { get set}
 }
@@ -118,15 +120,18 @@ public extension TAAnalyticsUIProtocol {
     }
 
     
-    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, extra: String? = nil, index: Int? = nil){
+    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, detail: String? = nil, isDefaultDetail: Bool? = nil, index: Int? = nil){
         var params = [String: (any AnalyticsBaseParameterValue)]()
         
         params["name"] = symbolicName
         if let index = index {
             params["order"] = index + 1
         }
-        if let extra = extra {
-            params["extra"] = extra
+        if let detail = detail {
+            params["detail"] = detail
+        }
+        if let isDefaultDetail = isDefaultDetail {
+            params["is_default_detail"] = isDefaultDetail
         }
         
         if let view = view as? ViewAnalyticsModel {

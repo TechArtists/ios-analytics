@@ -160,7 +160,7 @@ extension TAAnalytics: TAAnalyticsPaywallsProtocol {
         }
 
         track(event: .PAYWALL_PURCHASE_TAP, params: params, logCondition: .logAlways)
-        track(buttonTap: buttonName, onView: ViewAnalyticsModel(name: "paywall", type: paywall.analyticsPlacement), extra: nil, index: nil)
+        track(buttonTap: buttonName, onView: ViewAnalyticsModel(name: "paywall", type: paywall.analyticsPlacement), detail: nil, index: nil)
     }
     
 }
