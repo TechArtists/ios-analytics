@@ -381,7 +381,7 @@ By default, logs will be sent via OSLog. Clients can override this to forward lo
 **Custom Log Handler**
 
 ```swift
-TALogger.activeLogHandler = { message, level in
+TALogger.activeLogHandler = { message, level, file, function, line in
     MyCustomLogger.shared.writeLog("[\(level)] \(message)")
 }
 ```

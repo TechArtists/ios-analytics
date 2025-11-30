@@ -45,7 +45,7 @@ public struct TAAnalyticsLogger {
     public static var activeLogHandler: LogHandler = defaultHandler
     
     public static func log(_ message: String,
-                           _ level: OSLogType,
+                             level: OSLogType,
                            _ file: String = #fileID,
                            _ function: String = #function,
                            _ line: UInt = #line) {
