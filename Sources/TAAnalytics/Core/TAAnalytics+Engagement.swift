@@ -32,7 +32,7 @@ public protocol TAAnalyticsEngagementProtocol: TAAnalyticsBaseProtocol {
     /// Sends an `engagement` event with these parameters:
     ///
     ///      name: String
-    ///      view_{name, type, group_name, group_order, group_stage}: String?
+    ///      view_{name, type, funnel_name, funnel_step, funnel_step_is_optional, funnel_step_is_final}: String?
     ///
     /// - Parameters:
     ///   - engagement: the name for this engagement (e.g. for a fitness app it can be "start workout" or "end workout")
@@ -41,7 +41,7 @@ public protocol TAAnalyticsEngagementProtocol: TAAnalyticsBaseProtocol {
     /// Sends both `engagement_primary` & `engagement` events with these parameters:
     ///
     ///      name: String
-    ///      view_{name, type, group_name, group_order, group_stage}: String?
+    ///      view_{name, type, funnel_name, funnel_step, funnel_step_is_optional, funnel_step_is_final}: String?
     ///
     /// - Parameters:
     ///   - engagement: the name for this engagement (e.g. for a fitness app it can be "start workout" or "end workout")
