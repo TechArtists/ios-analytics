@@ -194,6 +194,8 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
  Event Name | Parameter Name & Type | Comments 
  --- | --- | --- 
  `onboarding_enter` |  | 
+ `onboarding_questionnaire_enter` |  | 
+ `onboarding_questionnaire_exit` |  | 
  `onboarding_exit` |  | 
  `account_signup_enter` | `method:Enum = {email, apple, google, facebook, <custom>}`  | The signup method chosen by the user
  `account_signup_exit` | `method:Enum = {email, apple, google, facebook, <custom>}`  | The signup method chosen by the user

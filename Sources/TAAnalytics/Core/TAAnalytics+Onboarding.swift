@@ -32,8 +32,14 @@ public protocol TAAnalyticsOnboardingProtocol: TAAnalyticsBaseProtocol {
     /// Sends an `onboarding_enter` event with these parameters:
     func trackOnboardingEnter(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 
-    /// Sends an `onboarding_enter` event with these parameters:
+    /// Sends an `onboarding_exit` event with these parameters:
     func trackOnboardingExit(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    
+    /// Sends an `onboarding_questionnaire_enter` event with these parameters:
+    func trackOnboardingQuestionnaireEnter(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
+    
+    /// Sends an `onboarding_questionnaire_exit` event with these parameters:
+    func trackOnboardingQuestionnaireExit(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
 }
 
 // MARK: - Default Implementations
@@ -47,6 +53,14 @@ extension TAAnalytics: TAAnalyticsOnboardingProtocol {
 
     public func trackOnboardingExit(extraParams: [String: (any AnalyticsBaseParameterValue)]?){
         track(event: .ONBOARDING_EXIT, params: extraParams, logCondition: .logAlways)
+    }
+    
+    public func trackOnboardingQuestionnaireEnter(extraParams: [String: (any AnalyticsBaseParameterValue)]?) {
+        track(event: .ONBOARDING_QUESTIONNAIRE_ENTER, params: extraParams, logCondition: .logAlways)
+    }
+    
+    public func trackOnboardingQuestionnaireExit(extraParams: [String: (any AnalyticsBaseParameterValue)]?) {
+        track(event: .ONBOARDING_QUESTIONNAIRE_EXIT, params: extraParams, logCondition: .logAlways)
     }
 
 }

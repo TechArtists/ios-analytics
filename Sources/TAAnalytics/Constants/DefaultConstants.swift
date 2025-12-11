@@ -55,6 +55,10 @@ public extension EventAnalyticsModel {
     static let ONBOARDING_ENTER = EventAnalyticsModel("onboarding_enter", isTAInternalEvent: true)
     /// Sent when the onboarding is finished
     static let ONBOARDING_EXIT = EventAnalyticsModel("onboarding_exit", isTAInternalEvent: true)
+    /// Sent when the onboarding questionnaire starts
+    static let ONBOARDING_QUESTIONNAIRE_ENTER = EventAnalyticsModel("onboarding_questionnaire_enter", isTAInternalEvent: true)
+    /// Sent when the onboarding questionnaire is finished
+    static let ONBOARDING_QUESTIONNAIRE_EXIT = EventAnalyticsModel("onboarding_questionnaire_exit", isTAInternalEvent: true)
     //// Sent when the account signup starts
     static let ACCOUNT_SIGNUP_ENTER = EventAnalyticsModel("account_signup_enter", isTAInternalEvent: true)
     //// Sent when the account signup ends
