@@ -26,4 +26,4 @@
 
 import Logging
 
-let TALogger = Logger(label: "ta-analytics")
+public let TALogger = Logger(label: "ta-analytics")
