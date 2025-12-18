@@ -150,7 +150,7 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         
-        TALogger.log("Sending to debug server \(String(describingOptional: postData["name"]))", level: .info)
+        TALogger.log(level: .info, "Sending to debug server \(String(describingOptional: postData["name"]))")
         self.debugServerFailedURLRequests.forEach { sendToDebugServer(urlRequest: $0.0, name: $0.1, hasFailedAlready: true) }
         sendToDebugServer(urlRequest: request, name: postData["name"] as? String, hasFailedAlready: false)
     }
@@ -159,22 +159,22 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
         let task = URLSession.shared.dataTask(with: urlRequest) { maybeData, maybeResponse, maybeError in
             
             if let error = maybeError {
-                TALogger.log("Found error when sending name: \(String(describingOptional: name)), error: \(String(describingOptional: error))", level: .error)
+                TALogger.log(level: .error, "Found error when sending name: \(String(describingOptional: name)), error: \(String(describingOptional: error))")
                 
                 if (error as NSError).domain == NSURLErrorDomain {
                     if !hasFailedAlready {
-                        TALogger.log("Adding to stale queue", level: .error)
+                        TALogger.log(level: .error, "Adding to stale queue")
                         self.debugServerFailedURLRequests.append((urlRequest, name))
                     } else {
-                        TALogger.log("Not adding to stale queue", level: .error)
+                        TALogger.log(level: .error, "Not adding to stale queue")
                     }
                 }
             } else {
                 if hasFailedAlready {
-                    TALogger.log("Sent stale to debug server \(String(describingOptional: name))", level: .error)
+                    TALogger.log(level: .error, "Sent stale to debug server \(String(describingOptional: name))")
                     self.debugServerFailedURLRequests.removeAll(where: { $0 == (urlRequest, name) })
                 } else {
-                    TALogger.log("Sent to debug server \(String(describingOptional: name))", level: .error)
+                    TALogger.log(level: .error, "Sent to debug server \(String(describingOptional: name))")
 
                 }
             }

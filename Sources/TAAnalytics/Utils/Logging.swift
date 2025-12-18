@@ -24,31 +24,6 @@
 //  THE SOFTWARE.
 //
 
-import OSLog
+import Logging
 
-typealias TALogger = TAAnalyticsLogger
-
-public struct TAAnalyticsLogger {
-    
-    public typealias LogHandler = (_ message: String,
-                                   _ level: OSLogType,
-                                   _ file: String,
-                                   _ function: String,
-                                   _ line: UInt) -> Void
-    
-    static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "analytics")
-    
-    private static let defaultHandler: LogHandler = { message, level, _, _, _ in
-        logger.log(level: level, "\(message)")
-    }
-    
-    public static var activeLogHandler: LogHandler = defaultHandler
-    
-    public static func log(_ message: String,
-                             level: OSLogType,
-                           _ file: String = #fileID,
-                           _ function: String = #function,
-                           _ line: UInt = #line) {
-        activeLogHandler(message, level, file, function, line)
-    }
-}
+let TALogger = Logger(label: "ta-analytics")

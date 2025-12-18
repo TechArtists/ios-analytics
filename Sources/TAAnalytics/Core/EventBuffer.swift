@@ -114,9 +114,9 @@ actor EventBuffer {
             
             if let params = params, !params.isEmpty {
                 let paramsString = params.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-                TALogger.log("Adaptor: '\(adaptorName)' has logged event: '\(eventName)', params: [\(paramsString)]", level: .info)
+                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)', params: [\(paramsString)]")
             } else {
-                TALogger.log("Adaptor: '\(adaptorName)' has logged event: '\(eventName)'", level: .info)
+                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)'")
             }
         }
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))

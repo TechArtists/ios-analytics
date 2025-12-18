@@ -24,6 +24,7 @@
 
 import UIKit
 import OSLog
+import Logging
 
 public class TAAnalytics: ObservableObject {
     public static let userdefaultsKeyPrefix = "TAAnalytics"
@@ -75,10 +76,11 @@ public class TAAnalytics: ObservableObject {
         }
         
         addAppLifecycleObservers()
+        
     }
     
     private func logStartupDetails() {
-        TALogger.log("Starting with install type: '\(String(describing: config.currentInstallType))', process type '\(String(describing: config.currentProcessType))', enabled process types '\(String(describing: config.enabledProcessTypes))'", level: .info)
+        TALogger.log(level: .info, "Starting with install type: '\(String(describing: config.currentInstallType))', process type '\(String(describing: config.currentProcessType))', enabled process types '\(String(describing: config.enabledProcessTypes))'")
     }
     
     private func startAdaptors() async {
@@ -98,13 +100,13 @@ public class TAAnalytics: ObservableObject {
                             )
                         }
                         
-                        TALogger.log("Adaptor: '\(String(describing: adaptor))' has been started", level: .info)
+                        TALogger.log(level: .info, "Adaptor: '\(String(describing: adaptor))' has been started")
                         return adaptor
                     } catch is TimeoutError {
-                        TALogger.log("Adaptor: '\(String(describing: adaptor))' did NOT start because maximum start timeout of '\(String(describing: self.config.maxTimeoutForAdaptorStart))' seconds was reached", level: .info)
+                        TALogger.log(level: .info, "Adaptor: '\(String(describing: adaptor))' did NOT start because maximum start timeout of '\(String(describing: self.config.maxTimeoutForAdaptorStart))' seconds was reached")
                         return nil
                     } catch {
-                        TALogger.log("Adaptor: '\(String(describing: adaptor))' did NOT start for this install type: '\(String(describing: self.config.currentInstallType))' and threw error: '\(error.localizedDescription)'", level: .info)
+                        TALogger.log(level: .info, "Adaptor: '\(String(describing: adaptor))' did NOT start for this install type: '\(String(describing: self.config.currentInstallType))' and threw error: '\(error.localizedDescription)'")
 
                         return nil
                     }
@@ -170,7 +172,7 @@ public class TAAnalytics: ObservableObject {
         shouldTrackFirstOpen: Bool = true,
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) {
-        TALogger.log("Is first open", level: .info)
+        TALogger.log(level: .info, "Is first open")
         
         calculateAndSetUserProperties()
         

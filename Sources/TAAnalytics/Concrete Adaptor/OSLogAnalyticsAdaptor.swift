@@ -47,7 +47,7 @@ public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
     
     public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : (any AnalyticsBaseParameterValue)]?) {
         let paramsString = params?.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-        TALogger.log("sendEvent: \(trimmedEvent.rawValue), params: \(String(describingOptional: paramsString))", level: .info)
+        TALogger.log(level: .info, "sendEvent: \(trimmedEvent.rawValue), params: \(String(describingOptional: paramsString))")
     }
     
     public func trim(event: EventAnalyticsModel) -> EventAnalyticsModelTrimmed {
@@ -78,7 +78,7 @@ public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
     }
 
     public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {        
-        TALogger.log("setUserProperty: '\(trimmedUserProperty.rawValue)', value: '\(String(describingOptional: to))'", level: .info)
+        TALogger.log(level: .info, "setUserProperty: '\(trimmedUserProperty.rawValue)', value: '\(String(describingOptional: to))'")
     }
     
     /// Returns a debug string for a set(userProperty:to:) function call.

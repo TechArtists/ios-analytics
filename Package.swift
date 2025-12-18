@@ -34,10 +34,18 @@ let package = Package(
             targets: ["TAAnalytics"]
             )
     ],
-    dependencies: [],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-log.git",
+            from: "1.6.1"
+        )
+    ],
     targets: [
         .target(
-            name: "TAAnalytics"
+            name: "TAAnalytics",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log")
+            ]
         ),
         .testTarget(
             name: "TAAnalyticsTests",

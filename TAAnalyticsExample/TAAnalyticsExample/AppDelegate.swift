@@ -25,6 +25,7 @@
 import Foundation
 import UIKit
 import CoreTelephony
+import Logging
 
 import TAAnalytics
 
@@ -45,6 +46,8 @@ extension ViewAnalyticsModel {
     /// the type will be set at runtime, as the id of the user
     static let CONTACT = ViewAnalyticsModel("contact")
 }
+
+let logger = Logger(label: "example-app")
 
 @objc class AppDelegate: NSObject, UIApplicationDelegate {
     
@@ -76,6 +79,16 @@ extension ViewAnalyticsModel {
 
         // TODO: also send an event
         
+        setupLogging()
+        
         return true
+    }
+    
+    private func setupLogging() {
+        // Bootstrap the logging system with OSLog as the universal backend
+        LoggingSystem.bootstrap { label in
+            StreamLogHandler.standardOutput(label: label)
+        }
+        logger.info("Hello, world!")
     }
 }
