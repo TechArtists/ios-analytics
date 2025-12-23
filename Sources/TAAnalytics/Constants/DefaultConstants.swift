@@ -73,10 +73,14 @@ public extension EventAnalyticsModel {
     /// This also sends the `ui_button_tapped` event in the background with `name="purchase"`, `extra=<actualButtonName>`, `view_name=paywall`, `view_type=<paywallPlacement>`
     static let PAYWALL_PURCHASE_TAP = EventAnalyticsModel("paywall_purchase_tap", isTAInternalEvent: true)
 
+    static let PURCHASE_NON_CONSUMABLE_ONE_TIME = EventAnalyticsModel("purchase_non_consumable_one_time", isTAInternalEvent: true)
+    static let PURCHASE_CONSUMABLE = EventAnalyticsModel("purchase_consumable", isTAInternalEvent: true)
+    static let PURCHASE_NEW = EventAnalyticsModel("purchase_new", isTAInternalEvent: true)
+
     static let SUBSCRIPTION_START_INTRO = EventAnalyticsModel("subscripton_start_intro", isTAInternalEvent: true)
     static let SUBSCRIPTION_START_PAID_REGULAR = EventAnalyticsModel("subscripton_start_paid_regular", isTAInternalEvent: true)
     static let SUBSCRIPTION_START_NEW = EventAnalyticsModel("subscripton_start_new", isTAInternalEvent: true)
-    static let SUBSCRIPTION_RESTORE   = EventAnalyticsModel("subscripton_restore", isTAInternalEvent: true)
+    static let SUBSCRIPTION_RESTORE = EventAnalyticsModel("subscripton_restore", isTAInternalEvent: true)
 
     static let ATT_PROMPT_NOT_ALLOWED = EventAnalyticsModel("att_prompt_not_allowed", isTAInternalEvent: true)
     static let ATT_PROMPT_SHOW        = EventAnalyticsModel("att_prompt_show", isTAInternalEvent: true)

@@ -349,7 +349,23 @@ Note that calling the specific `trackPaywallEnter()` method will track both a `p
 |               | `quantity:1` | 
 `subscription_start_paid_regular` | same as above  | subscription that is paid from the start
 `subscription_start_new` | same as above  | either one of the two above
-`subscription_start_restore` | same as above  | subscription that is restored
+`subscription_restore` | same as above  | subscription that is restored
+
+### In-App Purchases
+
+ Event Name | Parameter Name & Type | Comments 
+ --- | --- | --- 
+ `purchase_non_consumable_one_time` |   | a one-time non-consumable purchase (e.g., unlock premium features, remove ads)
+|               |  `placement:String`  | the placement that triggered the purchase
+|               | `product_id:String` | the id of the product
+|               | `paywall_id:String?` | the id of the paywall
+|               | `paywall_name:String?` | the name of the paywall
+|               | `value:Float` | the value of the purchase
+|               | `price:Float` | the price of the purchase
+|               | `currency:String` | the currency code (e.g., USD, EUR)
+|               | `quantity:1` | always 1 for single purchases
+`purchase_consumable` | same as above  | a consumable purchase (e.g., coins, hints, energy)
+`purchase_new` | same as above  | sent automatically when either of the two above purchase events occur
 
 ### Engagement
 
