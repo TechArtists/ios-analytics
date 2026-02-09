@@ -66,7 +66,7 @@ public extension EventAnalyticsModel {
     
     /// Parameters `placement`, `id` (optional)
     /// This also sends the `ui_view_show` event in the background with `name="paywall"` and `type=<placement>`
-    static let PAYWALL_ENTER = EventAnalyticsModel("paywall_show", isTAInternalEvent: true)
+    static let PAYWALL_ENTER = EventAnalyticsModel("paywall_enter", isTAInternalEvent: true)
     /// Parameters `placement`, `id` (optional)
     static let PAYWALL_EXIT = EventAnalyticsModel("paywall_exit", isTAInternalEvent: true)
     /// Parameters `button_name`, `product_id`, `paywall_placement`, `paywall_id` (optional),
