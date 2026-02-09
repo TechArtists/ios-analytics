@@ -51,8 +51,8 @@ class TAAnalyticsUITests {
     func testStuckEventTriggeredAfterTimer() async throws {
         analytics.track(viewShow: testView, stuckTimeout: 2)
         
-        let deferredQueuedEvent = try await requireEvent(named: "error", matching:  { event in
-            return event.parameters?["reason"] as? String == StuckUIManager.REASON
+        let deferredQueuedEvent = try await requireEvent(named: "error", matching:  { [weak self] event in
+            return event.parameters?["reason"] as? String == self?.analytics.stuckUIManager?.reason
         }, timeout: 5)
         #expect(deferredQueuedEvent.parameters?["view_name"] as? String == testView.name)
         #expect(deferredQueuedEvent.parameters?["view_type"] as? String == testView.type)
@@ -82,8 +82,8 @@ class TAAnalyticsUITests {
         analytics.track(viewShow: testView, stuckTimeout: 2)
         
         
-        let _ = try await requireEvent(named: "error", matching:  { event in
-            return event.parameters?["reason"] as? String == StuckUIManager.REASON
+        let _ = try await requireEvent(named: "error", matching:  { [weak self] event in
+            return event.parameters?["reason"] as? String == self?.analytics.stuckUIManager?.reason
         }, timeout: 5)
         
         // Show a new view after the stuck error

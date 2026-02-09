@@ -38,8 +38,6 @@ extension TAAnalytics : TAAnalyticsStuckUIProtocol {}
 // MARK: - 
 
 public class StuckUIManager {
-    internal static var REASON: String { "stuck on ui_view_show" }
-
     let analytics: any TAAnalyticsErrorProtocol
     
     let viewParams: [String: (any AnalyticsBaseParameterValue)]
@@ -47,12 +45,14 @@ public class StuckUIManager {
     
     var stuckTimer: Timer?
     var waitingForCorrectionAfterStuckStartDate: Date?
+    var reason: String
 
-    internal init(viewParams: [String: (any AnalyticsBaseParameterValue)], initialDelay: TimeInterval, analytics: any TAAnalyticsErrorProtocol) {
+    public init(viewParams: [String: (any AnalyticsBaseParameterValue)], initialDelay: TimeInterval, analytics: any TAAnalyticsErrorProtocol, reason: String = "stuck on ui_view_show") {
         self.viewParams = viewParams
         self.initialDelay = initialDelay
         self.analytics = analytics
         self.waitingForCorrectionAfterStuckStartDate = nil
+        self.reason = reason
         self.stuckTimer = Timer.scheduledTimer(withTimeInterval: initialDelay, repeats: false) { [weak self] _ in
             self?.handleStuckTimerExpired()
         }
@@ -63,7 +63,7 @@ public class StuckUIManager {
         viewParams.forEach({ key, value in newParams["view_\(key)"] = value })
         newParams["duration"] = initialDelay
             
-        analytics.trackErrorEvent(reason: Self.REASON, error: nil, extraParams: newParams)
+        analytics.trackErrorEvent(reason: self.reason, error: nil, extraParams: newParams)
         markCorrectionStart()
         
         self.stuckTimer = nil
@@ -81,7 +81,7 @@ public class StuckUIManager {
         viewParams.forEach({ key, value in newParams["view_\(key)"] = value })
         newParams["duration"] = initialDelay + Date().timeIntervalSince(correctionStartDate)
 
-        analytics.trackErrorCorrectedEvent(reason: Self.REASON, error: nil, extraParams: newParams)
+        analytics.trackErrorCorrectedEvent(reason: self.reason, error: nil, extraParams: newParams)
     }
     
     deinit {
