@@ -75,6 +75,7 @@ struct Queue<T> {
 
 actor EventBuffer {
     private var eventQueue: Queue<DeferredQueuedEvent> = .init()
+    private var userPropertyBuffer: [UserPropertyAnalyticsModel: String?] = [:]
     
     nonisolated(unsafe) private(set) var startedAdaptors: [any AnalyticsAdaptor] = []
     
@@ -94,6 +95,14 @@ actor EventBuffer {
             eventQueue.enqueue(.init(event: event, dateAdded: Date(), parameters: params))
         } else {
             trackEventInStartedAdaptors(event, params: params)
+        }
+    }
+    
+    func setUserProperty(_ userProperty: UserPropertyAnalyticsModel, to value: String?) {
+        if startedAdaptors.isEmpty {
+            userPropertyBuffer[userProperty] = value
+        } else {
+            setUserPropertyInStartedAdaptors(userProperty, to: value)
         }
     }
     
@@ -122,6 +131,21 @@ actor EventBuffer {
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
     
+    private func setUserPropertyInStartedAdaptors(_ userProperty: UserPropertyAnalyticsModel, to value: String?) {
+        for adaptor in startedAdaptors {
+            adaptor.set(trimmedUserProperty: adaptor.trim(userProperty: userProperty), to: value)
+            
+            let userPropertyName = adaptor.trim(userProperty: userProperty).rawValue
+            let adaptorName = String(describing: adaptor)
+            
+            if let value {
+                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has set user property: '\(userPropertyName)' to '\(value)'")
+            } else {
+                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has cleared user property: '\(userPropertyName)'")
+            }
+        }
+    }
+    
     private func flushDeferredEventQueue() {
         while let deferredEvent = eventQueue.dequeue() {
             let event = deferredEvent.event
@@ -129,5 +153,14 @@ actor EventBuffer {
             params["timeDelta"] = Date().timeIntervalSince(deferredEvent.dateAdded)
             trackEventInStartedAdaptors(event, params: params)
         }
+        
+        flushUserPropertyBuffer()
+    }
+    
+    private func flushUserPropertyBuffer() {
+        for (userProperty, value) in userPropertyBuffer {
+            setUserPropertyInStartedAdaptors(userProperty, to: value)
+        }
+        userPropertyBuffer.removeAll()
     }
 }

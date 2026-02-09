@@ -91,8 +91,10 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
     public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         let prefixedUserProperty = prefixUserPropertyIfNeeded(userProperty)
         self.setInUserDefaults(to, forKey: "userProperty_\(prefixedUserProperty.rawValue)")
-        self.eventQueueBuffer.startedAdaptors.forEach { adaptor in
-            adaptor.set(trimmedUserProperty: adaptor.trim(userProperty: prefixedUserProperty), to: to)
+        
+        Task { [weak self] in
+            guard let self else { return }
+            await self.eventQueueBuffer.setUserProperty(prefixedUserProperty, to: to)
         }
     }
 
