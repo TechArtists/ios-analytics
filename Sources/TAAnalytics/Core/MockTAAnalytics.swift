@@ -25,6 +25,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 /// Very basic implementation of `OvebaseAnalyticsProtocol` that can be used in unit tests:
 ///
@@ -34,7 +35,7 @@ import UIKit
 ///
 ///     XCTAssertEqual(foo.stuffItDid, 42)
 ///     XCTAssertEqual(mockAnalytics.eventsSent.last?.event, EventAnalyticsModel.EVENT_I_EXPECTED)
-public class MockTAAnalytics : TAAnalyticsProtocol {
+public class MockTAAnalytics : ObservableObject, TAAnalyticsProtocol {
     
     public var eventsSent = [(event: EventAnalyticsModel, params: [String: (any AnalyticsBaseParameterValue)?])]()
     public var userPropertiesSet = [UserPropertyAnalyticsModel: String]()
