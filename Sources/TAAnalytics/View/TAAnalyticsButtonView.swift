@@ -49,6 +49,20 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         self.action = action
         self.labelBuilder = label
     }
+    
+    public init(
+        analyticsName: String,
+        analyticsView: ViewAnalyticsModel,
+        taAnalytics: TAAnalytics,
+        action: @escaping () -> Void,
+        @ViewBuilder label: @escaping () -> Label
+    ) {
+        self.analyticsName = analyticsName
+        self.analyticsView = analyticsView
+        self.taAnalytics = taAnalytics
+        self.action = action
+        self.labelBuilder = { _ in label() }
+    }
 
     public var body: some View {
         Button {
