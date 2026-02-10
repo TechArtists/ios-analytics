@@ -29,30 +29,58 @@ import SwiftUI
 public struct TAAnalyticsButtonView<Label: View>: View {
     public let analyticsName: String
     public let analyticsView: ViewAnalyticsModel
-    public let label: Label
-    public let action: () -> Void
     public let taAnalytics: TAAnalytics
-    
+
+    private let action: (() async -> Void)?
+    private let labelBuilder: (_ isRunning: Bool) -> Label
+
+    @State private var task: Task<Void, Never>? = nil
+
     public init(
         analyticsName: String,
         analyticsView: ViewAnalyticsModel,
         taAnalytics: TAAnalytics,
-        action: @escaping () -> Void,
-        @ViewBuilder label: () -> Label
+        action: @escaping () async -> Void,
+        @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label
     ) {
         self.analyticsName = analyticsName
         self.analyticsView = analyticsView
-        self.label = label()
-        self.action = action
         self.taAnalytics = taAnalytics
+        self.action = action
+        self.labelBuilder = label
     }
-    
+
     public var body: some View {
         Button {
             taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
-            action()
+            // Async path
+            guard task == nil, let action else { return }
+
+            task = Task {
+                defer {
+                    Task { @MainActor in
+                        task = nil
+                    }
+                }
+
+                await action()
+            }
         } label: {
-            label
+            labelBuilder(task != nil)
         }
+        .opacity(task != nil ? 0.5 : 1.0)
+        .overlay {
+            if task != nil {
+                ProgressView()
+                    .padding(12)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+        }
+        .onDisappear {
+            task?.cancel()
+            task = nil
+        }
+        .disabled(task != nil)
     }
 }
