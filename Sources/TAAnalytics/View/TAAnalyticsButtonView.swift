@@ -40,13 +40,13 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         analyticsName: String,
         analyticsView: ViewAnalyticsModel,
         taAnalytics: TAAnalytics,
-        action: @escaping () async -> Void,
+        asynAction: @escaping () async -> Void,
         @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label
     ) {
         self.analyticsName = analyticsName
         self.analyticsView = analyticsView
         self.taAnalytics = taAnalytics
-        self.action = action
+        self.action = asynAction
         self.labelBuilder = label
     }
     
