@@ -31,7 +31,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     public let analyticsView: ViewAnalyticsModel
     public let taAnalytics: TAAnalytics
 
-    private let action: (() async -> Void)?
+    private let action: (() async -> Void)
     private let labelBuilder: (_ isRunning: Bool) -> Label
 
     @State private var task: Task<Void, Never>? = nil
@@ -60,15 +60,15 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         self.analyticsName = analyticsName
         self.analyticsView = analyticsView
         self.taAnalytics = taAnalytics
-        self.action = action
+        self.action = { action() }
         self.labelBuilder = { _ in label() }
     }
 
     public var body: some View {
         Button {
             taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
-            // Async path
-            guard task == nil, let action else { return }
+            
+            guard task == nil else { return }
 
             task = Task {
                 defer {
