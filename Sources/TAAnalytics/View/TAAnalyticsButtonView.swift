@@ -36,20 +36,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
 
     @State private var task: Task<Void, Never>? = nil
 
-    public init(
-        analyticsName: String,
-        analyticsView: ViewAnalyticsModel,
-        taAnalytics: TAAnalytics,
-        asynAction: @escaping () async -> Void,
-        @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label
-    ) {
-        self.analyticsName = analyticsName
-        self.analyticsView = analyticsView
-        self.taAnalytics = taAnalytics
-        self.action = asynAction
-        self.labelBuilder = label
-    }
-    
+    // Sync version - this will be the preferred/simpler init
     public init(
         analyticsName: String,
         analyticsView: ViewAnalyticsModel,
@@ -62,6 +49,21 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         self.taAnalytics = taAnalytics
         self.action = { action() }
         self.labelBuilder = { _ in label() }
+    }
+    
+    // Async version - explicitly named for clarity
+    public init(
+        analyticsName: String,
+        analyticsView: ViewAnalyticsModel,
+        taAnalytics: TAAnalytics,
+        asyncAction: @escaping () async -> Void,
+        @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label
+    ) {
+        self.analyticsName = analyticsName
+        self.analyticsView = analyticsView
+        self.taAnalytics = taAnalytics
+        self.action = asyncAction
+        self.labelBuilder = label
     }
 
     public var body: some View {
