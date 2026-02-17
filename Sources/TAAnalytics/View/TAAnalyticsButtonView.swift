@@ -34,9 +34,13 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     private let action: (() async -> Void)
     private let labelBuilder: (_ isRunning: Bool) -> Label
 
-    @State private var task: Task<Void, Never>? = nil
+    /// How long we wait before showing the progress UI.
+    private let progressDelayNanoseconds: UInt64 = 150_000_000
 
-    // Sync version - this will be the preferred/simpler init
+    @State private var task: Task<Void, Never>? = nil
+    @State private var showProgress: Bool = false
+
+    // Sync version - preferred/simpler init
     public init(
         analyticsName: String,
         analyticsView: ViewAnalyticsModel,
@@ -50,7 +54,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         self.action = { action() }
         self.labelBuilder = { _ in label() }
     }
-    
+
     // Async version - explicitly named for clarity
     public init(
         analyticsName: String,
@@ -67,14 +71,29 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     }
 
     public var body: some View {
+        let isActuallyRunning = (task != nil) // used for disabling / guarding
+        let isVisiblyRunning = showProgress   // used for spinner / label state
+
         Button {
-            taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
-            
             guard task == nil else { return }
 
+            taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
+
+            // Reset progress immediately (no flash)
+            showProgress = false
+
             task = Task {
+                // A child task that flips showProgress after a delay
+                let progressTask = Task {
+                    try? await Task.sleep(nanoseconds: progressDelayNanoseconds)
+                    guard !Task.isCancelled else { return }
+                    await MainActor.run { showProgress = true }
+                }
+
                 defer {
+                    progressTask.cancel()
                     Task { @MainActor in
+                        showProgress = false
                         task = nil
                     }
                 }
@@ -82,11 +101,13 @@ public struct TAAnalyticsButtonView<Label: View>: View {
                 await action()
             }
         } label: {
-            labelBuilder(task != nil)
+            // Pass the delayed-running state so label changes together with spinner
+            labelBuilder(isVisiblyRunning)
         }
-        .opacity(task != nil ? 0.5 : 1.0)
+        .disabled(isActuallyRunning)
+        .opacity(isActuallyRunning ? 0.5 : 1.0)
         .overlay {
-            if task != nil {
+            if isVisiblyRunning {
                 ProgressView()
                     .padding(12)
                     .background(.ultraThinMaterial)
@@ -96,7 +117,8 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         .onDisappear {
             task?.cancel()
             task = nil
+            showProgress = false
         }
-        .disabled(task != nil)
     }
 }
+
