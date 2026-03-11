@@ -280,6 +280,7 @@ There are two main types for views:
 2. For overlays/sheets/popups/inline warning states related to that screen, create a `SecondaryViewAnalyticsModel(name:mainView:)` and track it with `track(viewShow:)`.
 3. Track taps with the same context where the button lives: main screen taps with `ViewAnalyticsModel`, overlay/popup taps with `SecondaryViewAnalyticsModel`.
 4. `TAAnalyticsButtonView` accepts any `ViewAnalyticsModelProtocol`, so it can be used with either `ViewAnalyticsModel` or `SecondaryViewAnalyticsModel`.
+5. For SwiftUI ergonomics, use `TAAnalyticsView` for main screens and `TAAnalyticsSecondaryView` for secondary surfaces to auto-track `ui_view_show` on first appearance.
 
 ```swift
 let pairing = ViewAnalyticsModel("pairing")

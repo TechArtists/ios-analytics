@@ -50,6 +50,30 @@ public extension TAAnalyticsView {
     }
 }
 
+public protocol TAAnalyticsSecondaryView: View {
+    
+    associatedtype ViewBody : View
+    
+    @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
+    
+    var analyticsSecondaryView: SecondaryViewAnalyticsModel { get }
+    
+    var taAnalytics: TAAnalytics { get }
+}
+
+public extension TAAnalyticsSecondaryView {
+    
+    @ViewBuilder
+    @MainActor
+    var body: some View {
+        viewBody
+            .onFirstAppear {
+                taAnalytics.track(viewShow: analyticsSecondaryView)
+            }
+            .environmentObject(analyticsSecondaryView)
+    }
+}
+
 public protocol TAAnalyticsPaywalProvider {
     
     var analyticsPaywall: any TAPaywallAnalytics { get }
