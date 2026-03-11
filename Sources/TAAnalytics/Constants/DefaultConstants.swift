@@ -121,7 +121,7 @@ public extension UserPropertyAnalyticsModel {
     /// Ever increasing counter on each app open, starting from 1 at first open
     static let APP_OPEN_COUNT = UserPropertyAnalyticsModel("app_open_count", isInternalUserProperty: true)
     
-    /// This is only shown for parent views (aka those with "parent view" set to nil). It's has multiple fields concatenated by `;` `view_name;view_type;funnel_name;funnel_step;funnel_step_is_optional;funnel_step_is_final`
+    /// This is only shown for parent views (aka those with "parent view" set to nil). It's stored as `;`-separated `key=value` pairs, always including `name`, and only including fields that have values (for example: `name=paywall;type=onboarding`).
     static let LAST_VIEW_SHOW = UserPropertyAnalyticsModel("last_view_show", isInternalUserProperty: true)
         
     

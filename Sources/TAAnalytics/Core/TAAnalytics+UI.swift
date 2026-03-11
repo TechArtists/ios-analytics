@@ -150,7 +150,20 @@ public extension TAAnalyticsUIProtocol {
     }
         
     private func formatLastViewShow(_ view: ViewAnalyticsModel) -> String {
-        return "\(view.name);\(String(describingOptional: view.type));\(String(describingOptional: view.funnelStep?.funnelName));\(String(describingOptional: view.funnelStep?.step));\(String(describingOptional: view.funnelStep?.isOptionalStep));\(String(describingOptional: view.funnelStep?.isFinalStep))"
+        var fields = ["name=\(view.name)"]
+
+        if let type = view.type {
+            fields.append("type=\(type)")
+        }
+
+        if let funnelStep = view.funnelStep {
+            fields.append("funnel_name=\(funnelStep.funnelName)")
+            fields.append("funnel_step=\(funnelStep.step)")
+            fields.append("funnel_step_is_optional=\(funnelStep.isOptionalStep)")
+            fields.append("funnel_step_is_final=\(funnelStep.isFinalStep)")
+        }
+
+        return fields.joined(separator: ";")
     }
     
     internal func addParameters(for view: ViewAnalyticsModel, to params: inout [String: (any AnalyticsBaseParameterValue)], prefix: String) {
