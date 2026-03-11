@@ -28,7 +28,7 @@ import SwiftUI
 
 public struct TAAnalyticsButtonView<Label: View>: View {
     public let analyticsName: String
-    public let analyticsView: ViewAnalyticsModel
+    public let analyticsView: any ViewAnalyticsModelProtocol
     public let taAnalytics: TAAnalytics
 
     private let action: (() async -> Void)
@@ -43,7 +43,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     // Sync version - preferred/simpler init
     public init(
         analyticsName: String,
-        analyticsView: ViewAnalyticsModel,
+        analyticsView: any ViewAnalyticsModelProtocol,
         taAnalytics: TAAnalytics,
         action: @escaping () -> Void,
         @ViewBuilder label: @escaping () -> Label
@@ -58,7 +58,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     // Async version - explicitly named for clarity
     public init(
         analyticsName: String,
-        analyticsView: ViewAnalyticsModel,
+        analyticsView: any ViewAnalyticsModelProtocol,
         taAnalytics: TAAnalytics,
         asyncAction: @escaping () async -> Void,
         @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label

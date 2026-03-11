@@ -251,8 +251,8 @@ They both come with a rich set of parameters that can be customized for almost a
 |                | `funnel_step:Int?`, optional | the index inside the group of this view 
 |                | `funnel_step_is_optional:Bool?`, optional | if this specific view is optional in the funnel, so it can be skipped for a segment of users 
 |                | `funnel_step_is_final:Bool?`, optional | if this specific view is the last one 
-|                | `secondary_name:String?`, optional | the name of the secondary view that shown inside/on top/related to a normal one. For example, showing a "Passwords needs to have at least 8 character" warning label on the "reset password" screen.
-|                | `secondary_type:String?`, optional | same for the above
+|                | `secondary_view_name:String?`, optional | the name of the secondary view that shown inside/on top/related to a normal one. For example, showing a "Passwords needs to have at least 8 character" warning label on the "reset password" screen.
+|                | `secondary_view_type:String?`, optional | same for the above
  `ui_button_tap` | `name:String` | the name of the button. Try to use a symbolical name, not the localized one (e.g. "sign up", not "sign up" vs "Sign-up" vs "Register" vs "Inscribirse"). Using the same symbolical name for a longer period of time makes it easier to analyse long term trends.
 |                | `detail:String?`, optional | any extra detail you would like to attach to this button tap. For example, the response during on onboarding question (e.g. name = Continue, detail = female)
 |                | `is_default_detail:Bool?`, optional | if the detail is a default value vs it being user input (e.g. female was preselected)
@@ -270,9 +270,28 @@ The library has specific types to make handling these easier.
 
 There are two main types for views:
 
- - `ViewAnalyticsModel`, that uou can use to model full views/screens. For example, showing the "contacts list" in a phone app.
+ - `ViewAnalyticsModel`, that you can use to model full views/screens. For example, showing the "contacts list" in a phone app.
  - `SecondaryViewAnalyticsModel`, that can be used to model secondary views, that are attached to a "main" view from above. For example, a secondary view would be a popup confirming deleting a contact from the contact list or in a "change password" main view, it could be a label that shows that the new password is invalid (e.g. "invalid password combination, it needs at least 8 characters".)
  
+
+### Recommended workflow for primary and secondary views
+
+1. Track the first (main) screen with `ViewAnalyticsModel` using `track(viewShow:)`.
+2. For overlays/sheets/popups/inline warning states related to that screen, create a `SecondaryViewAnalyticsModel(name:mainView:)` and track it with `track(viewShow:)`.
+3. Track taps with the same context where the button lives: main screen taps with `ViewAnalyticsModel`, overlay/popup taps with `SecondaryViewAnalyticsModel`.
+4. `TAAnalyticsButtonView` accepts any `ViewAnalyticsModelProtocol`, so it can be used with either `ViewAnalyticsModel` or `SecondaryViewAnalyticsModel`.
+
+```swift
+let pairing = ViewAnalyticsModel("pairing")
+analytics.track(viewShow: pairing)
+
+let createInviteSheet = SecondaryViewAnalyticsModel(name: "create_invite", mainView: pairing)
+analytics.track(viewShow: createInviteSheet)
+
+analytics.track(buttonTap: "generate_new_code", onView: createInviteSheet)
+analytics.track(buttonTap: "skip", onView: pairing)
+```
+
 For main views, the library also provides a handy way for tracking when transient views get stuck.  By providing  a `stuckTimeout`, if that specific view hasn't been transitioned out by another main view within that time, it will send an `error reason=stuck on ui_view_show` event. For example, this is useful to track users that get stuck on a splash screen, a screen that should take at most 5 seconds to load. Once the view does get replaced, an `error_corrected` event will be sent with the total duration elapsed (e.g. 7 seconds), so that you can better measure how many users get stuck altogether vs how many false positives events there are because the `stuckTimeout` is too small.
 
 ```
