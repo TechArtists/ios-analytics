@@ -87,7 +87,7 @@ class TAAnalyticsUITests {
         }, timeout: 5)
         
         // Show a new view after the stuck error
-        try? await Task.sleep(for: .seconds(1))
+        try? await Task.sleep(seconds: 1)
         
         let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)

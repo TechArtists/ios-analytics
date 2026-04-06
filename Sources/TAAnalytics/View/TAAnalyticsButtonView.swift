@@ -35,7 +35,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     private let labelBuilder: (_ isRunning: Bool) -> Label
 
     /// How long we wait before showing the progress UI.
-    private let progressDelay: Duration = .seconds(0.15)
+    private let progressDelay: Double = 0.15
 
     @State private var task: Task<Void, Never>? = nil
     @State private var showProgress: Bool = false
@@ -85,7 +85,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
             task = Task {
                 // A child task that flips showProgress after a delay
                 let progressTask = Task {
-                    try? await Task.sleep(for: progressDelay)
+                    try? await Task.sleep(seconds: progressDelay)
                     guard !Task.isCancelled else { return }
                     await MainActor.run { showProgress = true }
                 }

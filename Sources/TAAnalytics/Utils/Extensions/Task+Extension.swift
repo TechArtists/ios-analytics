@@ -28,6 +28,10 @@
 extension Task where Success == Never, Failure == Never {
     // Sleep for a given number of seconds
     public static func sleep(seconds: Double) async throws {
-        try await Task.sleep(for: .seconds(seconds))
+        guard seconds > 0 else { return }
+
+        let maxSeconds = Double(UInt64.max) / 1_000_000_000
+        let cappedSeconds = min(seconds, maxSeconds)
+        try await Task.sleep(nanoseconds: UInt64(cappedSeconds * 1_000_000_000))
     }
 }
