@@ -25,6 +25,49 @@
 import Foundation
 
 public struct TAAnalyticsConfig {
+    public struct AdaptorLogPolicy {
+        enum Storage {
+            case disabled
+            case all
+            case only(Set<ObjectIdentifier>)
+            case excluding(Set<ObjectIdentifier>)
+        }
+
+        let storage: Storage
+
+        public static let disabled = Self(storage: .disabled)
+        public static let all = Self(storage: .all)
+
+        public static func only(_ adaptorTypes: any AnalyticsAdaptor.Type...) -> Self {
+            only(adaptorTypes)
+        }
+
+        public static func only(_ adaptorTypes: [any AnalyticsAdaptor.Type]) -> Self {
+            Self(storage: .only(Set(adaptorTypes.map(ObjectIdentifier.init))))
+        }
+
+        public static func excluding(_ adaptorTypes: any AnalyticsAdaptor.Type...) -> Self {
+            excluding(adaptorTypes)
+        }
+
+        public static func excluding(_ adaptorTypes: [any AnalyticsAdaptor.Type]) -> Self {
+            Self(storage: .excluding(Set(adaptorTypes.map(ObjectIdentifier.init))))
+        }
+
+        func shouldLog(adaptor: any AnalyticsAdaptor) -> Bool {
+            switch storage {
+            case .disabled:
+                return false
+            case .all:
+                return true
+            case .only(let adaptorTypeIDs):
+                return adaptorTypeIDs.contains(ObjectIdentifier(type(of: adaptor)))
+            case .excluding(let adaptorTypeIDs):
+                return !adaptorTypeIDs.contains(ObjectIdentifier(type(of: adaptor)))
+            }
+        }
+    }
+
     public enum ProcessType: CaseIterable {
         /// running as an app
         case app
@@ -63,6 +106,7 @@ public struct TAAnalyticsConfig {
     let installUserProperties: [UserPropertyAnalyticsModel]
     let maxTimeoutForAdaptorStart: Double
     let trackEventFilter: (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
+    let adaptorLogPolicyProvider: () -> AdaptorLogPolicy
 
     /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
     let automaticallyTrackedEventsPrefixConfig: PrefixConfig
@@ -94,6 +138,7 @@ public struct TAAnalyticsConfig {
                 flushIntervalForAdaptors: TimeInterval? = nil,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
+                adaptorLogPolicyProvider: @escaping () -> AdaptorLogPolicy = { .disabled },
                 trackEventFilter: @escaping (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
     ) {
         self.analyticsVersion = analyticsVersion
@@ -106,6 +151,7 @@ public struct TAAnalyticsConfig {
         self.maxTimeoutForAdaptorStart = maxTimeoutForAdaptorStart
         self.automaticallyTrackedEventsPrefixConfig = automaticallyTrackedEventsPrefixConfig
         self.manuallyTrackedEventsPrefixConfig = manuallyTrackedEventsPrefixConfig
+        self.adaptorLogPolicyProvider = adaptorLogPolicyProvider
         self.trackEventFilter = trackEventFilter
         self.flushIntervalForAdaptors = flushIntervalForAdaptors
     }

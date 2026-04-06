@@ -33,7 +33,7 @@ public class TAAnalytics: ObservableObject {
     
     internal var notificationCenterObservers = [Any]()
     
-    internal var eventQueueBuffer: EventBuffer = .init(allAdaptors: [])
+    internal let eventQueueBuffer: EventBuffer
     
     /// Events sent during this session that had the specific log condition of `.logOnlyOncePerAppSession`
     internal var appSessionEvents = Set<EventAnalyticsModel>()
@@ -44,6 +44,10 @@ public class TAAnalytics: ObservableObject {
     
     public init(config: TAAnalyticsConfig) {
         self.config = config
+        self.eventQueueBuffer = EventBuffer(
+            allAdaptors: config.adaptors,
+            adaptorLogPolicyProvider: config.adaptorLogPolicyProvider
+        )
     }
     
     /// - Parameters:

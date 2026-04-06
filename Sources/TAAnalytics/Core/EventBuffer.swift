@@ -80,11 +80,16 @@ actor EventBuffer {
     nonisolated(unsafe) private(set) var startedAdaptors: [any AnalyticsAdaptor] = []
     
     public let allAdaptors: [any AnalyticsAdaptor]
+    private let adaptorLogPolicyProvider: () -> TAAnalyticsConfig.AdaptorLogPolicy
     
     nonisolated(unsafe) internal let passthroughStream = PassthroughAsyncStream<DeferredQueuedEvent>()
     
-    init(allAdaptors: [any AnalyticsAdaptor]) {
+    init(
+        allAdaptors: [any AnalyticsAdaptor],
+        adaptorLogPolicyProvider: @escaping () -> TAAnalyticsConfig.AdaptorLogPolicy = { .disabled }
+    ) {
         self.allAdaptors = allAdaptors
+        self.adaptorLogPolicyProvider = adaptorLogPolicyProvider
     }
     
     func addEvent(
@@ -118,15 +123,7 @@ actor EventBuffer {
         for adaptor in startedAdaptors {
             adaptor.track(trimmedEvent: adaptor.trim(event: event), params: params)
             
-            let eventName = adaptor.trim(event: event).rawValue
-            let adaptorName = String(describing: adaptor)
-            
-            if let params = params, !params.isEmpty {
-                let paramsString = params.sorted(by: { $0.key < $1.key }).map( { "\($0.key):\($0.value.description)" }).joined(separator: ", ")
-                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)', params: [\(paramsString)]")
-            } else {
-                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)'")
-            }
+            logAdaptorEventIfNeeded(adaptor, event: event, params: params)
         }
         passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
@@ -135,14 +132,49 @@ actor EventBuffer {
         for adaptor in startedAdaptors {
             adaptor.set(trimmedUserProperty: adaptor.trim(userProperty: userProperty), to: value)
             
-            let userPropertyName = adaptor.trim(userProperty: userProperty).rawValue
-            let adaptorName = String(describing: adaptor)
-            
-            if let value {
-                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has set user property: '\(userPropertyName)' to '\(value)'")
-            } else {
-                TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has cleared user property: '\(userPropertyName)'")
-            }
+            logAdaptorUserPropertyIfNeeded(adaptor, userProperty: userProperty, value: value)
+        }
+    }
+
+    private func logAdaptorEventIfNeeded(
+        _ adaptor: any AnalyticsAdaptor,
+        event: EventAnalyticsModel,
+        params: [String: (any AnalyticsBaseParameterValue)]?
+    ) {
+        guard adaptorLogPolicyProvider().shouldLog(adaptor: adaptor) else {
+            return
+        }
+
+        let eventName = adaptor.trim(event: event).rawValue
+        let adaptorName = String(describing: adaptor)
+
+        if let params = params, !params.isEmpty {
+            let paramsString = params
+                .sorted(by: { $0.key < $1.key })
+                .map { "\($0.key):\($0.value.description)" }
+                .joined(separator: ", ")
+            TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)', params: [\(paramsString)]")
+        } else {
+            TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has logged event: '\(eventName)'")
+        }
+    }
+
+    private func logAdaptorUserPropertyIfNeeded(
+        _ adaptor: any AnalyticsAdaptor,
+        userProperty: UserPropertyAnalyticsModel,
+        value: String?
+    ) {
+        guard adaptorLogPolicyProvider().shouldLog(adaptor: adaptor) else {
+            return
+        }
+
+        let userPropertyName = adaptor.trim(userProperty: userProperty).rawValue
+        let adaptorName = String(describing: adaptor)
+
+        if let value {
+            TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has set user property: '\(userPropertyName)' to '\(value)'")
+        } else {
+            TALogger.log(level: .info, "Adaptor: '\(adaptorName)' has cleared user property: '\(userPropertyName)'")
         }
     }
     
