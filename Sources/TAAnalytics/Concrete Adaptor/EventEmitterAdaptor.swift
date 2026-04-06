@@ -26,6 +26,16 @@
 
 import Foundation
 
+public struct EventEmitterAnalyticsEvent: Sendable, Hashable {
+    public let name: String
+    public let parametersDescription: String?
+
+    public init(name: String, parametersDescription: String? = nil) {
+        self.name = name
+        self.parametersDescription = parametersDescription
+    }
+}
+
 /// Adaptor that provides streams for any events & user properties consumed.
 ///
 /// Useful if you want to do some specific actions when a certain event is sent or user property set.
@@ -33,9 +43,9 @@ public class EventEmitterAdaptor: AnalyticsAdaptor {
 
     public typealias T = EventEmitterAdaptor
     
-    public var eventStream: AsyncStream<EventAnalyticsModelTrimmed>?
-    
-    private var continuationEvent: AsyncStream<EventAnalyticsModelTrimmed>.Continuation?
+    public var eventStream: AsyncStream<EventEmitterAnalyticsEvent>?
+
+    private var continuationEvent: AsyncStream<EventEmitterAnalyticsEvent>.Continuation?
     
     public var propertyStream: AsyncStream<UserPropertyAnalyticsModelTrimmed>?
     
@@ -49,8 +59,12 @@ public class EventEmitterAdaptor: AnalyticsAdaptor {
     }
     
     public func track(trimmedEvent: EventAnalyticsModelTrimmed, params: [String : any AnalyticsBaseParameterValue]?) {
-        
-        continuationEvent?.yield(trimmedEvent)
+        continuationEvent?.yield(
+            EventEmitterAnalyticsEvent(
+                name: trimmedEvent.rawValue,
+                parametersDescription: Self.parametersDescription(for: params)
+            )
+        )
     }
     
     public func set(trimmedUserProperty: UserPropertyAnalyticsModelTrimmed, to: String?) {
@@ -67,5 +81,16 @@ public class EventEmitterAdaptor: AnalyticsAdaptor {
     
     public var wrappedValue: Self {
         self
+    }
+
+    private static func parametersDescription(for params: [String: any AnalyticsBaseParameterValue]?) -> String? {
+        guard let params, !params.isEmpty else {
+            return nil
+        }
+
+        return params
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key): \($0.value.description)" }
+            .joined(separator: ", ")
     }
 }
