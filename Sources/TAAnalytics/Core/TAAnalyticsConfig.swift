@@ -159,9 +159,9 @@ public struct TAAnalyticsConfig {
     /// Figures out if it's running as an app or app extension, by looking at the bundle's suffix
     public static func findProcessType() -> ProcessType {
         if Bundle.main.bundlePath.hasSuffix(".appex") {
-            return .app
-        } else {
             return .appExtension
+        } else {
+            return .app
         }
     }
     
