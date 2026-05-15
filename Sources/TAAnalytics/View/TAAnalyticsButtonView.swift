@@ -29,6 +29,7 @@ import SwiftUI
 public struct TAAnalyticsButtonView<Label: View>: View {
     public let analyticsName: String
     public let analyticsView: any ViewAnalyticsModelProtocol
+    public let analyticsParameters: [String: (any AnalyticsBaseParameterValue)]?
     public let taAnalytics: TAAnalytics
 
     private let action: (() async -> Void)
@@ -44,12 +45,14 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     public init(
         analyticsName: String,
         analyticsView: any ViewAnalyticsModelProtocol,
+        analyticsParameters: [String: (any AnalyticsBaseParameterValue)]? = nil,
         taAnalytics: TAAnalytics,
         action: @escaping () -> Void,
         @ViewBuilder label: @escaping () -> Label
     ) {
         self.analyticsName = analyticsName
         self.analyticsView = analyticsView
+        self.analyticsParameters = analyticsParameters
         self.taAnalytics = taAnalytics
         self.action = { action() }
         self.labelBuilder = { _ in label() }
@@ -59,12 +62,14 @@ public struct TAAnalyticsButtonView<Label: View>: View {
     public init(
         analyticsName: String,
         analyticsView: any ViewAnalyticsModelProtocol,
+        analyticsParameters: [String: (any AnalyticsBaseParameterValue)]? = nil,
         taAnalytics: TAAnalytics,
         asyncAction: @escaping () async -> Void,
         @ViewBuilder label: @escaping (_ isRunning: Bool) -> Label
     ) {
         self.analyticsName = analyticsName
         self.analyticsView = analyticsView
+        self.analyticsParameters = analyticsParameters
         self.taAnalytics = taAnalytics
         self.action = asyncAction
         self.labelBuilder = label
@@ -77,7 +82,7 @@ public struct TAAnalyticsButtonView<Label: View>: View {
         Button {
             guard task == nil else { return }
 
-            taAnalytics.track(buttonTap: analyticsName, onView: analyticsView)
+            taAnalytics.track(buttonTap: analyticsName, onView: analyticsView, extraParams: analyticsParameters)
 
             // Reset progress immediately (no flash)
             showProgress = false

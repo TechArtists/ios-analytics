@@ -91,6 +91,35 @@ class TAAnalyticsUIEventsTests {
         #expect(analytics.lastViewShow == step3)
         #expect(analytics.get(userProperty: .LAST_VIEW_SHOW) == "name=step 3;funnel_name=onboarding;funnel_step=3;funnel_step_is_optional=false;funnel_step_is_final=true")
     }
+
+    @Test
+    func testButtonTapIncludesExtraParams() async throws {
+        let view = ViewAnalyticsModel(name: "contacts", type: "list")
+
+        analytics.track(
+            buttonTap: "call",
+            onView: view,
+            detail: "primary",
+            isDefaultDetail: false,
+            index: 1,
+            extraParams: [
+                "phone_type": "mobile",
+                "has_country_code": true
+            ]
+        )
+
+        let event = try await requireEvent(named: EventAnalyticsModel.UI_BUTTON_TAP.rawValue)
+        let params = event.parameters
+
+        #expect((params?["name"] as? String) == "call")
+        #expect((params?["detail"] as? String) == "primary")
+        #expect((params?["is_default_detail"] as? Bool) == false)
+        #expect((params?["order"] as? Int) == 2)
+        #expect((params?["view_name"] as? String) == "contacts")
+        #expect((params?["view_type"] as? String) == "list")
+        #expect((params?["phone_type"] as? String) == "mobile")
+        #expect((params?["has_country_code"] as? Bool) == true)
+    }
     
     func requireEvent(
         named eventName: String,

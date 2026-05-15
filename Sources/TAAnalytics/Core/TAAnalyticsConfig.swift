@@ -25,8 +25,8 @@
 import Foundation
 
 public struct TAAnalyticsConfig {
-    public struct AdaptorLogPolicy {
-        enum Storage {
+    public struct AdaptorLogPolicy: Sendable {
+        enum Storage: Sendable {
             case disabled
             case all
             case only(Set<ObjectIdentifier>)
@@ -106,7 +106,8 @@ public struct TAAnalyticsConfig {
     let installUserProperties: [UserPropertyAnalyticsModel]
     let maxTimeoutForAdaptorStart: Double
     let trackEventFilter: (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool)
-    let adaptorLogPolicyProvider: () -> AdaptorLogPolicy
+    /// Called from analytics internals, potentially off the main actor.
+    let adaptorLogPolicyProvider: @Sendable () -> AdaptorLogPolicy
 
     /// Prefix for events/userProperties automatically tracked by this internal library. Those sent by your app via `track..`/`set(userProperty..` will not be prefixed
     let automaticallyTrackedEventsPrefixConfig: PrefixConfig
@@ -138,7 +139,7 @@ public struct TAAnalyticsConfig {
                 flushIntervalForAdaptors: TimeInterval? = nil,
                 automaticallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
                 manuallyTrackedEventsPrefixConfig: PrefixConfig = PrefixConfig(eventPrefix: "", userPropertyPrefix: ""),
-                adaptorLogPolicyProvider: @escaping () -> AdaptorLogPolicy = { .disabled },
+                adaptorLogPolicyProvider: @Sendable @escaping () -> AdaptorLogPolicy = { .disabled },
                 trackEventFilter: @escaping (( _ event: EventAnalyticsModel, _ params: [String: (any AnalyticsBaseParameterValue)?]?) -> Bool) = { _ ,_ in true }
     ) {
         self.analyticsVersion = analyticsVersion

@@ -71,6 +71,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///      order: Int?, that is 1-based. It is equal to `index + 1`
     ///      view_{name, type, funnel_name, funnel_step, funnel_step_is_optional, funnel_step_is_final}: String?
     ///      secondary_view_{name, type}: String?
+    ///      ...plus any custom parameters supplied through `extraParams`
     ///
     /// - Parameters:
     ///   - symbolicName: usually use the symbolic name of the button, not the actual localized name (e.g. "Subscribe", event though the button might be called "Try Free Before Subscribing"
@@ -78,7 +79,8 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///   - detail: any extra detail that should be attached (e.g. Users that respond to on onboarding questionnaie and you  want to write down their resopnse, so "detail=male" for on an onboarding gender question)
     ///   - isDefaultDetail: if the extra details was already pre-selected (e.g. male was already checked) or if the user had to exlicitly select it
     ///   - index: this should be 0 based, but it will be sent with an offset of +1. So the first item in the list, will have index=0, but will appear in analytics as 1.
-    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, detail: String?, isDefaultDetail: Bool?, index: Int?)
+    ///   - extraParams: extra analytics parameters to merge into the standard `ui_button_tap` payload
+    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, detail: String?, isDefaultDetail: Bool?, index: Int?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
     
     var lastViewShow: ViewAnalyticsModel? { get set}
 }
@@ -120,7 +122,14 @@ public extension TAAnalyticsUIProtocol {
     }
 
     
-    func track(buttonTap symbolicName: String, onView view: any ViewAnalyticsModelProtocol, detail: String? = nil, isDefaultDetail: Bool? = nil, index: Int? = nil){
+    func track(
+        buttonTap symbolicName: String,
+        onView view: any ViewAnalyticsModelProtocol,
+        detail: String? = nil,
+        isDefaultDetail: Bool? = nil,
+        index: Int? = nil,
+        extraParams: [String: (any AnalyticsBaseParameterValue)]? = nil
+    ) {
         var params = [String: (any AnalyticsBaseParameterValue)]()
         
         params["name"] = symbolicName
@@ -144,6 +153,10 @@ public extension TAAnalyticsUIProtocol {
             }
 
             addParameters(for: secondaryView.mainView, to: &params, prefix: "view_")
+        }
+
+        if let extraParams {
+            params.merge(extraParams) { _, new in new }
         }
         
         track(event: .UI_BUTTON_TAP, params: params, logCondition: .logAlways)

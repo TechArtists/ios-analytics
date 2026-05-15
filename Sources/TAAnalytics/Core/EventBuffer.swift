@@ -80,13 +80,13 @@ actor EventBuffer {
     nonisolated(unsafe) private(set) var startedAdaptors: [any AnalyticsAdaptor] = []
     
     public let allAdaptors: [any AnalyticsAdaptor]
-    private let adaptorLogPolicyProvider: () -> TAAnalyticsConfig.AdaptorLogPolicy
+    private let adaptorLogPolicyProvider: @Sendable () -> TAAnalyticsConfig.AdaptorLogPolicy
     
     nonisolated(unsafe) internal let passthroughStream = PassthroughAsyncStream<DeferredQueuedEvent>()
     
     init(
         allAdaptors: [any AnalyticsAdaptor],
-        adaptorLogPolicyProvider: @escaping () -> TAAnalyticsConfig.AdaptorLogPolicy = { .disabled }
+        adaptorLogPolicyProvider: @Sendable @escaping () -> TAAnalyticsConfig.AdaptorLogPolicy = { .disabled }
     ) {
         self.allAdaptors = allAdaptors
         self.adaptorLogPolicyProvider = adaptorLogPolicyProvider
