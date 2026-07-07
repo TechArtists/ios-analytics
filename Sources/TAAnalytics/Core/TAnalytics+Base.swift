@@ -78,13 +78,11 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
             _ = trackInAdaptors()
         case .logOnlyOncePerLifetime:
             let userDefaultsKey = "onlyOnce_\(prefixedEvent.rawValue)"
-            if self.boolFromUserDefaults(forKey: userDefaultsKey) != true,
-               trackInAdaptors() {
+            if self.boolFromUserDefaults(forKey: userDefaultsKey) != true, trackInAdaptors() {
                 self.setInUserDefaults(true, forKey: userDefaultsKey)
             }
         case .logOnlyOncePerAppSession:
-            if !self.appSessionEvents.contains(event),
-               trackInAdaptors() {
+            if !self.appSessionEvents.contains(event), trackInAdaptors() {
                 self.appSessionEvents.insert(event)
             }
         }
