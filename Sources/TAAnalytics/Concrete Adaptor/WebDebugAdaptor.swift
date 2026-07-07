@@ -47,11 +47,11 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
         if let userPseudoID = self.taAnalytics?.userPseudoID {
             return userPseudoID
         }
-        if let myRandomUUID = self.userDefaults?.string(forKey: "keemojiAPIRandomUUID") {
+        if let myRandomUUID = self.userDefaults?.string(forKey: UserDefaultKeys.keemojiAPIRandomUUID) {
             return myRandomUUID
         }
         let myRandomUUID = UUID().description
-        self.userDefaults?.set(myRandomUUID, forKey: "keemojiAPIRandomUUID")
+        self.userDefaults?.set(myRandomUUID, forKey: UserDefaultKeys.keemojiAPIRandomUUID)
         return myRandomUUID
     }()
     
@@ -113,10 +113,11 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
     func sendToDebugServer(endpoint: DebugServerEndpoint, postData: [String:Any]){
         let osVersion = ProcessInfo().operatingSystemVersion
         let osVersionString = "\(osVersion.majorVersion).\(osVersion.minorVersion).\(osVersion.patchVersion)"
+        let bundle = Bundle.main
 
         var postData = postData
         postData["platform"] = "iOS"
-        postData["appID"] = Bundle.main.bundleIdentifier!
+        postData["appID"] = bundle.taBundleIdentifier
         postData["seqID"] = debugServerGlobalCounter
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [
@@ -138,8 +139,8 @@ public class WebDebugAdaptor: AnalyticsAdaptor, AnalyticsAdaptorWithWriteOnlyUse
         var url = URLComponents(string: "https://api.keemoji.com/analyticsdebugview/v1/\(endpoint.rawValue)")!
         url.queryItems = [URLQueryItem(name: "userID", value: self.userIDForInstance),
                           URLQueryItem(name: "deviceName", value: deviceName),
-                          URLQueryItem(name: "appName", value:    (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName")! as! String)),
-                          URLQueryItem(name: "appVersion", value: (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")! as! String)),
+                          URLQueryItem(name: "appName", value: bundle.taDisplayName),
+                          URLQueryItem(name: "appVersion", value: bundle.taBuildVersion),
                           URLQueryItem(name: "osVersion", value: osVersionString)
         ]
         

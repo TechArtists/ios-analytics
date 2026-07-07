@@ -26,7 +26,7 @@
 import Foundation
 import OSLog
 
-/// Logs to OSLog. `OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")`
+/// Logs to OSLog using the main bundle identifier when available.
 public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
     
     public typealias T = OSLogAnalyticsAdaptor
@@ -34,7 +34,7 @@ public class OSLogAnalyticsAdaptor: AnalyticsAdaptor {
     private let logger : OSLog
     
     public init() {
-        self.logger = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "TAAnalytics")
+        self.logger = OSLog(subsystem: Bundle.main.taBundleIdentifier, category: "TAAnalytics")
     }
     
     public func startFor(installType: TAAnalyticsConfig.InstallType, userDefaults: UserDefaults, taAnalytics: TAAnalytics) async throws {

@@ -64,26 +64,28 @@ extension TAAnalytics: TAAnalyticsBaseProtocol {
         let paramsWithoutNils = params?.compactMapValues { $0 }
         let prefixedEvent = prefixEventIfNeeded(event)
 
-        func trackInAdaptors() {
-            guard config.trackEventFilter(event, params) else { return }
+        func trackInAdaptors() -> Bool {
+            guard config.trackEventFilter(event, params) else { return false }
             
             Task { [weak self] in
                 guard let self else { return }
                 await self.eventQueueBuffer.addEvent(prefixedEvent, params: paramsWithoutNils)
             }
+            return true
         }
         switch logCondition {
         case .logAlways:
-            trackInAdaptors()
+            _ = trackInAdaptors()
         case .logOnlyOncePerLifetime:
-            if self.boolFromUserDefaults(forKey: "onlyOnce_\(prefixedEvent.rawValue)") == false {
-                trackInAdaptors()
-                self.setInUserDefaults(true, forKey: "onlyOnce_\(prefixedEvent.rawValue)")
+            let userDefaultsKey = "onlyOnce_\(prefixedEvent.rawValue)"
+            if self.boolFromUserDefaults(forKey: userDefaultsKey) != true,
+               trackInAdaptors() {
+                self.setInUserDefaults(true, forKey: userDefaultsKey)
             }
         case .logOnlyOncePerAppSession:
-            if !self.appSessionEvents.contains(event) {
-                trackInAdaptors()
-                appSessionEvents.insert(event)
+            if !self.appSessionEvents.contains(event),
+               trackInAdaptors() {
+                self.appSessionEvents.insert(event)
             }
         }
     }

@@ -65,7 +65,10 @@ class DefaultInstallUserPropertiesCalculator {
     }
     
     private func setInstallVersion() {
-        let installVersion = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+        guard let installVersion = Bundle.main.taInstallVersion else {
+            TALogger.log(level: .error, "Missing app version metadata; skipping install_version user property")
+            return
+        }
         analytics.set(userProperty: .INSTALL_VERSION, to: installVersion)
     }
     
