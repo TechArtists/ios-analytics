@@ -237,7 +237,7 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
 
 ### UI Interactions
 
-After using multiple SDKs that codeless UI analytics, I much prefer an explicit event sent from the code. Far more reliable, easier to test & breaks less often.
+After using multiple SDKs that promise codeless UI analytics, I much prefer an explicit event sent from the code. Far more reliable, easier to test & breaks less often.
 
 Instead of standardizing on having many events such as `foo_clicked`, `tapped_foo`, `shown_bar` this library uses 2 generic events for manually tracking all UI events: `ui_view_show` & `ui_button_tap`. 
 
