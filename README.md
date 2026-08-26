@@ -333,7 +333,7 @@ Showing the screen sends
 `event_name="ui_view_show" parameters: "name"="login"`
   
 Tapping “Sign in with Google” sends  
-`event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
+`event_name="ui_button_tap" parameters: "view_name"="login", "name"="sign in with google"`
 
 #### Contacts App Example
 For example, for an app that shows contacts:
@@ -353,7 +353,7 @@ Then users tapping the "Request Permission" button would send
 Showing the Contact details page would send  
 `event_name="ui_view_show" parameters: "name"="contact details"`.
 
-Tapping the call information on a Contact Details page would send  
+Tapping the call button on a Contact Details page would send  
 `event_name="ui_button_tap" parameters: "view_name"="contact details", "name"="call", detail="home"`.
 
 #### Funnels Example
