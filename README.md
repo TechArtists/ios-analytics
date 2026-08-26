@@ -329,11 +329,11 @@ login : [sign in with apple, sign in with google, forgot password, sign up]
 forgot password : [send reset link, back]
 ```
 
-Showing the screen sends
-    `event_name="ui_view_show" parameters: "name"="login"`
+Showing the screen sends  
+`event_name="ui_view_show" parameters: "name"="login"`
   
-Tapping “Sign in with Google” sends
-    `event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
+Tapping “Sign in with Google” sends  
+`event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
 
 #### Contacts App Example
 For example, for an app that shows contacts:
@@ -344,10 +344,17 @@ contact details : [call/[home,work,iphone], message/[home,work], edit, delete]
 contact details + delete confirmation : [delete, cancel]
 ```
 
-Showing the Contacts List when the user has yet to grant permission and sees a general "Please give us permission" text would send `event_name="ui_view_show" parameters: "name"="contact list", "type"="no permission"`.
-Then users tapping the "Request Permission" button would send `event_name="ui_button_tap" parameters: "view_name"="contact list", "view_type"="no permission", "name"="request permission"`.
-Showing the Contact details page would send `event_name="ui_view_show" parameters: "name"="contact details"`.
-Tapping the call information on a Contact Details page would send `event_name="ui_button_tap" parameters: "view_name"="contact details", "name"="call", detail="home"`.
+Showing the Contacts List when the user has yet to grant permission and sees a general "Please give us permission" text would send  
+`event_name="ui_view_show" parameters: "name"="contact list", "type"="no permission"`.
+
+Then users tapping the "Request Permission" button would send  
+`event_name="ui_button_tap" parameters: "view_name"="contact list", "view_type"="no permission", "name"="request permission"`.
+
+Showing the Contact details page would send  
+`event_name="ui_view_show" parameters: "name"="contact details"`.
+
+Tapping the call information on a Contact Details page would send  
+`event_name="ui_button_tap" parameters: "view_name"="contact details", "name"="call", detail="home"`.
 
 #### Funnels Example
 
@@ -361,8 +368,11 @@ reset password/3 → create password: [save]
 reset password/4 → password changed: [login]
 ```
 
-Starting the reset password funnel would send `event_name="ui_view_show" parameters: "name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
-Tapping "Send Reset Link" on the first page would send `event_name="ui_button_tap" parameters: "name"="send reset link" "view_name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
+Starting the reset password funnel would send  
+`event_name="ui_view_show" parameters: "name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
+
+Tapping "Send Reset Link" on the first page would send  
+`event_name="ui_button_tap" parameters: "name"="send reset link" "view_name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
 
 Another example about an onboarding funnel for a fitness app that presents multiple choice questions:
 ```
