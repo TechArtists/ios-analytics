@@ -330,10 +330,10 @@ forgot password : [send reset link, back]
 ```
 
 Showing the screen sends
-  `event_name="ui_view_show" parameters: "name"="login"`
+    `event_name="ui_view_show" parameters: "name"="login"`
   
 Tapping “Sign in with Google” sends
-  `event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
+    `event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
 
 #### Contacts App Example
 For example, for an app that shows contacts:
