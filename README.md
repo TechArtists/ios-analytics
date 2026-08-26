@@ -273,7 +273,6 @@ There are two main types for views:
  - `ViewAnalyticsModel`, that you can use to model full views/screens. For example, showing the "contacts list" in a phone app.
  - `SecondaryViewAnalyticsModel`, that can be used to model secondary views, that are attached to a "main" view from above. For example, a secondary view would be a popup confirming deleting a contact from the contact list or in a "change password" main view, it could be a label that shows that the new password is invalid (e.g. "invalid password combination, it needs at least 8 characters".)
  
-
 ### Recommended workflow for primary and secondary views
 
 1. Track the first (main) screen with `ViewAnalyticsModel` using `track(viewShow:)`.
@@ -309,6 +308,66 @@ analytics.track(viewShow: mainView)
 // event sent with event_name="error_corrected", param["reason"]="stuck on ui_view_show", param["duration"]=5.0, param["view_name"]="splash"
 
 ```
+
+### Shorthand Notation for Issue Tracking
+
+
+Once you are used to the above `ui_%` events and parameters, instead of writing long & detailed tickets in Jira/Linear for each view & button, that specify every single parameter, you can use this shorthand notation for 99%+ of cases, when there are simple views, view types, buttons & funnels:
+
+```
+() means it is optional, [] means there are multiple choices
+
+(funnel name/step->) view_name/(type) (+ secondary_view name/type) : [button_name/(detail)]
+```
+
+The shorthand defines the possible events. It does not mean all button events are sent when the view appears. A `ui_button_tap` event is sent only for the button and detail the user actually selects.
+
+#### Basic Login & Forgot Password Example
+For example, a basic login & forgot password screen:
+```
+login : [sign in with apple, sign in with google, forgot password, sign up]
+forgot password : [send reset link, back]
+```
+
+Showing the screen sends `event_name="ui_view_show" parameters: "name"="login"`
+Tapping “Sign in with Google” sends `event_name=ui_button_tap parameters: "view_name"="login", "name"="sign in with google"`
+
+#### Contacts App Example
+For example, for an app that shows contacts:
+```
+contact list/no permission : [request permission]
+contact list : [select, add contact]
+contact details : [call/[home,work,iphone], message/[home,work], edit, delete]
+contact details + delete confirmation : [delete, cancel]
+```
+
+Showing the Contacts List when the user has yet to grant permission and sees a general "Please give us permission" text would send `event_name="ui_view_show" parameters: "name"="contact list", "type"="no permission"`.
+Then users tapping the "Request Permission" button would send `event_name="ui_button_tap" parameters: "view_name"="contact list", "view_type"="no permission", "name"="request permission"`.
+Showing the Contact details page would send `event_name="ui_view_show" parameters: "name"="contact details"`.
+Tapping the call information on a Contact Details page would send `event_name="ui_button_tap" parameters: "view_name"="contact details", "name"="call", detail="home"`.
+
+#### Funnels Example
+
+A reset password mini funnel:
+
+```
+reset password/1 → forgot password: [send reset link, back]
+reset password/1 → forgot password + "account does not exist": [ok]
+reset password/2 → check email: [open email, resend link, back]
+reset password/3 → create password: [save]
+reset password/4 → password changed: [login]
+```
+
+Starting the reset password funnel would send `event_name="ui_view_show" parameters: "name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
+Tapping "Send Reset Link" on the first page would send `event_name="ui_button_tap" parameters: "name"="send reset link" "view_name"="forgot password", "funnel_name"="reset password", "funnel_step"=1`.
+
+Another example about an onboarding funnel for a fitness app that presents multiple choice questions:
+```
+onboarding/1 -> gender -> [male, female]
+onboarding/2 -> main workout goal -> [lose weight, get fit]
+onboarding/3 -> final -> [get personalized plan]
+```
+
 
 ### Permissions & ATT Tracking
 
