@@ -48,6 +48,7 @@ public protocol TASubscriptionStartAnalytics {
     var paywall: TAPaywallAnalytics { get }
     var productID: String { get }
     var price: Float { get }
+    /// The ISO 4217 currency code for `price`, for example `USD`, `RON`, or `EUR`.
     var currency: String { get }
 }
 
@@ -58,6 +59,7 @@ public struct TASubscriptionStartAnalyticsImpl: TASubscriptionStartAnalytics {
     public var price: Float
     public var currency: String
     
+    /// - Parameter currency: The ISO 4217 currency code for `price`, for example `USD`, `RON`, or `EUR`.
     public init(subscriptionType: TASubscriptionType, paywall: any TAPaywallAnalytics, productID: String, price: Float, currency: String) {
         self.subscriptionType = subscriptionType
         self.paywall = paywall
