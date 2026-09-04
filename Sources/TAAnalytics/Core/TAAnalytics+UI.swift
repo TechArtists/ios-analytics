@@ -41,7 +41,7 @@ public protocol TAAnalyticsUIProtocol: TAAnalyticsBaseProtocol, TAAnalyticsStuck
     ///
     /// - Parameters:
     ///   - viewShow: the view that was just shown
-    ///   - stuckTimeout: The duration in seconds after which an `error (reason=stuck on ui_view_show, duration=)` event is triggered if the user remains on the view. If another view is shown after this duration finishes, an `error_corrected (reason=stuck on ui_view_show, duration=elapsed)` will be sent. For example, if you expect a transitory view like the splash screen to only be shown for 5 seconds, but it's shown after 7.5, this will send an `error (.. duration=5)` event followed by an `error_corrected (.. duration=7.5)` one.
+    ///   - stuckTimeout: The duration in seconds after which an `analytics_error (reason=stuck on ui_view_show, duration=)` event is triggered if the user remains on the view. If another view is shown after this duration finishes, an `analytics_error_corrected (reason=stuck on ui_view_show, duration=elapsed)` will be sent.
     func track(viewShow view: ViewAnalyticsModel, stuckTimeout: TimeInterval?)
     
     /// Sends an `ui_view_show` event  for any secondary view that's shown inside/on top of a normal view.

@@ -26,11 +26,11 @@ import Foundation
 
 // MARK: -
 
-/// Protocol that sends a specialized `error foo` event. If there is an acoompanying `Error`, it will also send
+/// Protocol that sends specialized `analytics_error` events. If there is an accompanying `Error`, it also sends
 /// alongside the `domain`, `code` & `localizedDescription`
 public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
 
-    /// Logs an `error` event with some details about the error
+    /// Logs an `analytics_error` event with details about the error.
     ///
     /// If an `error` is passed, these extra parameters will be added:
     ///
@@ -44,7 +44,7 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
     ///   - extraParams: any extra params to send (e.g. `error cant login user`, `reason`:`server down`
     func trackErrorEvent(reason: String, error: Error?, extraParams: [String: (any AnalyticsBaseParameterValue)]?)
     
-    /// Logs an `error_corrected` event with some details about the error. Use this if you want to specify that the previous error tracked state has been solved.
+    /// Logs an `analytics_error_corrected` event with details about an error state that has been resolved.
     /// Useful to be able to measure false positives from the analytics.
     ///
     /// If an `error_corrected` is passed, these extra parameters will be added:
@@ -63,7 +63,7 @@ public protocol TAAnalyticsErrorProtocol: TAAnalyticsBaseProtocol {
 // MARK: - Default Implementations
 
 public extension TAAnalyticsErrorProtocol {
-    /// Logs an `error_foo` event with some details about the error
+    /// Logs an `analytics_error` event with details about the error.
     ///
     /// The EventAnalyticsModel is sent alongside these parameters if an `error` parameter is present:
     ///

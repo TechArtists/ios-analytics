@@ -35,6 +35,12 @@ final class EventAnalyticsModelTests: XCTestCase {
     func testItDoesnTrim() throws {
         XCTAssertEqual(EventAnalyticsModel("short_value").rawValue, "short_value")
     }
+
+    func testDefaultErrorEventsAvoidFirebaseReservedNames() throws {
+        XCTAssertEqual(EventAnalyticsModel.ERROR.rawValue, "analytics_error")
+        XCTAssertEqual(EventAnalyticsModel.ERROR_CORRECTED.rawValue, "analytics_error_corrected")
+        XCTAssertNotEqual(EventAnalyticsModel.ERROR.rawValue, "error")
+    }
     
     func testFoo() throws {
         

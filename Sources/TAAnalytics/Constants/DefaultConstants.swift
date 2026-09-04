@@ -35,10 +35,11 @@ public extension EventAnalyticsModel {
     /// Sent when the app goes to the background as detected by `UIApplication.didEnterBackgroundNotification`. It also has parameters for the `last_parent_view` that was shown (aka no subviews).
     static let APP_CLOSE = EventAnalyticsModel("app_close", isTAInternalEvent: true)
     
-    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed
-    static let ERROR = EventAnalyticsModel("error", isTAInternalEvent: true)
-    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed. Use this when you want to specify that the error state has been resolved
-    static let ERROR_CORRECTED = EventAnalyticsModel("error_corrected", isTAInternalEvent: true)
+    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed.
+    /// The `analytics_` prefix avoids Firebase's reserved `error` event name.
+    static let ERROR = EventAnalyticsModel("analytics_error", isTAInternalEvent: true)
+    /// Parameters `reason` (mandatory) and optionally `"error_domain", "error_code", "error_description"` if an NSError was passed. Use this when you want to specify that the error state has been resolved.
+    static let ERROR_CORRECTED = EventAnalyticsModel("analytics_error_corrected", isTAInternalEvent: true)
     
     
     /// Parameters `from_version`, `to_version` (retrieved via `CFBundleShortVersionString` & `from_build`, `to_build` (retrieved via `CFBundleVersion`)
@@ -83,6 +84,9 @@ public extension EventAnalyticsModel {
     static let SUBSCRIPTION_RESTORE = EventAnalyticsModel("subscription_restore", isTAInternalEvent: true)
 
     static let ATT_PROMPT_NOT_ALLOWED = EventAnalyticsModel("att_prompt_not_allowed", isTAInternalEvent: true)
+    /// Recorded immediately before ATT authorization is requested. Apple does not expose a callback
+    /// that confirms the system prompt became visible, so this is a request signal rather than a
+    /// verified impression.
     static let ATT_PROMPT_SHOW        = EventAnalyticsModel("att_prompt_show", isTAInternalEvent: true)
     static let ATT_PROMPT_TAP_ALLOW   = EventAnalyticsModel("att_prompt_tap_allow", isTAInternalEvent: true)
     static let ATT_PROMPT_TAP_DENY    = EventAnalyticsModel("att_prompt_tap_deny", isTAInternalEvent: true)

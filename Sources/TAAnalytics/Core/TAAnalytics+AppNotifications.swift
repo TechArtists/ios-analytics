@@ -31,34 +31,24 @@ public protocol TAAnalyticsAppNotificationsProtocol {
     func addAppLifecycleObservers()
 }
 
-// TODO: move it into TAAnlytics
-var isFirstAppOpenThisProcess = true
-
 extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
     
     /// - Observers:
-    ///   - **Foreground**: Increments `APP_OPEN_COUNT` and logs `.APP_OPEN` (skips increment on first event).
-    ///   - **Background**: Logs `.APP_BACKGROUND`.
+    ///   - **Foreground**: Logs the deferred cold `.APP_OPEN` after a background launch, or a warm `.APP_OPEN` after the initial open.
+    ///   - **Background**: Logs `.APP_CLOSE`.
     public func addAppLifecycleObservers() {
-        
-        let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+        guard notificationCenterObservers.isEmpty else { return }
+
+        let obsForeground = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
             guard let self else { return }
-            // TODO: adi user defaults guard for is ready?
-            self.set(userProperty: .APP_OPEN_COUNT,
-                     to:"\(self.getNextCounterValueFrom(userProperty: .APP_OPEN_COUNT))")
-            
-            let isColdLaunch = isFirstAppOpenThisProcess
-            isFirstAppOpenThisProcess = false
-            var params: [String: (any AnalyticsBaseParameterValue)] = ["is_cold_launch": isColdLaunch]
-            if let view = self.lastViewShow {
-                self.addParameters(for: view, to: &params, prefix: "view_")
+            if self.hasTrackedInitialAppOpen {
+                self.trackAppOpen(isColdLaunch: false)
+            } else {
+                self.trackInitialAppOpenIfNeeded()
             }
-            self.track(event: .APP_OPEN, params: params)
         }
-        let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+        let obsBackground = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
             guard let self else { return }
-            // TODO: add unit test for last view shown
-            // add user property for last view types shown
             var params = [String: (any AnalyticsBaseParameterValue)]()
 
             if let view = self.lastViewShow {
@@ -67,8 +57,36 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
 
             track(event: .APP_CLOSE, params: params)
         }
-        
+
         notificationCenterObservers.append(obsForeground)
         notificationCenterObservers.append(obsBackground)
+    }
+
+    internal func trackInitialAppOpenIfNeeded() {
+        guard config.currentProcessType == .app, !hasTrackedInitialAppOpen else { return }
+        hasTrackedInitialAppOpen = true
+        trackAppOpen(isColdLaunch: true)
+    }
+
+    /// Tracks the initial open immediately for a visible launch. A process started
+    /// in the background defers this event until `willEnterForeground` fires.
+    internal func trackInitialAppOpenIfForeground(applicationState: UIApplication.State? = nil) {
+        guard config.currentProcessType == .app else { return }
+
+        let currentApplicationState = applicationState ?? UIApplication.shared.applicationState
+        guard currentApplicationState != .background else { return }
+
+        trackInitialAppOpenIfNeeded()
+    }
+
+    internal func trackAppOpen(isColdLaunch: Bool) {
+        set(userProperty: .APP_OPEN_COUNT, to: "\(getNextCounterValueFrom(userProperty: .APP_OPEN_COUNT))")
+
+        var params: [String: (any AnalyticsBaseParameterValue)] = ["is_cold_launch": isColdLaunch]
+
+        if let view = lastViewShow {
+            addParameters(for: view, to: &params, prefix: "view_")
+        }
+        track(event: .APP_OPEN, params: params)
     }
 }

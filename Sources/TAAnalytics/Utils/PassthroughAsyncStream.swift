@@ -29,13 +29,18 @@ import Foundation
 /// A class that simulates Combine's PassthroughSubject using AsyncStream
 class PassthroughAsyncStream<T> {
     private var continuation: AsyncStream<T>.Continuation?
-    
-    /// The async stream to which subscribers can listen
-    lazy var stream: AsyncStream<T> = {
-        AsyncStream { continuation in
-            self.continuation = continuation
+
+    /// The async stream to which subscribers can listen. It is created eagerly
+    /// so values sent before the first iterator is attached remain buffered.
+    let stream: AsyncStream<T>
+
+    init() {
+        var capturedContinuation: AsyncStream<T>.Continuation?
+        stream = AsyncStream { continuation in
+            capturedContinuation = continuation
         }
-    }()
+        continuation = capturedContinuation
+    }
     
     /// Sends a new value to the subscribers
     func send(_ value: T) {

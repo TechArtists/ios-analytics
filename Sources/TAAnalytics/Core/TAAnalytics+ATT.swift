@@ -32,8 +32,8 @@ import AdSupport
 
 /// Protocol for handling App Tracking Transparency (ATT) permission flow and related analytics events.
 ///
-/// This protocol provides methods for requesting ATT permission and tracking whether the prompt
-/// was shown, granted, denied, or not allowed.
+/// This protocol provides methods for requesting ATT permission and tracking when the prompt was
+/// requested, granted, denied, or not allowed. Apple does not expose a verified prompt-impression callback.
 public protocol TAAnalyticsATTProtocol: TAAnalyticsPermissionProtocol {
     
     /// Requests App Tracking Transparency (ATT) permission from the user.
@@ -46,7 +46,10 @@ public protocol TAAnalyticsATTProtocol: TAAnalyticsPermissionProtocol {
     /// - Parameter extraParams: Optional additional event parameters.
     func trackATTPromptNotAllowed(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
     
-    /// Tracks an event when the ATT prompt is displayed to the user.
+    /// Tracks an event immediately before the ATT prompt is requested.
+    ///
+    /// Despite the legacy `show` name, this is not a verified impression because
+    /// Apple does not report whether the system prompt actually became visible.
     ///
     /// - Parameter extraParams: Optional additional event parameters.
     func trackATTPromptShow(extraParams: [String: (any AnalyticsBaseParameterValue)]?)
@@ -70,7 +73,8 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
     ///
     /// - If permission is not allowed (e.g., due to MDM or parental controls), logs `.ATT_PROMPT_NOT_ALLOWED`.
     /// - If permission is requestable (`.notDetermined`), calls `requestTrackingAuthorization()` and logs:
-    ///     - `.ATT_PROMPT_SHOW` immediately,
+    ///     - `.ATT_PROMPT_SHOW` immediately before making the request. This represents request intent;
+    ///       Apple does not expose confirmation that the system prompt became visible.
     ///     - `.ATT_PROMPT_GRANTED` or `.ATT_PROMPT_DENIED` based on user choice.
     /// - Marks ATT permission as requested using `UserDefaults` key `permissionATTRequested`
     ///
@@ -80,26 +84,27 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         let permissionRequested = self.boolFromUserDefaults(forKey: UserDefaultKeys.permissionATTRequested) ?? false
 
         if !permissionRequested, status == .denied || status == .restricted {
-            trackATTPromptNotAllowed(extraParams: status.eventParameters)
+            trackATTPromptNotAllowed(extraParams: status.eventParameters.merging(extraParams ?? [:]) { _, custom in custom })
             self.setInUserDefaults(true, forKey: UserDefaultKeys.permissionATTRequested)
         }
 
-        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
-            let status = await ATTrackingManager.requestTrackingAuthorization()
-            trackATTPromptShow(extraParams: status.eventParameters)
+        if status == .notDetermined {
+            trackATTPromptShow(extraParams: status.eventParameters.merging(extraParams ?? [:]) { _, custom in custom })
+            let resultingStatus = await ATTrackingManager.requestTrackingAuthorization()
             self.setInUserDefaults(true, forKey: UserDefaultKeys.permissionATTRequested)
-            switch status {
+            let resultParams = resultingStatus.eventParameters.merging(extraParams ?? [:]) { _, custom in custom }
+            switch resultingStatus {
             case .authorized:
                 let params = ["advertising_id": "\(ASIdentifierManager.shared().advertisingIdentifier)"]
                 trackATTPromptTapAllow(
-                    extraParams: status.eventParameters.merging(params) { (_, new) in new }
+                    extraParams: resultParams.merging(params) { _, advertisingID in advertisingID }
                 )
             case .denied, .restricted:
-                trackATTPromptTapDeny(extraParams: status.eventParameters)
+                trackATTPromptTapDeny(extraParams: resultParams)
             default:
                 break
             }
-            return status
+            return resultingStatus
         }
 
         return status
@@ -117,9 +122,11 @@ extension TAAnalytics: TAAnalyticsATTProtocol {
         track(event: .ATT_PROMPT_NOT_ALLOWED, params: params, logCondition: .logAlways)
     }
     
-    /// Logs `.ATT_PROMPT_SHOW` when the ATT prompt is shown via `requestTrackingAuthorization()`.
+    /// Logs `.ATT_PROMPT_SHOW` immediately before calling `requestTrackingAuthorization()`.
     ///
     /// Tracked only when ATT status is `.notDetermined`, indicating a first-time request.
+    /// The event name is retained for schema compatibility, but it represents a prompt request,
+    /// not a verified impression; Apple provides no callback confirming presentation.
     ///
     /// - Parameter extraParams: Additional event parameters (optional).
     public func trackATTPromptShow(extraParams: [String : (any AnalyticsBaseParameterValue)]? = nil) {

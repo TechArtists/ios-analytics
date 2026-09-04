@@ -32,6 +32,8 @@ public class TAAnalytics: ObservableObject {
     public private(set) var config: TAAnalyticsConfig
     
     internal var notificationCenterObservers = [Any]()
+
+    internal var hasTrackedInitialAppOpen = false
     
     internal let eventQueueBuffer: EventBuffer
     
@@ -60,15 +62,13 @@ public class TAAnalytics: ObservableObject {
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) async {
         logStartupDetails()
-        
-        await startAdaptors()
-        
+
         configureUserProperties()
-        
+
         incrementColdLaunchCount()
-        
+
         sendAppVersionEventUpdatedIfNeeded()
-        
+
         sendOSUpdateEventIFNeeded()
 
         if isFirstOpen {
@@ -78,9 +78,14 @@ public class TAAnalytics: ObservableObject {
                 firstOpenParameterCallback: firstOpenParameterCallback
             )
         }
-        
+
         addAppLifecycleObservers()
-        
+        trackInitialAppOpenIfForeground()
+
+        // Events and properties generated above are buffered until adaptor
+        // startup completes. Registering lifecycle observers first ensures
+        // transitions are not missed while a slow adaptor is starting.
+        await startAdaptors()
     }
     
     private func logStartupDetails() {

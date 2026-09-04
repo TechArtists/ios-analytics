@@ -51,7 +51,7 @@ class TAAnalyticsUITests {
     func testStuckEventTriggeredAfterTimer() async throws {
         analytics.track(viewShow: testView, stuckTimeout: 2)
         
-        let deferredQueuedEvent = try await requireEvent(named: "error", matching:  { [weak self] event in
+        let deferredQueuedEvent = try await requireEvent(named: EventAnalyticsModel.ERROR.rawValue, matching:  { [weak self] event in
             return event.parameters?["reason"] as? String == self?.analytics.stuckUIManager?.reason
         }, timeout: 5)
         #expect(deferredQueuedEvent.parameters?["view_name"] as? String == testView.name)
@@ -72,7 +72,7 @@ class TAAnalyticsUITests {
         let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
-        let event = await expectEvent(named: "error", timeout: 6)
+        let event = await expectEvent(named: EventAnalyticsModel.ERROR.rawValue, timeout: 6)
         #expect(event == nil || (event?.parameters?["view_name"] as? String != testView.name))
     }
     
@@ -82,7 +82,7 @@ class TAAnalyticsUITests {
         analytics.track(viewShow: testView, stuckTimeout: 2)
         
         
-        let _ = try await requireEvent(named: "error", matching:  { [weak self] event in
+        let _ = try await requireEvent(named: EventAnalyticsModel.ERROR.rawValue, matching:  { [weak self] event in
             return event.parameters?["reason"] as? String == self?.analytics.stuckUIManager?.reason
         }, timeout: 5)
         
@@ -92,7 +92,7 @@ class TAAnalyticsUITests {
         let newView = ViewAnalyticsModel(name: "NewView", type: nil)
         analytics.track(viewShow: newView)
         
-        let correctedEvent = try await requireEvent(named: "error_corrected", timeout: 5)
+        let correctedEvent = try await requireEvent(named: EventAnalyticsModel.ERROR_CORRECTED.rawValue, timeout: 5)
 
         // 2 seconds for the stuck timer + 1 second for our sleep, the error corrected itself after at least 3s
         #expect(correctedEvent.parameters?["duration"] as? Double ?? 0 >= 3)

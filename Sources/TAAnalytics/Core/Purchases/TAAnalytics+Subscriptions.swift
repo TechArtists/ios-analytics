@@ -69,6 +69,35 @@ public struct TASubscriptionStartAnalyticsImpl: TASubscriptionStartAnalytics {
     }
 }
 
+/// Analytics data available when a subscription is restored. Restore flows do
+/// not always expose StoreKit price or currency information, so those fields are
+/// intentionally optional instead of requiring callers to invent placeholder values.
+public protocol TASubscriptionRestoreAnalytics {
+    var paywall: any TAPaywallAnalytics { get }
+    var productID: String? { get }
+    var price: Float? { get }
+    var currency: String? { get }
+}
+
+public struct TASubscriptionRestoreAnalyticsImpl: TASubscriptionRestoreAnalytics {
+    public var paywall: any TAPaywallAnalytics
+    public var productID: String?
+    public var price: Float?
+    public var currency: String?
+
+    public init(
+        paywall: any TAPaywallAnalytics,
+        productID: String? = nil,
+        price: Float? = nil,
+        currency: String? = nil
+    ) {
+        self.paywall = paywall
+        self.productID = productID
+        self.price = price
+        self.currency = currency
+    }
+}
+
 /// Defines specific events for showing views & tapping buttons
 public protocol TAAnalyticsSubscriptionsProtocol: TAAnalyticsBaseProtocol {
     
@@ -124,6 +153,35 @@ public protocol TAAnalyticsSubscriptionsProtocol: TAAnalyticsBaseProtocol {
     ///   - paywall: the placement that triggered the paywall
     func trackSubscriptionRestore(_ sub: TASubscriptionStartAnalytics)
 
+}
+
+public extension TAAnalyticsSubscriptionsProtocol {
+    /// Sends a `subscription_restore` event without requiring purchase metadata
+    /// that may not be available during a restore operation.
+    func trackSubscriptionRestore(_ restore: any TASubscriptionRestoreAnalytics) {
+        var params = [String: (any AnalyticsBaseParameterValue)]()
+        params["placement"] = restore.paywall.analyticsPlacement
+        params["quantity"] = 1
+
+        if let productID = restore.productID {
+            params["product_id"] = productID
+        }
+        if let price = restore.price {
+            params["value"] = price
+            params["price"] = price
+        }
+        if let currency = restore.currency {
+            params["currency"] = currency
+        }
+        if let id = restore.paywall.anayticsID {
+            params["paywall_id"] = id
+        }
+        if let name = restore.paywall.analyticsName {
+            params["paywall_name"] = name
+        }
+
+        track(event: .SUBSCRIPTION_RESTORE, params: params, logCondition: .logAlways)
+    }
 }
 
 // MARK: - Default Implementations

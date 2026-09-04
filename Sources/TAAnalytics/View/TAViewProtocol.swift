@@ -26,6 +26,13 @@
 
 import SwiftUI
 
+public enum TAAnalyticsViewTrackingBehavior: Sendable {
+    /// Track only the first appearance of this SwiftUI view identity.
+    case firstAppearance
+    /// Track every appearance, including when navigation returns to this view.
+    case everyAppearance
+}
+
 public protocol TAAnalyticsView: View {
     
     associatedtype ViewBody : View
@@ -33,20 +40,33 @@ public protocol TAAnalyticsView: View {
     @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
     
     var analyticsView: ViewAnalyticsModel { get }
+
+    var analyticsViewTrackingBehavior: TAAnalyticsViewTrackingBehavior { get }
     
     var taAnalytics: TAAnalytics { get }
 }
 
 public extension TAAnalyticsView {
+
+    var analyticsViewTrackingBehavior: TAAnalyticsViewTrackingBehavior { .firstAppearance }
     
     @ViewBuilder
     @MainActor
     var body: some View {
-        viewBody
-            .onFirstAppear {
-                taAnalytics.track(viewShow: analyticsView)
-            }
-            .environmentObject(analyticsView)
+        switch analyticsViewTrackingBehavior {
+        case .firstAppearance:
+            viewBody
+                .onFirstAppear {
+                    taAnalytics.track(viewShow: analyticsView)
+                }
+                .environmentObject(analyticsView)
+        case .everyAppearance:
+            viewBody
+                .onAppear {
+                    taAnalytics.track(viewShow: analyticsView)
+                }
+                .environmentObject(analyticsView)
+        }
     }
 }
 
@@ -57,20 +77,33 @@ public protocol TAAnalyticsSecondaryView: View {
     @ViewBuilder @MainActor var viewBody: Self.ViewBody { get }
     
     var analyticsSecondaryView: SecondaryViewAnalyticsModel { get }
+
+    var analyticsViewTrackingBehavior: TAAnalyticsViewTrackingBehavior { get }
     
     var taAnalytics: TAAnalytics { get }
 }
 
 public extension TAAnalyticsSecondaryView {
+
+    var analyticsViewTrackingBehavior: TAAnalyticsViewTrackingBehavior { .firstAppearance }
     
     @ViewBuilder
     @MainActor
     var body: some View {
-        viewBody
-            .onFirstAppear {
-                taAnalytics.track(viewShow: analyticsSecondaryView)
-            }
-            .environmentObject(analyticsSecondaryView)
+        switch analyticsViewTrackingBehavior {
+        case .firstAppearance:
+            viewBody
+                .onFirstAppear {
+                    taAnalytics.track(viewShow: analyticsSecondaryView)
+                }
+                .environmentObject(analyticsSecondaryView)
+        case .everyAppearance:
+            viewBody
+                .onAppear {
+                    taAnalytics.track(viewShow: analyticsSecondaryView)
+                }
+                .environmentObject(analyticsSecondaryView)
+        }
     }
 }
 

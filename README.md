@@ -204,7 +204,7 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
 
  Event Name | Parameter Name & Type | Comments 
  --- | --- | --- 
- `app_open`  | `is_cold_launch:Bool` | 
+ `app_open`  | `is_cold_launch:Bool` | Foreground launches send `true` during startup. Background-only launches defer the cold event until the app first enters the foreground. Later foreground transitions send `false`.
  `app_close` | `view_name:String?` | last view shown before the app was closed
 |            | `view_type:String?` | 
 |            | `funnel_name:String?` | 
@@ -223,12 +223,12 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
  --- | --- | --- 
  `debug`  | reason: String | Use when engineers want to test in production the occurences of any debug events. It's not an error, merely used for debugging.
  |  | `*` | 
- `error`  | reason: String | a developer reason about what triggered the error state (e.g. `couldnt find any valid JWT token`)
+ `analytics_error`  | reason: String | a developer reason about what triggered the error state (e.g. `couldnt find any valid JWT token`)
  | | `error_domain: String?` | the domain of underlying NSError that triggered this error state
   | | `error_code: Int?` | the code of underlying NSError that triggered this error state
   | | `error_description: String?` | the description of underlying NSError that triggered this error state
   | | `*` | any other parameters that the engineer might find useful
-`error_corrected`  | reason: String | An error that has been corrected. This should be the same reason as the above `error` event.
+`analytics_error_corrected`  | reason: String | An error that has been corrected. This should be the same reason as the above `analytics_error` event.
  | | `error_domain: String?` | 
   | | `error_code: Int?` | 
   | | `error_description: String?` | 
@@ -281,6 +281,12 @@ There are two main types for views:
 4. `TAAnalyticsButtonView` accepts any `ViewAnalyticsModelProtocol`, so it can be used with either `ViewAnalyticsModel` or `SecondaryViewAnalyticsModel`.
 5. For SwiftUI ergonomics, use `TAAnalyticsView` for main screens and `TAAnalyticsSecondaryView` for secondary surfaces to auto-track `ui_view_show` on first appearance.
 
+Views that must restore analytics context when revealed again after navigation can opt into tracking every appearance:
+
+```swift
+var analyticsViewTrackingBehavior: TAAnalyticsViewTrackingBehavior { .everyAppearance }
+```
+
 ```swift
 let pairing = ViewAnalyticsModel("pairing")
 analytics.track(viewShow: pairing)
@@ -292,7 +298,7 @@ analytics.track(buttonTap: "generate_new_code", onView: createInviteSheet)
 analytics.track(buttonTap: "skip", onView: pairing)
 ```
 
-For main views, the library also provides a handy way for tracking when transient views get stuck.  By providing  a `stuckTimeout`, if that specific view hasn't been transitioned out by another main view within that time, it will send an `error reason=stuck on ui_view_show` event. For example, this is useful to track users that get stuck on a splash screen, a screen that should take at most 5 seconds to load. Once the view does get replaced, an `error_corrected` event will be sent with the total duration elapsed (e.g. 7 seconds), so that you can better measure how many users get stuck altogether vs how many false positives events there are because the `stuckTimeout` is too small.
+For main views, the library also provides a handy way for tracking when transient views get stuck. By providing a `stuckTimeout`, if that specific view hasn't been transitioned out by another main view within that time, it will send an `analytics_error reason=stuck on ui_view_show` event. Once the view is replaced, an `analytics_error_corrected` event is sent with the total duration elapsed.
 
 ```
 let splashView = ..
@@ -301,11 +307,11 @@ let splashView = ..
 analytics.track(viewShow: splashView, stuckTimeout: 5) 
 
 // 5 seconds pass
-// event sent with event_name="error", param["reason"]="stuck on ui_view_show", param["duration"]=5.0, param["view_name"]="splash"
+// event sent with event_name="analytics_error", param["reason"]="stuck on ui_view_show", param["duration"]=5.0, param["view_name"]="splash"
 
 // 2 more seconds pass, we finally load in the main view
 analytics.track(viewShow: mainView) 
-// event sent with event_name="error_corrected", param["reason"]="stuck on ui_view_show", param["duration"]=5.0, param["view_name"]="splash"
+// event sent with event_name="analytics_error_corrected", param["reason"]="stuck on ui_view_show", param["duration"]=5.0, param["view_name"]="splash"
 
 ```
 
@@ -399,7 +405,7 @@ For ATT specifically, you can also make use of a dedicated method that tracks th
  Event Name | Parameter Name & Type | Comments 
  --- | --- | --- 
  `att_prompt_not_allowed` |  | 
- `att_prompt_show` |   | it also sends a corresponding `ui_view_show name=permission type=att` event for consistency
+ `att_prompt_show` |   | Recorded immediately before calling `requestTrackingAuthorization()` while status is `notDetermined`. Apple provides no callback confirming that the system prompt became visible, so this represents a prompt request, not a verified impression. It also sends `ui_view_show name=permission type=att` for consistency.
  `att_prompt_tap_allow` | `advertising_id:String`  | it also sends a corresponding `ui_button_tap` event for consistency
  `att_prompt_tap_deny` |   | 
 
@@ -441,7 +447,7 @@ Note that calling the specific `trackPaywallEnter()` method will track both a `p
 |               | `quantity:1` | 
 `subscription_start_paid_regular` | same as above  | subscription that is paid from the start
 `subscription_start_new` | same as above  | either one of the two above
-`subscription_restore` | same as above  | subscription that is restored
+`subscription_restore` | `placement:String`, `quantity:1`, optional product/price/currency/paywall metadata | subscription that is restored; unavailable StoreKit metadata can be omitted
 
 ### In-App Purchases
 
@@ -476,6 +482,24 @@ You can track engagement, as defined by whatever you consider engagement in your
 
 
 Note that sending an `engagement_primary` event will also send an `engagement` event for consistency.
+
+Apps can centralize engagement identifiers with their other event constants and avoid inline strings:
+
+```swift
+extension EventAnalyticsModel {
+    static let PRIMARY_ACTION = EventAnalyticsModel("PRIMARY_ACTION")
+}
+
+analytics.track(
+    engagementPrimary: .PRIMARY_ACTION,
+    extraParams: [
+        "id": "item-123",
+        "role": "primary"
+    ]
+)
+```
+
+As with `track(buttonTap:onView:extraParams:)`, engagement `extraParams` are merged after the automatic `view_*` context, so caller-supplied values win on duplicate keys.
 
 
 
