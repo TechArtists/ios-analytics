@@ -63,6 +63,14 @@ public class MockTAAnalytics : ObservableObject, TAAnalyticsProtocol {
     public func track(event: EventAnalyticsModel, params: [String : (any AnalyticsBaseParameterValue)?]? = nil, logCondition: EventLogCondition = .logAlways) {
         eventsSent.append((event, params ?? [:]))
     }
+
+    public func track(engagement: String) {
+        track(engagement: engagement, extraParams: nil)
+    }
+
+    public func track(engagementPrimary: String) {
+        track(engagementPrimary: engagementPrimary, extraParams: nil)
+    }
         
     public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         guard let to = to else { return }

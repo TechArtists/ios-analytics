@@ -63,6 +63,14 @@ public protocol TAAnalyticsEngagementProtocol: TAAnalyticsBaseProtocol {
 }
 
 public extension TAAnalyticsEngagementProtocol {
+    func track(engagement: String) {
+        track(engagement: engagement, extraParams: nil)
+    }
+
+    func track(engagementPrimary: String) {
+        track(engagementPrimary: engagementPrimary, extraParams: nil)
+    }
+
     func track(
         engagement: String,
         extraParams: [String: (any AnalyticsBaseParameterValue)]?

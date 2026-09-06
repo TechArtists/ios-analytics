@@ -87,6 +87,36 @@ final class TAAnalyticsEngagementTests {
         #expect((primary?.params["role"] as? String) == "primary_match")
     }
 
+    @Test
+    func mockConformsToAnalyticsProtocolAndCapturesPrimaryEngagement() {
+        let mock = MockTAAnalytics()
+        let analytics: any TAAnalyticsProtocol = mock
+        mock.lastViewShow = ViewAnalyticsModel(name: "CAMERA", type: "LIVE_SCAN")
+
+        analytics.track(
+            engagementPrimary: .TEST_MATCH_COLOR,
+            extraParams: [
+                "id": "paint-123",
+                "role": "CLOSEST_MATCH",
+                "view_type": "CAPTURED_PHOTO"
+            ]
+        )
+
+        #expect(mock.eventsSent.count == 2)
+        #expect(mock.eventsSent[0].event == .ENGAGEMENT)
+        #expect(mock.eventsSent[1].event == .ENGAGEMENT_PRIMARY)
+        #expect((mock.eventsSent[0].params["name"] as? String) == EventAnalyticsModel.TEST_MATCH_COLOR.rawValue)
+        #expect((mock.eventsSent[0].params["id"] as? String) == "paint-123")
+        #expect((mock.eventsSent[0].params["role"] as? String) == "CLOSEST_MATCH")
+        #expect((mock.eventsSent[0].params["view_name"] as? String) == "CAMERA")
+        #expect((mock.eventsSent[0].params["view_type"] as? String) == "CAPTURED_PHOTO")
+        #expect((mock.eventsSent[1].params["name"] as? String) == EventAnalyticsModel.TEST_MATCH_COLOR.rawValue)
+        #expect((mock.eventsSent[1].params["id"] as? String) == "paint-123")
+        #expect((mock.eventsSent[1].params["role"] as? String) == "CLOSEST_MATCH")
+        #expect((mock.eventsSent[1].params["view_name"] as? String) == "CAMERA")
+        #expect((mock.eventsSent[1].params["view_type"] as? String) == "CAPTURED_PHOTO")
+    }
+
     private func events(named name: String) -> [(event: EventAnalyticsModelTrimmed, params: [String: (any AnalyticsBaseParameterValue)?])] {
         adaptor.eventsSent.filter { $0.event.rawValue == name }
     }

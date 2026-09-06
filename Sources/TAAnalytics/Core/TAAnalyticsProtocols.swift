@@ -35,4 +35,4 @@ public enum EventLogCondition {
 }
 
 
-public typealias TAAnalyticsProtocol = TAAnalyticsBaseProtocol & TAAnalyticsUIProtocol & TAAnalyticsPermissionProtocol & TAAnalyticsErrorProtocol & TAAnalyticsOpenCountsProtocol & TAAnalyticsUserIDsProtocol & TAAnalyticsAppNotificationsProtocol & TAAnalyticsStuckUIProtocol
+public typealias TAAnalyticsProtocol = TAAnalyticsBaseProtocol & TAAnalyticsUIProtocol & TAAnalyticsEngagementProtocol & TAAnalyticsPermissionProtocol & TAAnalyticsErrorProtocol & TAAnalyticsOpenCountsProtocol & TAAnalyticsUserIDsProtocol & TAAnalyticsAppNotificationsProtocol & TAAnalyticsStuckUIProtocol
