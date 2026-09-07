@@ -234,6 +234,18 @@ Minimal events for sending `onboarding_{enter,exit}` events and `account_signup_
   | | `error_description: String?` | 
   | | `*` | 
 
+SwiftUI alerts and other Boolean-driven error UI can track their presentation transition directly:
+
+```swift
+content.trackAnalyticsError(
+    isPresented: showsLoadError,
+    reason: "LOAD_FAILED",
+    extraParams: ["source": "remote"]
+)
+```
+
+The modifier emits only when `isPresented` changes from `false` to `true`; it does not emit for an initially `true` value.
+
 
 ### UI Interactions
 
