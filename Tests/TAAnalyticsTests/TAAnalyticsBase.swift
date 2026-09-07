@@ -32,6 +32,7 @@ enum EventStreamError: Error {
 
 class TAAnalyticsBase {
     let analytics: TAAnalytics
+    let events: AsyncStream<DeferredQueuedEvent>
     let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     let notificationCenter = NotificationCenter.default
     
@@ -46,6 +47,7 @@ class TAAnalyticsBase {
                 userDefaults: mockUserDefaults
             )
         )
+        events = await analytics.eventQueueBuffer.enableEventObservation()
         await analytics.start()
     }
 
@@ -59,7 +61,10 @@ class TAAnalyticsBase {
         
         analytics.track(event: .OUR_FIRST_OPEN, params: params, logCondition: .logAlways)
         
-        let deferredEvent = try await requireEvent(named: "our_first_open")
+        // Startup emits the same event name; select the manually tracked payload.
+        let deferredEvent = try await requireEvent(named: "our_first_open", matching: {
+            $0.parameters?["key1"] as? String == "value1"
+        })
         #expect(deferredEvent.parameters?.count == 2)
         #expect((deferredEvent.parameters?["key1"] as! String) == "value1")
         #expect(deferredEvent.parameters?["key2"] == nil)
@@ -72,7 +77,7 @@ class TAAnalyticsBase {
         timeout: TimeInterval = 3
     ) async throws -> DeferredQueuedEvent {
         try await withThrowingTimeout(seconds: timeout) {
-            for await eventSpecific in analytics.eventQueueBuffer.passthroughStream.stream {
+            for await eventSpecific in events {
                 guard eventSpecific.event.rawValue == eventName else { continue }
 
                 if predicate(eventSpecific) {

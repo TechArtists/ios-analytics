@@ -79,8 +79,12 @@ public class TAAnalytics: ObservableObject {
             )
         }
 
-        addAppLifecycleObservers()
-        trackInitialAppOpenIfForeground()
+        // Keep observer registration and the initial UIKit state check together
+        // on the main actor so a lifecycle callback cannot interleave them.
+        await MainActor.run {
+            addAppLifecycleObservers()
+            trackInitialAppOpenIfForeground()
+        }
 
         // Events and properties generated above are buffered until adaptor
         // startup completes. Registering lifecycle observers first ensures

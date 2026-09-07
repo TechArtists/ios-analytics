@@ -82,7 +82,7 @@ actor EventBuffer {
     public let allAdaptors: [any AnalyticsAdaptor]
     private let adaptorLogPolicyProvider: @Sendable () -> TAAnalyticsConfig.AdaptorLogPolicy
     
-    nonisolated(unsafe) internal let passthroughStream = PassthroughAsyncStream<DeferredQueuedEvent>()
+    private var observationStream: BufferedAsyncStream<DeferredQueuedEvent>?
     
     init(
         allAdaptors: [any AnalyticsAdaptor],
@@ -90,6 +90,20 @@ actor EventBuffer {
     ) {
         self.allAdaptors = allAdaptors
         self.adaptorLogPolicyProvider = adaptorLogPolicyProvider
+    }
+
+    /// Enables an internal, single-consumer stream of delivered events for tests.
+    /// Call before analytics startup to capture startup events, even if iteration
+    /// begins later. Without this opt-in, delivery retains no observation copies.
+    /// Repeated calls return the same stream and preserve its buffered events.
+    func enableEventObservation() -> AsyncStream<DeferredQueuedEvent> {
+        if let observationStream {
+            return observationStream.stream
+        }
+
+        let observationStream = BufferedAsyncStream<DeferredQueuedEvent>()
+        self.observationStream = observationStream
+        return observationStream.stream
     }
     
     func addEvent(
@@ -125,7 +139,7 @@ actor EventBuffer {
             
             logAdaptorEventIfNeeded(adaptor, event: event, params: params)
         }
-        passthroughStream.send(.init(event: event, dateAdded: Date(), parameters: params))
+        observationStream?.send(.init(event: event, dateAdded: Date(), parameters: params))
     }
     
     private func setUserPropertyInStartedAdaptors(_ userProperty: UserPropertyAnalyticsModel, to value: String?) {

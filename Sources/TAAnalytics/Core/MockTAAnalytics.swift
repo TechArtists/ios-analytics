@@ -64,14 +64,6 @@ public class MockTAAnalytics : ObservableObject, TAAnalyticsProtocol {
         eventsSent.append((event, params ?? [:]))
     }
 
-    public func track(engagement: String) {
-        track(engagement: engagement, extraParams: nil)
-    }
-
-    public func track(engagementPrimary: String) {
-        track(engagementPrimary: engagementPrimary, extraParams: nil)
-    }
-        
     public func set(userProperty: UserPropertyAnalyticsModel, to: String?) {
         guard let to = to else { return }
         userPropertiesSet[userProperty] = to

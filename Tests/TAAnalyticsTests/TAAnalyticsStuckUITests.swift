@@ -30,6 +30,7 @@ import Foundation
 
 class TAAnalyticsUITests {
     let analytics: TAAnalytics
+    let events: AsyncStream<DeferredQueuedEvent>
     let testView = ViewAnalyticsModel(name: "TestView", type: "TestType")
     let unitTestAdaptor: TAAnalyticsUnitTestAdaptor
     
@@ -44,6 +45,7 @@ class TAAnalyticsUITests {
                 userDefaults: mockUserDefaults
             )
         )
+        events = await analytics.eventQueueBuffer.enableEventObservation()
         await analytics.start()
     }
     
@@ -119,7 +121,7 @@ class TAAnalyticsUITests {
         timeout: TimeInterval = 3
     ) async -> DeferredQueuedEvent? {
         return try? await withThrowingTimeout(seconds: timeout) {
-            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+            for await deferredEvent in events {
                 guard deferredEvent.event.rawValue == eventName else { continue }
                 
                 if predicate(deferredEvent) {

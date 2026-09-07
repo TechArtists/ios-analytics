@@ -30,6 +30,7 @@ import UIKit
 class TAAnalyticsUIEventsTests {
     
     let analytics: TAAnalytics
+    let events: AsyncStream<DeferredQueuedEvent>
     let unitTestAdaptor : TAAnalyticsUnitTestAdaptor
     let notificationCenter = NotificationCenter.default
     
@@ -44,6 +45,7 @@ class TAAnalyticsUIEventsTests {
                 userDefaults: mockUserDefaults
             )
         )
+        events = await analytics.eventQueueBuffer.enableEventObservation()
         await analytics.start()
     }
         
@@ -127,7 +129,7 @@ class TAAnalyticsUIEventsTests {
         timeout: TimeInterval = 3
     ) async throws -> DeferredQueuedEvent {
         try await withThrowingTimeout(seconds: timeout) {
-            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+            for await deferredEvent in events {
                 guard deferredEvent.event.rawValue == eventName else { continue }
 
                 if predicate(deferredEvent) {

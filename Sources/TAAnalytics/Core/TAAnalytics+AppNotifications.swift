@@ -70,6 +70,7 @@ extension TAAnalytics: TAAnalyticsAppNotificationsProtocol {
 
     /// Tracks the initial open immediately for a visible launch. A process started
     /// in the background defers this event until `willEnterForeground` fires.
+    @MainActor
     internal func trackInitialAppOpenIfForeground(applicationState: UIApplication.State? = nil) {
         guard config.currentProcessType == .app else { return }
 

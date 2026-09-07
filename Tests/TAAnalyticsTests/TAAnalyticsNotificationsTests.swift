@@ -57,6 +57,19 @@ final class TAAnalyticsNotificationsTests {
     }
 
     @Test
+    func testInitialOpenRecheckDoesNotDuplicateColdOpen() async throws {
+        _ = try await requireAdaptorEvent(named: EventAnalyticsModel.APP_OPEN.rawValue)
+
+        await analytics.trackInitialAppOpenIfForeground(applicationState: .inactive)
+        await analytics.trackInitialAppOpenIfForeground(applicationState: .active)
+
+        #expect(unitTestAdaptor.eventsSent.filter {
+            $0.event.rawValue == EventAnalyticsModel.APP_OPEN.rawValue
+        }.count == 1)
+        #expect(analytics.get(userProperty: .APP_OPEN_COUNT) == "1")
+    }
+
+    @Test
     func testAddAppLifecycleObservers_ForegroundNotification() async throws {
         _ = try await requireAdaptorEvent(named: EventAnalyticsModel.APP_OPEN.rawValue)
 
@@ -76,7 +89,7 @@ final class TAAnalyticsNotificationsTests {
         analytics.hasTrackedInitialAppOpen = false
         analytics.set(userProperty: .APP_OPEN_COUNT, to: nil)
 
-        analytics.trackInitialAppOpenIfForeground(applicationState: .background)
+        await analytics.trackInitialAppOpenIfForeground(applicationState: .background)
 
         #expect(
             unitTestAdaptor.eventsSent.contains {

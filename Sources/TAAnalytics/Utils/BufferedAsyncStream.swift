@@ -1,5 +1,5 @@
 //
-//  PassthroughAsyncStream.swift
+//  BufferedAsyncStream.swift
 //  TAAnalytics
 //
 //  Created by Robert Tataru on 30.10.2024.
@@ -26,12 +26,22 @@
 
 import Foundation
 
-/// A class that simulates Combine's PassthroughSubject using AsyncStream
-class PassthroughAsyncStream<T> {
+/// A single-consumer `AsyncStream` with an unbounded buffer, written to through
+/// ``send(_:)``.
+///
+/// This is deliberately **not** a Combine `PassthroughSubject`: a subject drops a
+/// value that arrives while nothing is subscribed, whereas this type queues every
+/// value until an iterator consumes it. That is the point — values sent before
+/// iteration begins are still delivered — but it also means an instance nothing
+/// iterates retains every value it was sent, for as long as the instance lives.
+///
+/// So create one only where something will actually read it, and keep it out of
+/// paths that run in normal app usage.
+class BufferedAsyncStream<T> {
     private var continuation: AsyncStream<T>.Continuation?
 
-    /// The async stream to which subscribers can listen. It is created eagerly
-    /// so values sent before the first iterator is attached remain buffered.
+    /// The stream to iterate. Values sent before iteration starts are buffered
+    /// rather than dropped.
     let stream: AsyncStream<T>
 
     init() {
@@ -41,13 +51,15 @@ class PassthroughAsyncStream<T> {
         }
         continuation = capturedContinuation
     }
-    
-    /// Sends a new value to the subscribers
+
+    /// Queues a value for the consumer, delivering it immediately if one is
+    /// already waiting in `next()`.
     func send(_ value: T) {
         continuation?.yield(value)
     }
-    
-    /// Completes the stream, notifying all subscribers of completion
+
+    /// Ends the stream, finishing the consumer's iteration once it has drained
+    /// whatever is still buffered.
     func sendCompletion() {
         continuation?.finish()
     }

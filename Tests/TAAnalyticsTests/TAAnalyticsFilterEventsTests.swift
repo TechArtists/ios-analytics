@@ -31,6 +31,7 @@ import Foundation
 class TAAnalyticsFilterEventsTests {
 
     let analytics: TAAnalytics
+    let events: AsyncStream<DeferredQueuedEvent>
     let unitTestAdaptor: TAAnalyticsUnitTestAdaptor
     
     init() async {
@@ -50,6 +51,7 @@ class TAAnalyticsFilterEventsTests {
                 }
             )
         )
+        events = await analytics.eventQueueBuffer.enableEventObservation()
         await analytics.start()
     }
     
@@ -86,7 +88,7 @@ class TAAnalyticsFilterEventsTests {
         timeout: TimeInterval = 3
     ) async -> DeferredQueuedEvent? {
         return try? await withThrowingTimeout(seconds: timeout) {
-            for await deferredEvent in analytics.eventQueueBuffer.passthroughStream.stream {
+            for await deferredEvent in events {
                 guard deferredEvent.event.rawValue == eventName else { continue }
                 
                 if predicate(deferredEvent) {
