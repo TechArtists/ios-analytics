@@ -55,7 +55,7 @@ public class TAAnalytics: ObservableObject {
             adaptorLogPolicyProvider: config.adaptorLogPolicyProvider
         )
     }
-    
+
     /// - Parameters:
     ///   - customInstallUserPropertiesCompletion: completion called before logging the `first open` event. Use this to set any custom install time user properties specific to your app, that are not available by default via `TAAnalyticsConfig#instalUserProperties`
     ///   - shouldTrackFirstOpen: if the first open event should be logged. Normally you want this set to `true`, but in some instances, if this is called in `AppDelegate#didFinishLaunching`, a specific parameter you'd want to might not be available. In that case, set this to `false` and then manually call `TAAnalytics#maybeTrackTAFirstOpen` when you have all the data

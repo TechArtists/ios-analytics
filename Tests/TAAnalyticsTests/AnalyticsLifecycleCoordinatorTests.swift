@@ -31,7 +31,8 @@ import UIKit
 final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
 
     @MainActor func testLaunchReachesEveryObserverExactlyOnce() {
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter())
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter(),
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
@@ -39,7 +40,8 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
     }
 
     @MainActor func testLaunchOptionsAreHandedThrough() {
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter())
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter(),
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         let url = URL(string: "https://example.com/onelink")!
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: [.url: url])
@@ -48,7 +50,8 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
 
     @MainActor func testAppStateEventsReachOnlyAdaptorsThatFinishedStartFor() {
         let center = NotificationCenter()
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center)
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center,
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
 
@@ -57,17 +60,19 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
         XCTAssertEqual(adaptor.events, [])
 
         coordinator.markReady(adaptor)
+        XCTAssertEqual(adaptor.events, ["didBecomeActive"])
         center.post(name: UIApplication.didBecomeActiveNotification, object: nil)
         center.post(name: UIApplication.willResignActiveNotification, object: nil)
         center.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
         center.post(name: UIApplication.willEnterForegroundNotification, object: nil)
         XCTAssertEqual(adaptor.events,
-                       ["didBecomeActive", "willResignActive", "didEnterBackground", "willEnterForeground"])
+                       ["didBecomeActive", "didBecomeActive", "willResignActive", "didEnterBackground", "willEnterForeground"])
     }
 
     @MainActor func testEveryActivationIsForwarded() {
         let center = NotificationCenter()
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center)
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center,
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
         coordinator.markReady(adaptor)
@@ -81,7 +86,8 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
     }
 
     @MainActor func testLinksReachObserversBeforePreparationFinishes() {
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter())
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: NotificationCenter(),
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
 
@@ -98,7 +104,8 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
 
     @MainActor func testMarkReadyIgnoresAdaptorsThatDoNotObserveTheLifecycle() {
         let center = NotificationCenter()
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center)
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center,
+                                                        initialApplicationIsActive: false)
         let plain = TAAnalyticsUnitTestAdaptor()
         let observing = LifecycleAdaptor()
         coordinator.launch(adaptors: [plain, observing], application: .shared, launchOptions: nil)
@@ -112,7 +119,8 @@ final class AnalyticsLifecycleCoordinatorTests: XCTestCase {
 
     @MainActor func testAnAdaptorNeverMarkedReadyNeverSeesAppState() {
         let center = NotificationCenter()
-        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center)
+        let coordinator = AnalyticsLifecycleCoordinator(notificationCenter: center,
+                                                        initialApplicationIsActive: false)
         let adaptor = LifecycleAdaptor()
         coordinator.launch(adaptors: [adaptor], application: .shared, launchOptions: nil)
         for name: Notification.Name in [UIApplication.didBecomeActiveNotification,

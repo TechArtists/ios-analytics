@@ -41,10 +41,14 @@ final class AnalyticsLifecycleCoordinator: NSObject {
     private var ready: [any AnalyticsAdaptorObservingAppLifecycle] = []
 
     private var didLaunch = false
+    private var isActive = false
     private let notificationCenter: NotificationCenter
+    private let initialApplicationIsActive: Bool?
 
-    init(notificationCenter: NotificationCenter = .default) {
+    init(notificationCenter: NotificationCenter = .default,
+         initialApplicationIsActive: Bool? = nil) {
         self.notificationCenter = notificationCenter
+        self.initialApplicationIsActive = initialApplicationIsActive
         super.init()
     }
 
@@ -52,6 +56,7 @@ final class AnalyticsLifecycleCoordinator: NSObject {
                 launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         guard !didLaunch else { return }
         didLaunch = true
+        isActive = initialApplicationIsActive ?? (application.applicationState == .active)
         observers = adaptors.compactMap { $0 as? any AnalyticsAdaptorObservingAppLifecycle }
 
         let events: [(Notification.Name, Selector)] = [
@@ -75,6 +80,9 @@ final class AnalyticsLifecycleCoordinator: NSObject {
               observers.contains(where: { $0 === adaptor }),
               !ready.contains(where: { $0 === adaptor }) else { return }
         ready.append(adaptor)
+        if isActive {
+            adaptor.applicationDidBecomeActive()
+        }
     }
 
     // A cold launch through a deep link arrives before preparation could have finished, so links
@@ -87,9 +95,20 @@ final class AnalyticsLifecycleCoordinator: NSObject {
         observers.forEach { $0.observeUserActivity(userActivity) }
     }
 
-    @objc func didBecomeActive() { ready.forEach { $0.applicationDidBecomeActive() } }
-    @objc func willResignActive() { ready.forEach { $0.applicationWillResignActive() } }
-    @objc func didEnterBackground() { ready.forEach { $0.applicationDidEnterBackground() } }
+    @objc func didBecomeActive() {
+        isActive = true
+        ready.forEach { $0.applicationDidBecomeActive() }
+    }
+
+    @objc func willResignActive() {
+        isActive = false
+        ready.forEach { $0.applicationWillResignActive() }
+    }
+
+    @objc func didEnterBackground() {
+        isActive = false
+        ready.forEach { $0.applicationDidEnterBackground() }
+    }
     @objc func willEnterForeground() { ready.forEach { $0.applicationWillEnterForeground() } }
 }
 

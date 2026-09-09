@@ -33,7 +33,8 @@ import UIKit
 /// Delivery has one rule. Launch and link events reach every conforming adaptor, because a cold
 /// launch through a deep link arrives before preparation could possibly have finished. The four
 /// app-state events reach only adaptors whose `startFor` succeeded, so an adaptor that TAAnalytics
-/// excluded from event delivery does not go on counting sessions in its SDK.
+/// excluded from event delivery does not go on counting sessions in its SDK. If startup finishes
+/// while the app is already active, the adaptor immediately receives that current activation.
 ///
 /// Every member is main-actor isolated; tracking stays off it.
 public protocol AnalyticsAdaptorObservingAppLifecycle: AnyObject {
