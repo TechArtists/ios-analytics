@@ -49,14 +49,22 @@ public final class UserPropertyAnalyticsModel : Hashable, Equatable, RawRepresen
     public let rawValue: String
     public let isInternalUserProperty: Bool
     
-    /// At most 24 alphanumeric characters or underscores
-    /// Usually in snake_case, but it would be best to consult the BI for their preference.
+    /// A naming convention, not a constraint this type enforces: at most 24 alphanumeric
+    /// characters or underscores, usually snake_case — consult the BI for their preference.
+    ///
+    /// The name is stored untouched. Every destination caps names differently, so trimming is the
+    /// adaptor's job, in `trim(userProperty:)`; truncating here would hand each adaptor a name
+    /// already cut to someone else's limit.
     public init(_ rawValue: String) {
         self.rawValue = rawValue
         self.isInternalUserProperty = false
     }
-    /// At most 24 alphanumeric characters or underscores
-    /// Usually in snake_case, but it would be best to consult the BI for their preference.
+    /// A naming convention, not a constraint this type enforces: at most 24 alphanumeric
+    /// characters or underscores, usually snake_case — consult the BI for their preference.
+    ///
+    /// The name is stored untouched. Every destination caps names differently, so trimming is the
+    /// adaptor's job, in `trim(userProperty:)`; truncating here would hand each adaptor a name
+    /// already cut to someone else's limit.
     public init?(rawValue: String) {
         self.rawValue = rawValue
         self.isInternalUserProperty = false

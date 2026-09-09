@@ -541,3 +541,23 @@ Once set, TALogger.log(...) inside the package will use the custom logging syste
 
 - ATT 
 - Config automaticallyTrackedEventsPrefixConfig in TAAnalyticsConfig does not work for events
+
+## App lifecycle for SDK adaptors (1.13.0)
+
+Some SDKs need app lifecycle events; most do not. An adaptor that does adopts `AnalyticsAdaptorObservingAppLifecycle` and implements whichever of `application(_:didFinishLaunchingWithOptions:)`, `applicationDidBecomeActive()`, `applicationWillResignActive()`, `applicationDidEnterBackground()`, `applicationWillEnterForeground()`, `observeOpenURL(_:options:)` and `observeUserActivity(_:)` its SDK actually needs. Every member is optional and the names are UIKit's, because the events are UIKit's. TAAnalytics forwards; it prescribes no sequence of its own.
+
+Call `analytics.applicationDidFinishLaunching(application, launchOptions: launchOptions)` synchronously inside `didFinishLaunchingWithOptions`, after SDK prerequisites. `start()` calls it too, as a fallback for hosts without app-delegate integration. Forward URLs with `applicationOpen(_:options:)` and activities with `applicationContinue(_:)`; these observe attribution without claiming app routing. ETUAppCore supplies the whole bridge automatically.
+
+Delivery has one rule. Launch and link events reach every conforming adaptor, because a cold launch through a deep link arrives before preparation could have finished. The four app-state events reach only adaptors whose `startFor` succeeded, so an adaptor TAAnalytics excluded from event delivery does not go on counting sessions in its SDK.
+
+Configure at launch only when the SDK has to be usable before `didFinishLaunchingWithOptions` returns — a deep link on a cold launch is the case that forces it. Anything that can wait, and anything needing the install type, belongs in `startFor`, which receives one. `applicationDidBecomeActive()` is activation, not foregrounding: a system alert such as ATT, an incoming call, or Notification Center takes the app merely inactive and activates it again with no background transition, and each round trip is another session for SDKs that count them.
+
+## MMP attribution (1.13.0)
+
+An **MMP (Mobile Measurement Partner)** — AppsFlyer, Adjust, Branch, Singular — determines which ad, if any, led to an install. The ad network sees the click, the app sees the install, and the App Store links neither, so a neutral third party wired into both ends is the only thing that can join them. Neutrality matters because ad networks self-report conversions: asked separately, two networks will each claim the same user, and the MMP is what picks one and deduplicates the rest.
+
+The flow is: the network fires the MMP's tracking URL on tap → the user installs → the MMP's SDK reports the install on first launch → the MMP matches the two and reports back. That last step is deterministic via the IDFA when ATT is granted, and falls back to SKAdNetwork's aggregated, delayed postbacks when it is not — which is why an MMP adaptor may hold its install postback open until the ATT prompt is answered. An install that matches no click is *organic*.
+
+Attribution also flows outward: purchase and revenue events sent to the MMP are relayed to the ad networks, which bid toward users who look likely to convert. Revenue accuracy feeds ad targeting, not just reporting.
+
+An adaptor whose SDK reports attribution translates its vendor payload into `MMPAttribution` — normalized `network`, `campaign`, `isOrganic` and `isFirstLaunch`, plus `vendorParameters` for its own `af_*`-style fields and `raw` for the untouched payload. Pass the result to `trackMMPAttribution(_:)`, which sets `mmp_attributed_network` and `mmp_attributed_campaign` on every launch and tracks `mmp_attributed_first_open` once per install. Because MMPs replay attribution from cache on every launch, `isFirstLaunch` is what keeps the install from being counted twice.

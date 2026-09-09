@@ -31,8 +31,13 @@ final class AnalyticsUserPropertyTests: XCTestCase {
         XCTAssertEqual(UserPropertyAnalyticsModel("short_value").rawValue, "short_value")
     }
     
-    func testItTrims() throws {
-        XCTAssertEqual(UserPropertyAnalyticsModel("long_value_longer_than_24_characters").rawValue, "long_value_longer_than_2")
+    /// Replaces a `testItTrims` that asserted the initializer truncated to 24 characters. It never
+    /// did — no commit in this repository has ever put trimming there — so the test had never
+    /// passed. The 24-character guidance is a BI naming convention; the enforcement that matters
+    /// is per-destination, in each adaptor's `trim(userProperty:)`, which needs the full name.
+    func testTheModelKeepsTheFullNameSoEachAdaptorCanApplyItsOwnLimit() throws {
+        let name = "long_value_longer_than_24_characters"
+        XCTAssertEqual(UserPropertyAnalyticsModel(name).rawValue, name)
     }
 
 }

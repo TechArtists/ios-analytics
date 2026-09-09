@@ -1,6 +1,8 @@
-//  TAAnalyticsConfig.swift
-//  Created by Adi on 10/25/22
 //
+//  TAAnalyticsConfig.swift
+//  TAAnalytics
+//
+//  Created by Adi on 10/25/22.
 //  Copyright (c) 2022 Tech Artists Agency SRL
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -75,7 +77,7 @@ public struct TAAnalyticsConfig {
         case appExtension
     }
 
-    public enum InstallType: CaseIterable {
+    public enum InstallType: CaseIterable, Sendable {
         /// installed from the App Store
         case AppStore
         /// installed from Xcode

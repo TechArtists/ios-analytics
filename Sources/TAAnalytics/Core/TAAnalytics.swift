@@ -1,6 +1,8 @@
-//  TAAnalytics.swift
-//  Created by Adi on 10/24/22
 //
+//  TAAnalytics.swift
+//  TAAnalytics
+//
+//  Created by Adi on 10/24/22.
 //  Copyright (c) 2022 Tech Artists Agency SRL
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +35,8 @@ public class TAAnalytics: ObservableObject {
     
     internal var notificationCenterObservers = [Any]()
 
+    @MainActor internal var adaptorLifecycle: AnalyticsLifecycleCoordinator?
+
     internal var hasTrackedInitialAppOpen = false
     
     internal let eventQueueBuffer: EventBuffer
@@ -61,6 +65,8 @@ public class TAAnalytics: ObservableObject {
         shouldTrackFirstOpen: Bool = true,
         firstOpenParameterCallback: (() -> [String: any AnalyticsBaseParameterValue]?)? = nil
     ) async {
+        await applicationDidFinishLaunching()
+        
         logStartupDetails()
 
         configureUserProperties()
@@ -126,7 +132,15 @@ public class TAAnalytics: ObservableObject {
                 }
             }
 
-             return await group.compactMap{ $0 }.reduce(into: []) { $0.append($1) }
+            var started: [any AnalyticsAdaptor] = []
+            for await result in group {
+                guard let adaptor = result else { continue }
+                // Start eligible SDK sessions as each adaptor becomes ready. Event delivery
+                // retains the existing all-adaptor barrier so buffered events are not lost.
+                await adaptorLifecycle?.markReady(adaptor)
+                started.append(adaptor)
+            }
+            return started
         }
         
         await self.eventQueueBuffer.setupAdaptors(with: startedAdaptors)
