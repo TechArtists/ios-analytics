@@ -8,7 +8,7 @@ import Testing
 @testable import TAAnalytics
 
 private extension EventAnalyticsModel {
-    static let TEST_MATCH_COLOR = EventAnalyticsModel("MATCH_COLOR")
+    static let TEST_MATCH_COLOR = EventAnalyticsModel("match_color")
 }
 
 @Suite(.serialized)
@@ -51,7 +51,7 @@ final class TAAnalyticsEngagementTests {
         analytics.lastViewShow = ViewAnalyticsModel(name: "CAMERA", type: "LIVE_SCAN")
 
         analytics.track(
-            engagement: "MATCH_COLOR",
+            engagement: "match_color",
             extraParams: [
                 "id": "paint-123",
                 "role": "closest_match",

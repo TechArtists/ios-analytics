@@ -65,8 +65,8 @@ class TAAnalyticsUIEventsTests {
         #expect(analytics.lastViewShow == step1)
         
         // send another event, so that we can wait on it and test the LAST_VIEW_SHOW user property afterwards (to make sure it got executed from the queue)
-        analytics.track(event: EventAnalyticsModel("dont care"))
-        let _ = try await requireEvent(named: "dont care", matching: { _ in return true } )
+        analytics.track(event: EventAnalyticsModel("dont_care"))
+        let _ = try await requireEvent(named: "dont_care", matching: { _ in return true } )
         #expect(analytics.get(userProperty: .LAST_VIEW_SHOW) == "name=step 1;funnel_name=onboarding;funnel_step=1;funnel_step_is_optional=false;funnel_step_is_final=false")
         
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)

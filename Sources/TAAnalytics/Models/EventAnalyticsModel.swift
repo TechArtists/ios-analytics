@@ -28,14 +28,14 @@ public final class EventAnalyticsModel: Hashable, Equatable, RawRepresentable {
     public let rawValue: String
     let isInternalEvent: Bool
     
-    /// "firebase_", "google_", and "ga_" prefixes are reserved
-    /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
+    /// "firebase_", "google_", and "ga_" prefixes are reserved.
+    /// Event names should use lowercase snake_case.
     public init(_ rawValue: String){
         self.rawValue = rawValue
         self.isInternalEvent = false
     }
-    /// "firebase_", "google_", and "ga_" prefixes are reserved
-    /// You can use spaces, snake_case or camelCase, best to consult the BIs for their preference.
+    /// "firebase_", "google_", and "ga_" prefixes are reserved.
+    /// Event names should use lowercase snake_case.
     public init?(rawValue: String) {
         self.rawValue = rawValue
         self.isInternalEvent = false

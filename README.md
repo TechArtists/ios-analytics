@@ -499,7 +499,7 @@ Apps can centralize engagement identifiers with their other event constants and 
 
 ```swift
 extension EventAnalyticsModel {
-    static let PRIMARY_ACTION = EventAnalyticsModel("PRIMARY_ACTION")
+    static let PRIMARY_ACTION = EventAnalyticsModel("primary_action")
 }
 
 analytics.track(
